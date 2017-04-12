@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>Foldergallery_XH – User Manual</title>
+<link rel="stylesheet" type="text/css" href="./stylesheet.css">
+</head>
+
+<body>
+
+<article>
+<h1>Fotogallery_XH – User Manual</h1>
+<img src="../foldergallery.png" class="logo" alt="Empty Folder">
+<p>
+    Fotogallery_XH facilitates the presentation of image galleries on a
+    CMSimple_XH website. Contrary to most other existing gallery plugins, the
+    galleries are created completely automatically from existing images in a
+    given folder, so that the galleries don't have to be prepared in the
+    back-end. That makes Foldergallery_XH especially suited for large amounts of
+    images, and also for use with <a
+    href="http://3-magi.net/?CMSimple_XH/Extedit_XH">Extedit_XH</a>.
+</p>
+
+<nav id="nav">
+<h2>Table of Contents</h2>
+<ul>
+<li><a href="#notice">Important Notice</a></li>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#settings">Settings</a></li>
+<li><a href="#usage">Usage</a></li>
+<li><a href="#limitations">Limitations</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#credits">Credits</a></li>
+</ul>
+</nav>
+
+<section id="notice">
+<h2>Important Notice</h2>
+<p class="important">
+    Foldergallery_XH couldn't be tested so far in various environments. It is a
+    so called beta version. Use with caution!
+</p>
+</section>
+
+<section id="requirements">
+<h2>Requirements</h2>
+<p>
+    Foldergallery_XH is a plugin for CMSimple_XH &ge; 1.6.3. It requires PHP &ge;
+    5.4.0 with the Fileinfo and JSON extensions.
+</p>
+</section>
+
+<section id="installation">
+<h2>Installation</h2>
+<p>
+    The installation is done as with many other CMSimple_XH plugins.
+    See the <a href="http://www.cmsimple-xh.org/wiki/doku.php/installation">
+    CMSimple_XH wiki</a> for further details.
+</p>
+<ol>
+<li class="important">
+    Backup the data on your server.
+</li>
+<li>
+    Unzip the distribution on your computer.
+</li>
+<li>
+    Upload the whole directory fotogallery/ to your server into CMSimple_XH's
+    plugins directory.
+</li>
+<li>
+    Set write permissions for the subdirectories css/ and languages/.
+</li>
+<!--<li class="important">
+    Switch to <em>Plugins</em>→<em>Foldergallery</em> in the back-end to check if
+    all requirements are fulfilled.
+</li>-->
+</ol>
+</section>
+
+<section id="settings">
+<h2>Settings</h2>
+<!--<p>
+    The plugin's configuration is done as with many other CMSimple_XH plugins in
+    the website's back-end. Select <em>Plugins</em>→<em>Foldergallery</em>.
+</p>-->
+<!--<p>
+    You can change the default settings of Foldergallery_XH under <em>Config</em>. Hints
+    for the options will be displayed when hovering over the help icon with your
+    mouse.
+</p>-->
+<!--<p>
+    Localization is done under <em>Language</em>. You can translate the character
+    strings to your own language if there is no appropriate language file available,
+    or customize them according to your needs.
+</p>-->
+<!--<p>
+    The look of Foldergallery_XH can be customized under <em>Stylesheet</em>.
+</p>-->
+</section>
+
+<section id="usage">
+<h2>Usage</h2>
+<p>
+    Prepare the galleries by uploading images into CMSimple_XH's image folder,
+    or a subfolder thereof, either via FTP or a filebrowser.
+</p>
+<p>
+    To present all images in the image folder on a page, insert the following
+    plugin call:
+</p>
+<pre>{{{foldergallery}}}</pre>
+<p>
+    To present only the images of a subfolder (and all subfolders of that
+    folder), use somethink like the following (replace
+    <code>SUBFOLDERNAME</code> with the actual name of the subfolder):
+</p>
+<pre>{{{foldergallery 'SUBFOLDERNAME'}}}</pre>
+</section>
+
+<section id="limitations">
+<h2>Limitations</h2>
+<p>
+    Currently, only a single gallery can be shown on each page.
+</p>
+</section>
+
+<section id="license">
+<h2>License</h2>
+<p>
+    Fotogallery_XH is licensed under
+    <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>.
+</p>
+<p>
+    &copy; 2017 Christoph M. Becker
+</p>
+</section>
+
+<section id="credits">
+<h2>Credits</h2>
+<p>
+    Fotogallery_XH uses <a
+    href="http://www.jacklmoore.com/colorbox/">Colorbox</a> by Jack Moore.
+    Thanks for releasing this great Lightbox clone under MIT license.
+</p>
+<p>
+    The plugin logo is designed by <a
+    href="http://www.everaldo.com/">Everaldo Coelho</a>. Many thanks for
+    publishing this icon under GPL.
+</p>
+<!--
+<p>
+    This plugin uses free applications icons from <a
+    href="http://www.aha-soft.com/">Aha-Soft</a>. Many thanks for making these icons
+    freely available.
+</p>
+-->
+<!--<p>
+    Many thanks to the community at the <a
+    href="http://www.cmsimpleforum.com">CMSimple_XH forum</a> for tips,
+    suggestions and testing.
+</p>-->
+<p>
+    And last but not least many thanks to <a href="http://harteg.dk/">Peter
+    Harteg</a>, the father of CMSimple, and all developers of <a
+    href="http://www.cmsimple-xh.org">CMSimple_XH</a> without whom this amazing CMS
+    wouldn't exist.
+</p>
+</section>
+
+</article>
+
+</body>
+
+</html>
