@@ -59,24 +59,50 @@ class ImageService
         return $result;
     }
 
+    /**
+     * @var string $entry
+     * @return object
+     */
     private function createDir($entry)
     {
         return (object) array(
-            'name' => $entry,
+            'caption' => $entry,
             'basename' => $entry,
             'filename' => "{$this->folder}{$entry}",
             'isDir' => true
         );
     }
 
+    /**
+     * @var string $entry
+     * @return object
+     */
     private function createImage($entry)
     {
         return (object) array(
-            'name' => pathinfo($entry, PATHINFO_FILENAME),
+            'caption' => $this->getImageCaption($entry),
             'basename' => $entry,
             'filename' => "{$this->folder}{$entry}",
             'isDir' => false
         );
+    }
+
+    /**
+     * @var string $entry
+     * @return string
+     */
+    private function getImageCaption($entry)
+    {
+        if (extension_loaded('exif')) {
+            $filename = "{$this->folder}$entry";
+            if (exif_imagetype($filename) === IMAGETYPE_JPEG) {
+                $exif = exif_read_data($filename);
+                if (isset($exif['ImageDescription'])) {
+                    return $exif['ImageDescription'];
+                }
+            }
+        }
+        return pathinfo($entry, PATHINFO_FILENAME);
     }
 
     /**
@@ -94,6 +120,6 @@ class ImageService
      */
     private function compareEntries(stdClass $a, stdClass $b)
     {
-        return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->name, $b->name);
+        return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->caption, $b->caption);
     }
 }

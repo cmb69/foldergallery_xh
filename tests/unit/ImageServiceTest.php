@@ -47,13 +47,13 @@ class ImageServiceTest extends PHPUnit_Framework_TestCase
     {
         $expected = array(
             (object) array(
-                'name' => 'foo',
+                'caption' => 'foo',
                 'basename' => 'foo',
                 'filename' => vfsStream::url('root/foo'),
                 'isDir' => true
             ),
             (object) array(
-                'name' => 'image',
+                'caption' => 'image',
                 'basename' => 'image.jpg',
                 'filename' => vfsStream::url('root/image.jpg'),
                 'isDir' => false

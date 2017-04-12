@@ -15,14 +15,14 @@
         <a href="<?=$this->escape($child->url)?>">
             <img src="<?=$this->folderImage()?>">
         </a> 
-        <div><?=$this->escape($child->name)?></div>
+        <div><?=$this->escape($child->caption)?></div>
     </div>
 <?php   else:?>
     <div class="foldergallery_image">
-        <a class="foldergallery_group" href="<?=$this->escape($child->filename)?>" title="<?=$this->escape($child->name)?>">
+        <a class="foldergallery_group" href="<?=$this->escape($child->filename)?>" title="<?=$this->escape($child->caption)?>">
             <img src="<?=$this->escape($child->filename)?>">
         </a>
-        <div><?=$this->escape($child->name)?></div>
+        <div><?=$this->escape($child->caption)?></div>
     </div>
 <?php   endif?>
 <?php endforeach?>

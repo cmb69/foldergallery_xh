@@ -48,7 +48,7 @@
 <h2>Requirements</h2>
 <p>
     Foldergallery_XH is a plugin for CMSimple_XH &ge; 1.6.3. It requires PHP &ge;
-    5.4.0 with the Fileinfo and JSON extensions.
+    5.4.0 with the Fileinfo, JSON and optionally Exif extensions.
 </p>
 </section>
 
@@ -105,7 +105,9 @@
 <h2>Usage</h2>
 <p>
     Prepare the galleries by uploading images into CMSimple_XH's image folder,
-    or a subfolder thereof, either via FTP or a filebrowser.
+    or a subfolder thereof, either via FTP or a filebrowser. The image captions
+    shown by Foldergallery_XH are retrieved from the filename or, if available,
+    the Exif <em>ImageDescription</em> tag stored in the image file.
 </p>
 <p>
     To present all images in the image folder on a page, insert the following
