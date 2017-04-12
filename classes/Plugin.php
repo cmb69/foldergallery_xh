@@ -24,4 +24,35 @@ namespace Foldergallery;
 class Plugin
 {
     const VERSION = '@FOLDERGALLERY_VERSION@';
+
+    public function run()
+    {
+        global $admin, $action, $o;
+
+        XH_registerStandardPluginMenuItems(false);
+        if (XH_wantsPluginAdministration('foldergallery')) {
+            $o .= print_plugin_admin('off');
+            switch ($admin) {
+                case '':
+                    $o .= $this->renderInfo();
+                    break;
+                default:
+                    $o .= plugin_admin_common($action, $admin, 'foldergallery');
+            }
+        }
+    }
+
+    /**
+     * @return string
+     */
+    private function renderInfo()
+    {
+        global $pth;
+
+        $view = new View('info');
+        $view->logo = "{$pth['folder']['plugins']}foldergallery/foldergallery.png";
+        $view->version = self::VERSION;
+        $view->checks = (new SystemCheckService)->getChecks();
+        return (string) $view;
+    }
 }

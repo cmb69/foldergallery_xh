@@ -1,3 +1,6 @@
+/**
+ * Galleries
+ */
 .foldergallery {
     text-align: center;
 }
@@ -10,4 +13,15 @@
 }
 .foldergallery_image img {
     max-height: 64px;
+}
+
+/**
+ * Back-end
+ */
+.foldergallery_logo {
+    float: left;
+    margin: 0 1em 0.5em 0;
+}
+.foldergallery_license {
+    text-align: justify;
 }

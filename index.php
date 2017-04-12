@@ -30,3 +30,5 @@ function foldergallery($basefolder = '')
     $gallery->indexAction();
     return ob_get_clean();
 }
+
+(new Foldergallery\Plugin)->run();
