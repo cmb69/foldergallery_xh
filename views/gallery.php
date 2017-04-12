@@ -10,7 +10,7 @@
     </div>
 <?php   else:?>
     <div class="foldergallery_image">
-        <a href="<?=$this->escape($child->filename)?>">
+        <a class="foldergallery_group" href="<?=$this->escape($child->filename)?>" title="<?=$this->escape($child->name)?>">
             <img src="<?=$this->escape($child->filename)?>">
         </a>
         <div><?=$this->escape($child->name)?></div>

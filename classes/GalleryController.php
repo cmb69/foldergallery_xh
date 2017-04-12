@@ -59,6 +59,7 @@ class GalleryController
     {
         global $pth, $sn, $su;
 
+        $this->includeColorbox();
         $view = new View('gallery');
         $view->locator = new HtmlString($this->showLocator());
         $view->children = $this->findChildren();
@@ -66,6 +67,31 @@ class GalleryController
         $pageName = html_entity_decode($su, ENT_QUOTES, 'UTF-8');
         $view->urlPrefix = "$sn?$pageName&foldergallery_folder={$this->currentSubfolder}";
         $view->render();
+    }
+
+    private function includeColorbox()
+    {
+        global $pth, $plugin_tx, $hjs, $bjs;
+
+        include_once "{$pth['folder']['plugins']}jquery/jquery.inc.php";
+        include_jquery();
+        $colorboxFolder = "{$pth['folder']['plugins']}foldergallery/colorbox/";
+        include_jqueryplugin('colorbox', "{$colorboxFolder}jquery.colorbox-min.js");
+        $hjs .= '<link rel="stylesheet" href="' . $colorboxFolder . 'colorbox.css" type="text/css">';
+        $config = array('rel' => 'foldergallery_group');
+        foreach ($plugin_tx['foldergallery'] as $key => $value) {
+            if (strpos($key, 'colorbox_') === 0) {
+                $config[substr($key, strlen('colorbox_'))] = $value;
+            }
+        }
+        $config = json_encode($config);
+        $bjs .= <<<SCRIPT
+<script>
+jQuery(function ($) {
+    $(".foldergallery_group").colorbox($config);
+});
+</script>
+SCRIPT;
     }
 
     /**
