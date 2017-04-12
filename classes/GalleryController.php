@@ -52,7 +52,7 @@ class GalleryController
 
     /**
      * @return string
-     */    
+     */
     private function getCurrentSubfolder()
     {
         if (!isset($_GET['foldergallery_folder'])) {
@@ -156,7 +156,8 @@ SCRIPT;
             }
             $parts[] = $part;
         }
-        return '<div class="foldergallery_locator">' . implode(XH_hsc($this->lang['locator_separator']), $parts) . '</div>';
+        return '<div class="foldergallery_locator">'
+            . implode(XH_hsc($this->lang['locator_separator']), $parts) . '</div>';
     }
 
     /**
