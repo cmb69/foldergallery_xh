@@ -68,7 +68,7 @@ class GalleryController
         $this->includeColorbox();
         $view = new View('gallery');
         $view->locator = new HtmlString($this->showLocator());
-        $view->children = $this->findChildren();
+        $view->children = (new ImageService("{$this->basefolder}{$this->currentSubfolder}"))->findEntries();
         $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.png";
         $pageName = html_entity_decode($su, ENT_QUOTES, 'UTF-8');
         $view->urlPrefix = "$sn?$pageName&foldergallery_folder={$this->currentSubfolder}";
@@ -98,14 +98,6 @@ jQuery(function ($) {
 });
 </script>
 SCRIPT;
-    }
-
-    /**
-     * @return object[]
-     */
-    private function findChildren()
-    {
-        return (new ImageService("{$this->basefolder}{$this->currentSubfolder}"))->findEntries();
     }
 
     /**
