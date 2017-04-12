@@ -116,7 +116,7 @@ SCRIPT;
         global $sn, $su;
 
         $parts = array();
-        $breadcrumbs = $this->getBreadcrumbs();
+        $breadcrumbs = (new BreadcrumbService($this->currentSubfolder))->getBreadcrumbs();
         foreach ($breadcrumbs as $i => $breadcrumb) {
             $url = "$sn?$su" . (isset($breadcrumb->url) ? XH_hsc("&foldergallery_folder={$breadcrumb->url}") : '');
             if ($i < count($breadcrumbs) - 1) {
@@ -128,21 +128,5 @@ SCRIPT;
         }
         return '<div class="foldergallery_locator">'
             . implode(XH_hsc($this->lang['locator_separator']), $parts) . '</div>';
-    }
-
-    /**
-     * @return object[]
-     */
-    private function getBreadcrumbs()
-    {
-        $parts = explode('/', $this->currentSubfolder);
-        array_pop($parts);
-        $url = '';
-        foreach ($parts as &$part) {
-            $url .= "$part/";
-            $part = (object) array('name' => $part, 'url' => rtrim($url, '/'));
-        }
-        array_unshift($parts, (object) array('name' => $this->lang['locator_start']));
-        return $parts;
     }
 }
