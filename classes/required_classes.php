@@ -19,12 +19,9 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @param string $basefolder
- * @return string
- */
-function foldergallery($basefolder = '')
-{
-    $gallery = new Foldergallery\GalleryController($basefolder);
-    return $gallery->indexAction();
-}
+spl_autoload_register(function ($class) {
+    $parts = explode('\\', $class, 2);
+    if ($parts[0] == 'Foldergallery') {
+        include_once __DIR__ . '/' . $parts[1] . '.php';
+    }
+});
