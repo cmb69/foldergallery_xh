@@ -101,41 +101,11 @@ SCRIPT;
     }
 
     /**
-     * @param string $filename
-     * @return bool
-     */
-    private function isImageFile($filename)
-    {
-        return is_file($filename) && strpos(mime_content_type($filename), 'image/') === 0;
-    }
-
-    /**
      * @return object[]
      */
     private function findChildren()
     {
-        $results = [];
-        $entries = scandir("{$this->basefolder}{$this->currentSubfolder}");
-        foreach ($entries as $entry) {
-            if (strpos($entry, '.') === 0) {
-                continue;
-            }
-            $filename = "{$this->basefolder}{$this->currentSubfolder}$entry";
-            $isDir = is_dir($filename);
-            if (!$isDir && !$this->isImageFile($filename)) {
-                continue;
-            }
-            $results[] = (object) array(
-                'name' => $isDir ? $entry : pathinfo($entry, PATHINFO_FILENAME),
-                'basename' => $entry,
-                'filename' => $filename,
-                'isDir' => $isDir
-            );
-        }
-        usort($results, function ($a, $b) {
-            return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->name, $b->name);
-        });
-        return $results;
+        return (new ImageService("{$this->basefolder}{$this->currentSubfolder}"))->findEntries();
     }
 
     /**
