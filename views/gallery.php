@@ -1,5 +1,14 @@
 <div class="foldergallery">
-<?=$this->locator()?>
+    <div class="foldergallery_locator">
+<?php foreach ($this->breadcrumbs as $breadcrumb):?>
+<?php   if (isset($breadcrumb->url)):?>
+        <a href="<?=$this->escape($breadcrumb->url)?>"><?=$this->escape($breadcrumb->name)?></a>
+        <?=$this->text('locator_separator')?>
+<?php   else:?>
+        <span><?=$this->escape($breadcrumb->name)?></span>
+<?php   endif?>
+<?php endforeach?>
+    </div>
 <?php foreach ($this->children as $child):?>
 <?php   if ($child->isDir):?>
     <div class="foldergallery_folder">

@@ -67,7 +67,7 @@ class GalleryController
 
         $this->includeColorbox();
         $view = new View('gallery');
-        $view->locator = new HtmlString($this->showLocator());
+        $view->breadcrumbs = $this->getBreadcrumbs();
         $view->children = (new ImageService("{$this->basefolder}{$this->currentSubfolder}"))->findEntries();
         $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.png";
         $pageName = html_entity_decode($su, ENT_QUOTES, 'UTF-8');
@@ -103,22 +103,20 @@ SCRIPT;
     /**
      * @return string
      */
-    private function showLocator()
+    private function getBreadcrumbs()
     {
         global $sn, $su;
 
-        $parts = array();
+        $pagename = html_entity_decode($su, ENT_QUOTES, 'UTF-8');
         $breadcrumbs = (new BreadcrumbService($this->currentSubfolder))->getBreadcrumbs();
         foreach ($breadcrumbs as $i => $breadcrumb) {
-            $url = "$sn?$su" . (isset($breadcrumb->url) ? XH_hsc("&foldergallery_folder={$breadcrumb->url}") : '');
+            $url = "$sn?$pagename" . (isset($breadcrumb->url) ? "&foldergallery_folder={$breadcrumb->url}" : '');
             if ($i < count($breadcrumbs) - 1) {
-                $part = '<a href="' . $url . '">' . XH_hsc($breadcrumb->name) . '</a>';
+                $breadcrumb->url = $url;
             } else {
-                $part = XH_hsc($breadcrumb->name);
+                $breadcrumb->url = null;
             }
-            $parts[] = $part;
         }
-        return '<div class="foldergallery_locator">'
-            . implode(XH_hsc($this->lang['locator_separator']), $parts) . '</div>';
+        return $breadcrumbs;
     }
 }
