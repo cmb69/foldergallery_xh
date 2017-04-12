@@ -120,9 +120,9 @@ SCRIPT;
         foreach ($breadcrumbs as $i => $breadcrumb) {
             $url = "$sn?$su" . (isset($breadcrumb->url) ? XH_hsc("&foldergallery_folder={$breadcrumb->url}") : '');
             if ($i < count($breadcrumbs) - 1) {
-                $part = '<a href="' . $url . '">' . $breadcrumb->name . '</a>';
+                $part = '<a href="' . $url . '">' . XH_hsc($breadcrumb->name) . '</a>';
             } else {
-                $part = $breadcrumb->name;
+                $part = XH_hsc($breadcrumb->name);
             }
             $parts[] = $part;
         }
@@ -142,7 +142,7 @@ SCRIPT;
             $url .= "$part/";
             $part = (object) array('name' => $part, 'url' => rtrim($url, '/'));
         }
-        array_unshift($parts, (object) array('name' => XH_hsc($this->lang['locator_start'])));
+        array_unshift($parts, (object) array('name' => $this->lang['locator_start']));
         return $parts;
     }
 }
