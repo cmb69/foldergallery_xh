@@ -64,20 +64,19 @@ class Foldergallery
         $html .= $this->showLocator();
         $children = $this->findChildren();
         foreach ($children as $child) {
-            $filename = "{$this->basefolder}{$this->currentSubfolder}$child";
-            if (is_dir($filename)) {
+            if ($child->isDir) {
                 $html .= '<div class="foldergallery_folder">'
-                    . '<a href="' . "$sn?$su" . '&foldergallery_folder=' . XH_hsc("{$this->currentSubfolder}$child") . '">'
+                    . '<a href="' . "$sn?$su" . '&foldergallery_folder=' . XH_hsc("{$this->currentSubfolder}{$child->basename}") . '">'
                     . '<img src="' . XH_hsc($pth['folder']['plugins']) . 'foldergallery/images/folder.png">'
                     . '</a>'
-                    . '<div>' . XH_hsc($child) . '</div>'
+                    . '<div>' . XH_hsc($child->name) . '</div>'
                     . '</div>';
-            } elseif ($this->isImageFile($filename)) {
+            } else {
                 $html .= '<div class="foldergallery_image">'
-                    . '<a href="' . XH_hsc($filename) . '">'
-                    . '<img src="' . XH_hsc($filename) . '">'
+                    . '<a href="' . XH_hsc($child->filename) . '">'
+                    . '<img src="' . XH_hsc($child->filename) . '">'
                     . '</a>'
-                    . '<div>' . XH_hsc($child) . '</div>'
+                    . '<div>' . XH_hsc($child->name) . '</div>'
                     . '</div>';
             }
         }
@@ -95,15 +94,32 @@ class Foldergallery
     }
 
     /**
-     * @return string[]
+     * @return object[]
      */
     private function findChildren()
     {
+        $result = [];
         $entries = scandir("{$this->basefolder}{$this->currentSubfolder}");
-        natcasesort($entries);
-        return array_filter($entries, function ($entry) {
-            return strpos($entry, '.') !== 0;
+        foreach ($entries as $entry) {
+            if (strpos($entry, '.') === 0) {
+                continue;
+            }
+            $filename = "{$this->basefolder}{$this->currentSubfolder}$entry";
+            $isDir = is_dir($filename);
+            if (!$isDir && !$this->isImageFile($filename)) {
+                continue;
+            }
+            $results[] = (object) array(
+                'name' => $isDir ? $entry : pathinfo($entry, PATHINFO_FILENAME),
+                'basename' => $entry,
+                'filename' => $filename,
+                'isDir' => $isDir
+            );
+        }
+        usort($results, function ($a, $b) {
+            return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->name, $b->name);
         });
+        return $results;
     }
 
     /**
