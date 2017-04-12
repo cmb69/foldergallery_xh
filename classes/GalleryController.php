@@ -39,15 +39,21 @@ class GalleryController
     private $lang;
 
     /**
+     * @var Url
+     */
+    private $pageUrl;
+
+    /**
      * @param string $basefolder
      */
     public function __construct($basefolder)
     {
-        global $pth, $plugin_tx;
+        global $sn, $pth, $plugin_tx;
 
         $this->basefolder = "{$pth['folder']['images']}$basefolder/";
         $this->currentSubfolder = $this->getCurrentSubfolder();
         $this->lang = $plugin_tx['foldergallery'];
+        $this->pageUrl = new Url($sn, $_GET);
     }
 
     /**
@@ -63,15 +69,20 @@ class GalleryController
 
     public function indexAction()
     {
-        global $pth, $sn, $su;
+        global $pth;
 
         $this->includeColorbox();
         $view = new View('gallery');
         $view->breadcrumbs = $this->getBreadcrumbs();
-        $view->children = (new ImageService("{$this->basefolder}{$this->currentSubfolder}"))->findEntries();
+        $children = (new ImageService("{$this->basefolder}{$this->currentSubfolder}"))->findEntries();
+        foreach ($children as $child) {
+            if ($child->isDir) {
+                $folder = "{$this->currentSubfolder}{$child->basename}";
+                $child->url = $this->pageUrl->with('foldergallery_folder', $folder);
+            }
+        }
+        $view->children = $children;
         $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.png";
-        $pageName = html_entity_decode($su, ENT_QUOTES, 'UTF-8');
-        $view->urlPrefix = "$sn?$pageName&foldergallery_folder={$this->currentSubfolder}";
         $view->render();
     }
 
@@ -105,14 +116,14 @@ SCRIPT;
      */
     private function getBreadcrumbs()
     {
-        global $sn, $su;
-
-        $pagename = html_entity_decode($su, ENT_QUOTES, 'UTF-8');
         $breadcrumbs = (new BreadcrumbService($this->currentSubfolder))->getBreadcrumbs();
         foreach ($breadcrumbs as $i => $breadcrumb) {
-            $url = "$sn?$pagename" . (isset($breadcrumb->url) ? "&foldergallery_folder={$breadcrumb->url}" : '');
             if ($i < count($breadcrumbs) - 1) {
-                $breadcrumb->url = $url;
+                if (isset($breadcrumb->url)) {
+                    $breadcrumb->url = $this->pageUrl->with('foldergallery_folder', $breadcrumb->url);
+                } else {
+                    $breadcrumb->url = $this->pageUrl->without('foldergallery_folder');
+                }
             } else {
                 $breadcrumb->url = null;
             }

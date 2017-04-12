@@ -12,7 +12,7 @@
 <?php foreach ($this->children as $child):?>
 <?php   if ($child->isDir):?>
     <div class="foldergallery_folder">
-        <a href="<?=$this->urlPrefix()?><?=$this->escape($child->basename)?>">
+        <a href="<?=$this->escape($child->url)?>">
             <img src="<?=$this->folderImage()?>">
         </a> 
         <div><?=$this->escape($child->name)?></div>
