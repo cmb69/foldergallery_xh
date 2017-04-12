@@ -19,14 +19,28 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * @param string $basefolder
- * @return string
- */
-function foldergallery($basefolder = '')
+namespace Foldergallery;
+
+class HtmlString
 {
-    $gallery = new Foldergallery\GalleryController($basefolder);
-    ob_start();
-    $gallery->indexAction();
-    return ob_get_clean();
+    /**
+     * @var string
+     */
+    private $value;
+
+    /**
+     * @param string $string
+     */
+    public function __construct($string)
+    {
+        $this->value = (string) $string;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->value;
+    }
 }

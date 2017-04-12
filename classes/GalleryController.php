@@ -55,35 +55,17 @@ class GalleryController
         return preg_replace(array('/\\\\/', '/\.{1,2}\//'), '', "{$_GET['foldergallery_folder']}/");
     }
 
-    /**
-     * @return string
-     */
     public function indexAction()
     {
         global $pth, $sn, $su;
 
-        $html = '<div class="foldergallery">';
-        $html .= $this->showLocator();
-        $children = $this->findChildren();
-        foreach ($children as $child) {
-            if ($child->isDir) {
-                $html .= '<div class="foldergallery_folder">'
-                    . '<a href="' . "$sn?$su" . '&foldergallery_folder=' . XH_hsc("{$this->currentSubfolder}{$child->basename}") . '">'
-                    . '<img src="' . XH_hsc($pth['folder']['plugins']) . 'foldergallery/images/folder.png">'
-                    . '</a>'
-                    . '<div>' . XH_hsc($child->name) . '</div>'
-                    . '</div>';
-            } else {
-                $html .= '<div class="foldergallery_image">'
-                    . '<a href="' . XH_hsc($child->filename) . '">'
-                    . '<img src="' . XH_hsc($child->filename) . '">'
-                    . '</a>'
-                    . '<div>' . XH_hsc($child->name) . '</div>'
-                    . '</div>';
-            }
-        }
-        $html .= '</div>';
-        return $html;
+        $view = new View('gallery');
+        $view->locator = new HtmlString($this->showLocator());
+        $view->children = $this->findChildren();
+        $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.png";
+        $pageName = html_entity_decode($su, ENT_QUOTES, 'UTF-8');
+        $view->urlPrefix = "$sn?$pageName&foldergallery_folder={$this->currentSubfolder}";
+        $view->render();
     }
 
     /**
