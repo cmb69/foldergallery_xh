@@ -31,7 +31,7 @@ class GalleryController
     /**
      * @var string
      */
-    private $subfolder;
+    private $currentSubfolder;
 
     /**
      * @var array
@@ -114,7 +114,7 @@ SCRIPT;
      */
     private function findChildren()
     {
-        $result = [];
+        $results = [];
         $entries = scandir("{$this->basefolder}{$this->currentSubfolder}");
         foreach ($entries as $entry) {
             if (strpos($entry, '.') === 0) {
