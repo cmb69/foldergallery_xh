@@ -34,14 +34,20 @@ class GalleryController
     private $subfolder;
 
     /**
+     * @var array
+     */
+    private $lang;
+
+    /**
      * @param string $basefolder
      */
     public function __construct($basefolder)
     {
-        global $pth;
+        global $pth, $plugin_tx;
 
         $this->basefolder = "{$pth['folder']['images']}$basefolder/";
         $this->currentSubfolder = $this->getCurrentSubfolder();
+        $this->lang = $plugin_tx['foldergallery'];
     }
 
     /**
@@ -71,7 +77,7 @@ class GalleryController
 
     private function includeColorbox()
     {
-        global $pth, $plugin_tx, $hjs, $bjs;
+        global $pth, $hjs, $bjs;
 
         include_once "{$pth['folder']['plugins']}jquery/jquery.inc.php";
         include_jquery();
@@ -79,7 +85,7 @@ class GalleryController
         include_jqueryplugin('colorbox', "{$colorboxFolder}jquery.colorbox-min.js");
         $hjs .= '<link rel="stylesheet" href="' . $colorboxFolder . 'colorbox.css" type="text/css">';
         $config = array('rel' => 'foldergallery_group');
-        foreach ($plugin_tx['foldergallery'] as $key => $value) {
+        foreach ($this->lang as $key => $value) {
             if (strpos($key, 'colorbox_') === 0) {
                 $config[substr($key, strlen('colorbox_'))] = $value;
             }
@@ -150,7 +156,7 @@ SCRIPT;
             }
             $parts[] = $part;
         }
-        return '<div class="foldergallery_locator">' . implode(' > ', $parts) . '</div>';
+        return '<div class="foldergallery_locator">' . implode(XH_hsc($this->lang['locator_separator']), $parts) . '</div>';
     }
 
     /**
@@ -165,7 +171,7 @@ SCRIPT;
             $url .= "$part/";
             $part = (object) array('name' => $part, 'url' => rtrim($url, '/'));
         }
-        array_unshift($parts, (object) array('name' => 'Home'));
+        array_unshift($parts, (object) array('name' => XH_hsc($this->lang['locator_start'])));
         return $parts;
     }
 }

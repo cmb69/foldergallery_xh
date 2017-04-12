@@ -1,5 +1,7 @@
 <?php
 
+$plugin_tx['foldergallery']['locator_start']="Start";
+$plugin_tx['foldergallery']['locator_separator']=" > ";
 $plugin_tx['foldergallery']['colorbox_current']="Bild {current} von {total}";
 $plugin_tx['foldergallery']['colorbox_previous']="Zurück";
 $plugin_tx['foldergallery']['colorbox_next']="Vor";
