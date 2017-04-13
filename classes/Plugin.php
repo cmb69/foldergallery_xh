@@ -29,15 +29,17 @@ class Plugin
     {
         global $admin, $action, $o;
 
-        XH_registerStandardPluginMenuItems(false);
-        if (XH_wantsPluginAdministration('foldergallery')) {
-            $o .= print_plugin_admin('off');
-            switch ($admin) {
-                case '':
-                    $o .= $this->renderInfo();
-                    break;
-                default:
-                    $o .= plugin_admin_common($action, $admin, 'foldergallery');
+        if (XH_ADM) {
+            XH_registerStandardPluginMenuItems(false);
+            if (XH_wantsPluginAdministration('foldergallery')) {
+                $o .= print_plugin_admin('off');
+                switch ($admin) {
+                    case '':
+                        $o .= $this->renderInfo();
+                        break;
+                    default:
+                        $o .= plugin_admin_common($action, $admin, 'foldergallery');
+                }
             }
         }
     }
