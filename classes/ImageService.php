@@ -31,11 +31,17 @@ class ImageService
     private $folder;
 
     /**
+     * @var ThumbnailService
+     */
+    private $thumbnailService;
+
+    /**
      * @param string $folder
      */
-    public function __construct($folder)
+    public function __construct($folder, ThumbnailService $thumbnailService)
     {
         $this->folder = $folder;
+        $this->thumbnailService = $thumbnailService;
     }
 
     /**
@@ -79,12 +85,21 @@ class ImageService
      */
     private function createImage($entry)
     {
-        return (object) array(
-            'caption' => $this->getImageCaption($entry),
-            'basename' => $entry,
-            'filename' => "{$this->folder}{$entry}",
-            'isDir' => false
-        );
+        $caption = $this->getImageCaption($entry);
+        $filename = "{$this->folder}{$entry}";
+        $srcset = '';
+        $thumbnail = $this->thumbnailService->makeThumbnail($filename, 128);
+        if ($thumbnail !== $filename) {
+            $srcset .= "$thumbnail 1x";
+            foreach (range(2, 3) as $i) {
+                $thumb = $this->thumbnailService->makeThumbnail($filename, $i * 128);
+                if ($thumb !== $filename) {
+                    $srcset .= ", $thumb {$i}x";
+                }
+            }
+        }
+        $isDir = false;
+        return (object) compact('caption', 'filename', 'thumbnail', 'srcset', 'isDir');
     }
 
     /**

@@ -74,7 +74,8 @@ class GalleryController
         $this->includeColorbox();
         $view = new View('gallery');
         $view->breadcrumbs = $this->getBreadcrumbs();
-        $children = (new ImageService("{$this->basefolder}{$this->currentSubfolder}"))->findEntries();
+        $imageService = new ImageService("{$this->basefolder}{$this->currentSubfolder}", new ThumbnailService);
+        $children = $imageService->findEntries();
         foreach ($children as $child) {
             if ($child->isDir) {
                 $folder = "{$this->currentSubfolder}{$child->basename}";

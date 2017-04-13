@@ -40,7 +40,9 @@ class ImageServiceTest extends PHPUnit_Framework_TestCase
         $im = imagecreatetruecolor(10, 10);
         imagefilledrectangle($im, 0, 0, 9, 9, 0xffffff);
         imagejpeg($im, vfsStream::url('root/image.jpg'));
-        $this->subject = new ImageService(vfsStream::url('root/'));
+        $thumbnailServiceStub = $this->createMock(ThumbnailService::class);
+        $thumbnailServiceStub->method('makeThumbnail')->willReturn('thumb/nail');
+        $this->subject = new ImageService(vfsStream::url('root/'), $thumbnailServiceStub);
     }
 
     public function testFindEntries()
@@ -54,9 +56,10 @@ class ImageServiceTest extends PHPUnit_Framework_TestCase
             ),
             (object) array(
                 'caption' => 'image',
-                'basename' => 'image.jpg',
                 'filename' => vfsStream::url('root/image.jpg'),
-                'isDir' => false
+                'isDir' => false,
+                'thumbnail' => 'thumb/nail',
+                'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x'
             )
         );
         $this->assertEquals($expected, $this->subject->findEntries());

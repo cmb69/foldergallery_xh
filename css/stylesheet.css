@@ -11,9 +11,6 @@
     display: inline-block;
     margin: 1em;
 }
-.foldergallery_image img {
-    max-height: 128px;
-}
 
 /**
  * Back-end

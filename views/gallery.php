@@ -20,7 +20,7 @@
 <?php   else:?>
     <figure class="foldergallery_image">
         <a class="foldergallery_group" href="<?=$this->escape($child->filename)?>" title="<?=$this->escape($child->caption)?>">
-            <img src="<?=$this->escape($child->filename)?>">
+            <img src="<?=$this->escape($child->thumbnail)?>" srcset="<?=$this->escape($child->srcset)?>">
         </a>
         <figcaption><?=$this->escape($child->caption)?></figcaption>
     </figure>

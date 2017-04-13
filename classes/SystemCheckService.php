@@ -50,8 +50,10 @@ class SystemCheckService
             $this->checkPhpVersion('5.4.0'),
             $this->checkExtension('exif', false),
             $this->checkExtension('fileinfo'),
+            $this->checkExtension('gd'),
             $this->checkExtension('json'),
             $this->checkXhVersion('1.6.3'),
+            $this->checkWritability("$this->pluginFolder/cache/"),
             $this->checkWritability("$this->pluginFolder/css/"),
             $this->checkWritability("$this->pluginFolder/languages/")
         );
