@@ -36,6 +36,11 @@ class GalleryController
     /**
      * @var array
      */
+    private $config;
+
+    /**
+     * @var array
+     */
     private $lang;
 
     /**
@@ -48,10 +53,11 @@ class GalleryController
      */
     public function __construct($basefolder)
     {
-        global $sn, $pth, $plugin_tx;
+        global $sn, $pth, $plugin_cf, $plugin_tx;
 
         $this->basefolder = "{$pth['folder']['images']}$basefolder/";
         $this->currentSubfolder = $this->getCurrentSubfolder();
+        $this->config = $plugin_cf['foldergallery'];
         $this->lang = $plugin_tx['foldergallery'];
         $this->pageUrl = new Url($sn, $_GET);
     }
@@ -83,7 +89,7 @@ class GalleryController
             }
         }
         $view->children = $children;
-        $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.png";
+        $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.{$this->config['icon_format']}";
         $view->render();
     }
 
