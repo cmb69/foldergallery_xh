@@ -17,5 +17,6 @@ $plugin_tx['foldergallery']['syscheck_title']="System-Prüfung";
 $plugin_tx['foldergallery']['syscheck_warning']="Warnung";
 $plugin_tx['foldergallery']['syscheck_writable']="'%s' schreibbar ist";
 $plugin_tx['foldergallery']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
+$plugin_tx['foldergallery']['cf_thumb_size']="Die maximale Breite und Höhe der Vorschaubilder in Pixeln.";
 
 ?>

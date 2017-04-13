@@ -36,12 +36,20 @@ class ImageService
     private $thumbnailService;
 
     /**
+     * @var int
+     */
+    private $thumbSize;
+
+    /**
      * @param string $folder
      */
     public function __construct($folder, ThumbnailService $thumbnailService)
     {
+        global $plugin_cf;
+
         $this->folder = $folder;
         $this->thumbnailService = $thumbnailService;
+        $this->thumbSize = $plugin_cf['foldergallery']['thumb_size'];
     }
 
     /**
@@ -88,11 +96,11 @@ class ImageService
         $caption = $this->getImageCaption($entry);
         $filename = "{$this->folder}{$entry}";
         $srcset = '';
-        $thumbnail = $this->thumbnailService->makeThumbnail($filename, 128);
+        $thumbnail = $this->thumbnailService->makeThumbnail($filename, $this->thumbSize);
         if ($thumbnail !== $filename) {
             $srcset .= "$thumbnail 1x";
             foreach (range(2, 3) as $i) {
-                $thumb = $this->thumbnailService->makeThumbnail($filename, $i * 128);
+                $thumb = $this->thumbnailService->makeThumbnail($filename, $i * $this->thumbSize);
                 if ($thumb !== $filename) {
                     $srcset .= ", $thumb {$i}x";
                 }
