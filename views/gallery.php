@@ -11,19 +11,19 @@
     </div>
 <?php foreach ($this->children as $child):?>
 <?php   if ($child->isDir):?>
-    <div class="foldergallery_folder">
+    <figure class="foldergallery_folder">
         <a href="<?=$this->escape($child->url)?>">
             <img src="<?=$this->folderImage()?>">
         </a> 
-        <div><?=$this->escape($child->caption)?></div>
-    </div>
+        <figcaption><?=$this->escape($child->caption)?></figcaption>
+    </figure>
 <?php   else:?>
-    <div class="foldergallery_image">
+    <figure class="foldergallery_image">
         <a class="foldergallery_group" href="<?=$this->escape($child->filename)?>" title="<?=$this->escape($child->caption)?>">
             <img src="<?=$this->escape($child->filename)?>">
         </a>
-        <div><?=$this->escape($child->caption)?></div>
-    </div>
+        <figcaption><?=$this->escape($child->caption)?></figcaption>
+    </figure>
 <?php   endif?>
 <?php endforeach?>
 </div>
