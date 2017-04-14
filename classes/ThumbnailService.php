@@ -39,19 +39,13 @@ class ThumbnailService
 
     /**
      * @param string $srcPath
-     * @param string $dstMax
+     * @param string $dstHeight
      * @return string
      */
-    public function makeThumbnail($srcPath, $dstMax)
+    public function makeThumbnail($srcPath, $dstHeight)
     {
         list($srcWidth, $srcHeight, $type) = getimagesize($srcPath);
-        if ($srcWidth >= $srcHeight) {
-            $dstWidth = $dstMax;
-            $dstHeight = round($dstMax / ($srcWidth / $srcHeight));
-        } else {
-            $dstWidth = round($dstMax / ($srcHeight / $srcWidth));
-            $dstHeight = $dstMax;
-        }
+        $dstWidth = round($srcWidth / $srcHeight * $dstHeight);
         if ($dstWidth > $srcWidth || $dstHeight > $srcHeight
             || $dstWidth == $srcWidth && $dstHeight == $srcHeight
             || $type != IMG_JPEG

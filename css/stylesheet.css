@@ -8,8 +8,26 @@
     text-align: left;
 }
 .foldergallery_folder, .foldergallery_image {
+    position: relative;
     display: inline-block;
-    margin: 1em;
+    margin: 1em 1em 0 0;
+}
+.foldergallery figcaption {
+    position: absolute;
+    left: 0;
+    bottom: 4px;
+    color: white;
+    background: black;
+    opacity: 0.666;
+    border-radius: 0.5em;
+    font-size: smaller;
+    padding: 0.2em 0.5em;
+}
+.foldergallery_image figcaption {
+    display: none;
+}
+.foldergallery_image:hover figcaption {
+    display: block;
 }
 
 /**

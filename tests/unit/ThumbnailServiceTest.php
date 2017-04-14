@@ -57,12 +57,12 @@ class ThumbnailServiceTest extends PHPUnit_Framework_TestCase
 
     public function testLandscape()
     {
-        $expected = 'vfs://root/foldergallery/cache/9dec6781e4447a3c4a0aeb51c642f4812c0e3425.jpg';
+        $expected = 'vfs://root/foldergallery/cache/dc8f662fdb72d3fb9e296b6a4dfd70337d9a45b1.jpg';
         $actual = $this->subject->makeThumbnail(vfsStream::url('root/landscape.jpg'), 128);
         $this->assertSame($expected, $actual);
         $info = getimagesize($expected);
-        $this->assertSame(128, $info[0]);
-        $this->assertSame(96, $info[1]);
+        $this->assertSame(171, $info[0]);
+        $this->assertSame(128, $info[1]);
         $this->assertSame(IMG_JPEG, $info[2]);
     }
 
