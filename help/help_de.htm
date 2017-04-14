@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+<meta http-equiv="content-type" content="text/html;charset=utf-8">
+<title>Foldergallery_XH – Handbuch</title>
+<link rel="stylesheet" type="text/css" href="./stylesheet.css">
+</head>
+
+<body>
+
+<article>
+<h1>Fotogallery_XH – Handbuch</h1>
+<img src="../foldergallery.png" class="logo" alt="Leerer Ordner">
+<p>
+    Fotogallery_XH ermöglicht die Präsentation von Bilder-Galerien auf einer
+    CMSimple_XH Website. Im Gegensatz zu den meisten anderen verfügbaren
+    Galerie-Plugins, werden die Galerien vollkommen automatisch aus den
+    vorhandenen Bildern im einem bestimmten Ordner generiert, so dass die
+    Galerien nicht im Backend vorbereitet werden müssen. Daher ist
+    Foldergallery_XH besonders für eine große Azahl von Bildern geeignet, und
+    ebenso für die Verwendung mit <a
+    href="http://3-magi.net/de/?CMSimple_XH/Extedit_XH">Extedit_XH</a>.
+</p>
+
+<nav id="nav">
+<h2>Inhaltsverzeichnis</h2>
+<ul>
+<li><a href="#notice">Wichtiger Hinweis</a></li>
+<li><a href="#requirements">Voraussetzungen</a></li>
+<li><a href="#installation">Installation</a></li>
+<li><a href="#settings">Einstellungen</a></li>
+<li><a href="#usage">Verwendung</a></li>
+<li><a href="#limitations">Beschränkungen</a></li>
+<li><a href="#license">Lizenz</a></li>
+<li><a href="#credits">Danksagung</a></li>
+</ul>
+</nav>
+
+<section id="notice">
+<h2>Wichtiger Hinweis</h2>
+<p class="important">
+    Foldergallery_XH konnte bisher nicht in diversen Umgebungen getestet werden.
+    Es ist eine so genannte Beta-Version. Vorsicht bei der Verwendung!
+</p>
+</section>
+
+<section id="requirements">
+<h2>Voraussetzungen</h2>
+<p>
+    Foldergallery_XH ist ein Plugin für CMSimple_XH &ge; 1.6.3. Es benötigt PHP
+    &ge; 5.4.0 mit der Fileinfo, GD, JSON und optional der Exif Extension.
+</p>
+</section>
+
+<section id="installation">
+<h2>Installation</h2>
+<p>
+    Die Installation erfolgt wie bei vielen anderen CMSimple_XH-Plugins auch. Im
+    <a href="http://www.cmsimple-xh.org/wiki/doku.php/de:installation">
+    CMSimple_XH Wiki</a> finden sie ausführliche Hinweise.
+</p>
+<ol>
+<li class="important">
+    Sichern Sie die Daten auf Ihrem Server.
+</li>
+<li>
+    Entpacken Sie die ZIP-Datei auf Ihrem Computer.
+</li>
+<li>
+    Laden Sie das gesamte Verzeichnis foldergallery/ auf Ihren Server in das
+    plugins/ Verzeichnis von CMSimple_XH hoch.
+</li>
+<li>
+    Vergeben Sie Schreibrechte für die Unterverzeichnisse cache/, css/, config/
+    und languages/.
+</li>
+<li class="important">
+    Navigieren Sie zu <em>Plugins</em>→<em>Foldergallery</em> im
+    Administrationsbereich, und prüfen Sie, ob alle Voraussetzungen für den
+    Betrieb erfüllt sind.
+</li>
+</ol>
+</section>
+
+<section id="settings">
+<h2>Einstellungen</h2>
+<p>
+    Die Konfiguration des Plugins erfolgt wie bei vielen anderen
+    CMSimple_XH-Plugins auch im Administrationsbereich der Homepage. Wählen Sie
+    unter <em>Plugins</em> → <em>Foldergallery</em> aus.
+</p>
+<p>
+    Sie können die Original-Einstellungen von Foldergallery_XH in der
+    <em>Konfiguration</em> ändern. Beim Überfahren der Hilfe-Icons mit der Maus
+    werden Hinweise zu den Einstellungen angezeigt.
+</p>
+<p>
+    Die Lokalisierung wird unter <em>Sprache</em> vorgenommen. Sie können die
+    Zeichenketten in Ihre eigene Sprache übersetzen, falls keine entsprechende
+    Sprachdatei zur Verfügung steht, oder sie entsprechend Ihren Anforderungen
+    anpassen.
+</p>
+<p>
+    Das Aussehen von Foldergallery_XH kann unter <em>Stylesheet</em> angepasst
+    werden.
+</p>
+</section>
+
+<section id="usage">
+<h2>Verwendung</h2>
+<p>
+    Bereiten Sie die Galerien vor, indem Sie Bilder in den Bilderordner von
+    CMSimple_XH, oder einen Unterordner davon, hoch laden, entweder per FTP oder
+    einem Filebrowser. Die Bildunterschriften werden aus dem Dateinamen
+    gebildet, oder, falls vorhanden, aus dem Exif <em>ImageDescription</em> Tag,
+    der in der Bilddatei gespeichert ist.
+</p>
+<p>
+    Um alle Bilder im Bilderordner auf einer Seite anzuzeigen, fügen Sie
+    folgenden Pluginaufruf ein:
+</p>
+<pre>{{{foldergallery}}}</pre>
+<p>
+    Um nur die Bilder eines Unterordners (und allen Unterordnern dieses Ordners)
+    anzuzeigen, verwenden Sie in etwa folgendes (ersetzen Sie
+    <code>UNTERORDNERNAME</code> durch den tatsächlichen Namen des
+    Unterordners):
+</p>
+<pre>{{{foldergallery 'UNTERORDNERNAME'}}}</pre>
+</section>
+
+<section id="limitations">
+<h2>Beschränkungen</h2>
+<p>
+    Derzeit kann nur eine einzige Galerie auf jeder Seite angezeigt werden.
+</p>
+<p>
+    Obgleich Foldergallery_XH dazu da ist, um mit allen für das Web geeigneten
+    Bildformaten umzugehen, werden Thumbnails und Exif Metadaten
+    Bildunterschriften nur für JPEG Bilder unterstützt.
+</p>
+</section>
+
+<section id="license">
+<h2>Lizenz</h2>
+<p>
+    Fotogallery_XH kann unter Einhaltung der <a
+    href="http://www.gnu.org/licenses/gpl.html">GPLv3</a> verwendet werden.
+</p>
+<p>
+    &copy; 2017 Christoph M. Becker
+</p>
+</section>
+
+<section id="credits">
+<h2>Danksagung</h2>
+<p>
+    Dieses Plugin wurde von dem <a
+    href="https://www.drupal.org/project/fast_gallery">Fast Gallery</a> Drupal
+    Module inspiriert.
+</p>
+<p>
+    Fotogallery_XH verwendet <a
+    href="http://www.jacklmoore.com/colorbox/">Colorbox</a> von Jack Moore.
+    Danke für die Veröffentlichung dieses großartigen Lighbox-Clones unter MIT
+    Lizenz.
+</p>
+<p>
+    Das Pluginlogo wurde von <a href="http://www.everaldo.com/">Everaldo
+    Coelho</a> gestaltet. Vielen Dank für die Veröffentlichung dieses Icons
+    unter GPL.
+</p>
+
+<p>
+    Das Ordnericon wurde von <a
+    href="https://commons.wikimedia.org/wiki/File:Human-folder.svg">Wikimedia
+    Commons</a> übernommen. Vielen Dank für die Bereitstellung dieses Icons
+    unter CC BY-SA 2.5.
+</p>
+
+<p>
+    Vielen Dank an die Gemeinschaft im <a
+    href="http://www.cmsimpleforum.com/">CMSimple_XH-Forum</a> für Tipps,
+    Anregungen und das Testen. Besonders möchte ich frase und lck für das Testen
+    und Feedback zu einem frühen Entwicklungsstand danken.
+</p>
+<p>
+    Zu guter Letzt vielen Dank an <a href="http://harteg.dk/">Peter Harteg</a>,
+    den "Vater" von CMSimple, und allen Entwicklern von <a
+    href="http://www.cmsimple-xh.org/">CMSimple_XH</a>, ohne die dieses
+    fantastische CMS nicht existieren würde.
+</p>
+</section>
+
+</article>
+
+</body>
+
+</html>
