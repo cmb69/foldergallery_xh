@@ -102,7 +102,7 @@ class GalleryController
         $colorboxFolder = "{$pth['folder']['plugins']}foldergallery/colorbox/";
         include_jqueryplugin('colorbox', "{$colorboxFolder}jquery.colorbox-min.js");
         $hjs .= '<link rel="stylesheet" href="' . $colorboxFolder . 'colorbox.css" type="text/css">';
-        $config = array('rel' => 'foldergallery_group');
+        $config = array('rel' => 'foldergallery_group', 'maxWidth' => '100%', 'maxHeight' => '100%');
         foreach ($this->lang as $key => $value) {
             if (strpos($key, 'colorbox_') === 0) {
                 $config[substr($key, strlen('colorbox_'))] = $value;
