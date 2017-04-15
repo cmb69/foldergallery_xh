@@ -132,6 +132,14 @@
     While Foldergallery_XH is supposed to work with all image formats suitable
     for the Web, only JPEG images support thumbnails and Exif metadata captions.
 </p>
+<p>
+    It takes some time to create the thumbnails, so many large images in the
+    same folder may trigger a PHP timeout (CMSimple_XH reports a fatal error in
+    this case). You may have to refresh your browser several times
+    (<code>F5</code>), until all thumbnails have been created. To avoid that
+    this happens to visitors of your website, it is recommended to have a look
+    at the folder preview immediately after uploading a bunch of images.
+</p>
 </section>
 
 <section id="license">
