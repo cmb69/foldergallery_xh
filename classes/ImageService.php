@@ -79,12 +79,43 @@ class ImageService
      */
     private function createDir($entry)
     {
+        $filename = "{$this->folder}{$entry}";
+        $images = $this->firstImagesIn($entry);
+        $srcset = '';
+        $thumbnail = $this->thumbnailService->makeFolderThumbnail($filename, $images, $this->thumbSize);
+        $srcset .= "$thumbnail 1x";
+        foreach (range(2, 3) as $i) {
+            $thumb = $this->thumbnailService->makeFolderThumbnail($filename, $images, $i * $this->thumbSize);
+            $srcset .= ", $thumb {$i}x";
+        }
         return (object) array(
             'caption' => $entry,
             'basename' => $entry,
             'filename' => "{$this->folder}{$entry}",
+            'thumbnail' => $thumbnail,
+            'srcset' => $srcset,
             'isDir' => true
         );
+    }
+
+    /**
+     * @var string $folder
+     * @return string[]
+     */
+    private function firstImagesIn($folder)
+    {
+        $folder = "{$this->folder}$folder/";
+        $result = [];
+        foreach (scandir($folder) as $basename) {
+            $filename = "{$folder}$basename";
+            if ($basename[0] !== '.' && $this->isImageFile($filename, 'jpeg')) {
+                $result[] = $basename;
+            }
+            if (count($result) === 2) {
+                break;
+            }
+        }
+        return $result;
     }
 
     /**
@@ -130,11 +161,12 @@ class ImageService
 
     /**
      * @param string $filename
+     * @param string $subtype
      * @return bool
      */
-    private function isImageFile($filename)
+    private function isImageFile($filename, $subtype = '')
     {
-        return is_file($filename) && strpos(mime_content_type($filename), 'image/') === 0;
+        return is_file($filename) && strpos(mime_content_type($filename), "image/$subtype") === 0;
     }
 
     /**

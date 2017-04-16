@@ -38,6 +38,53 @@ class ThumbnailService
     }
 
     /**
+     * @param string $scrPath
+     * @param string[] $images
+     * @param int $dstHeight
+     * @return string
+     */
+    public function makeFolderThumbnail($srcPath, array $images, $dstHeight)
+    {
+        $dstPath = $this->cache . sha1("$srcPath." . implode('.', $images) . ".$dstHeight") . '.jpg';
+        $dst = imagecreatetruecolor($dstHeight, $dstHeight);
+        imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, 0xffdd44);
+        foreach ($images as $i => $basename) {
+            $this->copyResizedAndCropped($dst, "$srcPath/$basename", $i);
+        }
+        imagejpeg($dst, $dstPath);
+        return $dstPath;
+    }
+
+    /**
+     * @param resource $im
+     * @param string $filename
+     * @param int $index
+     */
+    private function copyResizedAndCropped($im, $filename, $index)
+    {
+        $im2 = imagecreatefromjpeg($filename);
+        $w = imagesx($im2);
+        $h = imagesy($im2);
+        $d = $w - $h;
+        if ($d >= 0) {
+            $sx = round($d / 2);
+            $sy = 0;
+            $sw = $w - $d;
+            $sh = $h;
+        } else {
+            $d = abs($d);
+            $sx = 0;
+            $sy = round($d / 2);
+            $sw = $w;
+            $sh = $h - $d;
+        }
+        $size = imagesx($im);
+        $dx = $dy = ($index * 5 + 1)/16 * $size;
+        $dw = $dh = 9/16 * $size;
+        imagecopyresampled($im, $im2, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
+    }
+
+    /**
      * @param string $srcPath
      * @param string $dstHeight
      * @return string
