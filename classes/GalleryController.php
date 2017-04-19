@@ -89,7 +89,6 @@ class GalleryController
             }
         }
         $view->children = $children;
-        $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.{$this->config['icon_format']}";
         $view->render();
     }
 

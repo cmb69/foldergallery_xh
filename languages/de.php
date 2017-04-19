@@ -18,6 +18,6 @@ $plugin_tx['foldergallery']['syscheck_warning']="Warnung";
 $plugin_tx['foldergallery']['syscheck_writable']="'%s' schreibbar ist";
 $plugin_tx['foldergallery']['syscheck_xhversion']="die CMSimple_XH-Version ≥ %s";
 $plugin_tx['foldergallery']['cf_thumb_size']="Die Höhe der Vorschaubilder in Pixeln.";
-$plugin_tx['foldergallery']['cf_icon_format']="Das Bildformat des Ordner-Icons. \"svg\" bietet bessere Qualität auf modernen Smartphones, aber wird von alten Browsern wie IE 8 nicht unterstützt.";
+$plugin_tx['foldergallery']['cf_folder_background']="Ein hexadezimaler RGB Farbwert im Format RRGGBB.";
 
 ?>

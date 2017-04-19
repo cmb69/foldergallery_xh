@@ -18,4 +18,3 @@ $plugin_tx['foldergallery']['syscheck_warning']="upozornenie";
 $plugin_tx['foldergallery']['syscheck_writable']="'%s' umožňuje zápis";
 $plugin_tx['foldergallery']['syscheck_xhversion']="CMSimple_XH verzia ≥ %s";
 $plugin_tx['foldergallery']['cf_thumb_size']="Výška náhľadov v pixeloch (px).";
-$plugin_tx['foldergallery']['cf_icon_format']="Formát ikony adresára. \"svg\" poskytuje lepšiu kvalitu na moderných smartfónoch, ale staršie prehliadače ju nepodporujú (napr. IE 8).";

@@ -30,11 +30,17 @@ class ThumbnailService
      */
     private $cache;
 
+    /**
+     * @var int
+     */
+    private $folderBackground;
+
     public function __construct()
     {
-        global $pth;
+        global $pth, $plugin_cf;
 
         $this->cache = "{$pth['folder']['plugins']}foldergallery/cache/";
+        $this->folderBackground = hexdec($plugin_cf['foldergallery']['folder_background']);
     }
 
     /**
@@ -47,7 +53,7 @@ class ThumbnailService
     {
         $dstPath = $this->cache . sha1("$srcPath." . implode('.', $images) . ".$dstHeight") . '.jpg';
         $dst = imagecreatetruecolor($dstHeight, $dstHeight);
-        imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, 0xffdd44);
+        imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, $this->folderBackground);
         foreach ($images as $i => $basename) {
             $this->copyResizedAndCropped($dst, "$srcPath/$basename", $i);
         }
