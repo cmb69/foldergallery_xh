@@ -13,7 +13,7 @@
 <?php   if ($child->isDir):?>
     <figure class="foldergallery_folder">
         <a href="<?=$this->escape($child->url)?>">
-            <img src="<?=$this->folderImage()?>">
+            <img src="<?=$this->escape($child->thumbnail)?>" srcset="<?=$this->escape($child->srcset)?>">
         </a> 
         <figcaption><?=$this->escape($child->caption)?></figcaption>
     </figure>

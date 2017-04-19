@@ -42,6 +42,7 @@ class ImageServiceTest extends PHPUnit_Framework_TestCase
         imagejpeg($im, vfsStream::url('root/image.jpg'));
         $thumbnailServiceStub = $this->createMock(ThumbnailService::class);
         $thumbnailServiceStub->method('makeThumbnail')->willReturn('thumb/nail');
+        $thumbnailServiceStub->method('makeFolderThumbnail')->willReturn('thumb/nail');
         $this->subject = new ImageService(vfsStream::url('root/'), $thumbnailServiceStub);
     }
 
@@ -52,7 +53,9 @@ class ImageServiceTest extends PHPUnit_Framework_TestCase
                 'caption' => 'foo',
                 'basename' => 'foo',
                 'filename' => vfsStream::url('root/foo'),
-                'isDir' => true
+                'isDir' => true,
+                'thumbnail' => 'thumb/nail',
+                'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x'
             ),
             (object) array(
                 'caption' => 'image',
