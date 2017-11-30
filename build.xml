@@ -65,7 +65,6 @@
         <move todir="dist">
             <fileset dir="export">
                 <exclude name="build.xml"/>
-                <exclude name="composer.*"/>
                 <exclude name="coverage.xml"/>
                 <exclude name="pax_global_header"/>
                 <exclude name="phpcompatinfo.*"/>
