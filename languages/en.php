@@ -19,5 +19,3 @@ $plugin_tx['foldergallery']['syscheck_writable']="'%s' is writable";
 $plugin_tx['foldergallery']['syscheck_xhversion']="CMSimple_XH version ≥ %s";
 $plugin_tx['foldergallery']['cf_thumb_size']="The height of the thumbnails in pixels.";
 $plugin_tx['foldergallery']['cf_folder_background']="A hexadecimal RGB color value with the format RRGGBB.";
-
-?>
