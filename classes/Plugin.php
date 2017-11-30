@@ -23,7 +23,7 @@ namespace Foldergallery;
 
 class Plugin
 {
-    const VERSION = '@FOLDERGALLERY_VERSION@';
+    const VERSION = '@PLUGIN_VERSION@';
 
     public function run()
     {
