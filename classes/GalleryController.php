@@ -75,8 +75,6 @@ class GalleryController
 
     public function indexAction()
     {
-        global $pth;
-
         $this->includeColorbox();
         $view = new View('gallery');
         $view->breadcrumbs = $this->getBreadcrumbs();
