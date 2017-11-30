@@ -108,7 +108,7 @@ class ImageService
         $result = [];
         foreach (scandir($folder) as $basename) {
             $filename = "{$folder}$basename";
-            if ($basename[0] !== '.' && $this->isImageFile($filename, 'jpeg')) {
+            if ($basename[0] !== '.' && $this->isImageFile($filename)) {
                 $result[] = $basename;
             }
             if (count($result) === 2) {
@@ -161,12 +161,11 @@ class ImageService
 
     /**
      * @param string $filename
-     * @param string $subtype
      * @return bool
      */
-    private function isImageFile($filename, $subtype = '')
+    private function isImageFile($filename)
     {
-        return is_file($filename) && strpos(mime_content_type($filename), "image/$subtype") === 0;
+        return is_file($filename) && strpos(mime_content_type($filename), "image/jpeg") === 0;
     }
 
     /**
