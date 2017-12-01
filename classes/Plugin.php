@@ -21,6 +21,8 @@
 
 namespace Foldergallery;
 
+use Pfw\View\View;
+
 class Plugin
 {
     const VERSION = '@PLUGIN_VERSION@';
@@ -51,10 +53,15 @@ class Plugin
     {
         global $pth;
 
-        $view = new View('info');
-        $view->logo = "{$pth['folder']['plugins']}foldergallery/foldergallery.png";
-        $view->version = self::VERSION;
-        $view->checks = (new SystemCheckService)->getChecks();
-        return (string) $view;
+        ob_start();
+        (new View('foldergallery'))
+            ->template('info')
+            ->data([
+                'logo' => "{$pth['folder']['plugins']}foldergallery/foldergallery.png",
+                'version' => self::VERSION,
+                'checks' => (new SystemCheckService)->getChecks()
+            ])
+            ->render();
+        return ob_get_clean();
     }
 }

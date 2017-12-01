@@ -21,6 +21,8 @@
 
 namespace Foldergallery;
 
+use Pfw\View\View;
+
 class GalleryController
 {
     /**
@@ -76,8 +78,6 @@ class GalleryController
     public function indexAction()
     {
         $this->includeColorbox();
-        $view = new View('gallery');
-        $view->breadcrumbs = $this->getBreadcrumbs();
         $imageService = new ImageService("{$this->basefolder}{$this->currentSubfolder}", new ThumbnailService);
         $children = $imageService->findEntries();
         foreach ($children as $child) {
@@ -86,8 +86,13 @@ class GalleryController
                 $child->url = $this->pageUrl->with('foldergallery_folder', $folder);
             }
         }
-        $view->children = $children;
-        $view->render();
+        (new View('foldergallery'))
+            ->template('gallery')
+            ->data([
+                'breadcrumbs' => $this->getBreadcrumbs(),
+                'children' => $children
+            ])
+            ->render();
     }
 
     private function includeColorbox()

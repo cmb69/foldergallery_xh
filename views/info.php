@@ -1,6 +1,6 @@
 <h1>Foldergallery</h1>
-<img src="<?=$this->logo()?>" class="foldergallery_logo" alt="<?=$this->text('alt_logo')?>">
-<p>Version: <?=$this->version()?></p>
+<img src="<?=$logo?>" class="foldergallery_logo" alt="<?=$this->text('alt_logo')?>">
+<p>Version: <?=$version?></p>
 <p>
     Copyright 2017 <a href="http://3-magi.net/">Christoph M. Becker</a>
 </p>
@@ -23,7 +23,7 @@
 </p>
 <h2><?=$this->text('syscheck_title')?></h2>
 <div class="foldergallery_syscheck">
-<?php foreach ($this->checks as $check):?>
-    <p class="xh_<?=$this->escape($check->state)?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
+<?php foreach ($checks as $check):?>
+    <p class="xh_<?=$check->state?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
 <?php endforeach?>
 </div>
