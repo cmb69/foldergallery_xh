@@ -49,7 +49,6 @@ class SystemCheckService
         return array(
             $this->checkPhpVersion('5.4.0'),
             $this->checkExtension('exif', false),
-            $this->checkExtension('fileinfo'),
             $this->checkExtension('gd'),
             $this->checkExtension('json'),
             $this->checkXhVersion('1.6.3'),

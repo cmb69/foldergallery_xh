@@ -165,7 +165,8 @@ class ImageService
      */
     private function isImageFile($filename)
     {
-        return is_file($filename) && strpos(mime_content_type($filename), "image/jpeg") === 0;
+        return is_file($filename)
+            && in_array(pathinfo($filename, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'JPG', 'JPEG']);
     }
 
     /**
