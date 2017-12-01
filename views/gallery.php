@@ -1,7 +1,7 @@
 <div class="foldergallery">
     <div class="foldergallery_locator">
 <?php foreach ($breadcrumbs as $breadcrumb):?>
-<?php   if (isset($breadcrumb->url)):?>
+<?php   if ($breadcrumb->isLink):?>
         <a href="<?=$breadcrumb->url?>"><?=$breadcrumb->name?></a>
         <?=$this->text('locator_separator')?>
 <?php   else:?>

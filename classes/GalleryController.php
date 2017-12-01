@@ -134,8 +134,10 @@ SCRIPT;
                 } else {
                     $breadcrumb->url = $this->pageUrl->without('foldergallery_folder');
                 }
+                $breadcrumb->isLink = true;
             } else {
                 $breadcrumb->url = null;
+                $breadcrumb->isLink = false;
             }
         }
         return $breadcrumbs;
