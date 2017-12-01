@@ -56,7 +56,7 @@ class GalleryController
      */
     public function __construct($basefolder)
     {
-        global $sn, $pth, $plugin_cf, $plugin_tx;
+        global $pth, $plugin_cf, $plugin_tx;
 
         $this->basefolder = "{$pth['folder']['images']}$basefolder/";
         $this->currentSubfolder = $this->getCurrentSubfolder();
