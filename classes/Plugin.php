@@ -66,6 +66,8 @@ class Plugin
                     ->extension('gd')
                     ->extension('json')
                     ->minXhVersion('1.6.3')
+                    ->plugin('pfw')
+                    ->plugin('jquery')
                     ->writable("{$pth['folder']['plugins']}foldergallery/cache/")
                     ->writable("{$pth['folder']['plugins']}foldergallery/config/")
                     ->writable("{$pth['folder']['plugins']}foldergallery/css/")
