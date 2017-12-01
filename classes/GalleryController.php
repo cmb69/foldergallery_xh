@@ -21,6 +21,7 @@
 
 namespace Foldergallery;
 
+use Pfw\Url;
 use Pfw\View\View;
 
 class GalleryController
@@ -61,7 +62,7 @@ class GalleryController
         $this->currentSubfolder = $this->getCurrentSubfolder();
         $this->config = $plugin_cf['foldergallery'];
         $this->lang = $plugin_tx['foldergallery'];
-        $this->pageUrl = new Url($sn, $_GET);
+        $this->pageUrl = Url::getCurrent();
     }
 
     /**
