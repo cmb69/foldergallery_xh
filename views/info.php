@@ -24,6 +24,6 @@
 <h2><?=$this->text('syscheck_title')?></h2>
 <div class="foldergallery_syscheck">
 <?php foreach ($checks as $check):?>
-    <p class="xh_<?=$check->state?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
+    <p class="xh_<?=$check->getState()?>"><?=$this->text('syscheck_message', $check->getLabel(), $check->getStateLabel())?></p>
 <?php endforeach?>
 </div>

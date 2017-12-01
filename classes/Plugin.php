@@ -21,6 +21,7 @@
 
 namespace Foldergallery;
 
+use Pfw\SystemCheckService;
 use Pfw\View\View;
 
 class Plugin
@@ -59,7 +60,17 @@ class Plugin
             ->data([
                 'logo' => "{$pth['folder']['plugins']}foldergallery/foldergallery.png",
                 'version' => self::VERSION,
-                'checks' => (new SystemCheckService)->getChecks()
+                'checks' => (new SystemCheckService)
+                    ->minPhpVersion('5.4.0')
+                    ->extension('exif')
+                    ->extension('gd')
+                    ->extension('json')
+                    ->minXhVersion('1.6.3')
+                    ->writable("{$pth['folder']['plugins']}foldergallery/cache/")
+                    ->writable("{$pth['folder']['plugins']}foldergallery/config/")
+                    ->writable("{$pth['folder']['plugins']}foldergallery/css/")
+                    ->writable("{$pth['folder']['plugins']}foldergallery/languages/")
+                    ->getChecks()
             ])
             ->render();
         return ob_get_clean();
