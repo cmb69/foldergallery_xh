@@ -147,12 +147,11 @@ class ImageService
      */
     private function getImageCaption($entry)
     {
-        if (extension_loaded('exif')) {
-            $filename = "{$this->folder}$entry";
-            if (exif_imagetype($filename) === IMAGETYPE_JPEG) {
-                $exif = exif_read_data($filename);
-                if (isset($exif['ImageDescription'])) {
-                    return $exif['ImageDescription'];
+        if (getimagesize("{$this->folder}$entry", $info)) {
+            if (isset($info['APP13'])) {
+                $iptc = iptcparse($info['APP13']);
+                if (isset($iptc['2#105'][0])) {
+                    return $iptc['2#105'][0];
                 }
             }
         }

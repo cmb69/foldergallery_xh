@@ -62,7 +62,6 @@ class Plugin
                 'version' => self::VERSION,
                 'checks' => (new SystemCheckService)
                     ->minPhpVersion('5.4.0')
-                    ->extension('exif')
                     ->extension('gd')
                     ->extension('json')
                     ->minXhVersion('1.6.3')
