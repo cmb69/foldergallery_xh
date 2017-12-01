@@ -29,14 +29,3 @@
 .foldergallery_image:hover figcaption {
     display: block;
 }
-
-/**
- * Back-end
- */
-.foldergallery_logo {
-    float: left;
-    margin: 0.5em 1em 0.5em 0;
-}
-.foldergallery_license {
-    text-align: justify;
-}
