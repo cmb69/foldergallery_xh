@@ -21,9 +21,6 @@
 
 namespace Foldergallery;
 
-use Pfw\SystemCheckService;
-use Pfw\View\View;
-
 class Plugin
 {
     const VERSION = '@PLUGIN_VERSION@';
@@ -38,42 +35,14 @@ class Plugin
                 $o .= print_plugin_admin('off');
                 switch ($admin) {
                     case '':
-                        $o .= $this->renderInfo();
+                        ob_start();
+                        (new InfoController)->defaultAction();
+                        $o .= ob_get_clean();
                         break;
                     default:
                         $o .= plugin_admin_common($action, $admin, 'foldergallery');
                 }
             }
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function renderInfo()
-    {
-        global $pth;
-
-        ob_start();
-        (new View('foldergallery'))
-            ->template('info')
-            ->data([
-                'logo' => "{$pth['folder']['plugins']}foldergallery/foldergallery.png",
-                'version' => self::VERSION,
-                'checks' => (new SystemCheckService)
-                    ->minPhpVersion('5.4.0')
-                    ->extension('gd')
-                    ->extension('json')
-                    ->minXhVersion('1.6.3')
-                    ->plugin('pfw')
-                    ->plugin('jquery')
-                    ->writable("{$pth['folder']['plugins']}foldergallery/cache/")
-                    ->writable("{$pth['folder']['plugins']}foldergallery/config/")
-                    ->writable("{$pth['folder']['plugins']}foldergallery/css/")
-                    ->writable("{$pth['folder']['plugins']}foldergallery/languages/")
-                    ->getChecks()
-            ])
-            ->render();
-        return ob_get_clean();
     }
 }
