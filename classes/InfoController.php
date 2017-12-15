@@ -43,7 +43,7 @@ class InfoController
                     ->extension('gd')
                     ->extension('json')
                     ->minXhVersion('1.6.3')
-                    ->plugin('pfw')
+                    ->minPfwVersion('0.2.0')
                     ->plugin('jquery')
                     ->writable("{$pth['folder']['plugins']}foldergallery/cache/")
                     ->writable("{$pth['folder']['plugins']}foldergallery/config/")
