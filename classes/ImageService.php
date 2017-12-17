@@ -70,7 +70,7 @@ class ImageService
             }
         }
         usort($result, function ($a, $b) {
-            return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->caption, $b->caption);
+            return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->filename, $b->filename);
         });
         return $result;
     }
