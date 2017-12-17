@@ -69,7 +69,9 @@ class ImageService
                 $result[] = $this->createImage($entry);
             }
         }
-        usort($result, array($this, 'compareEntries'));
+        usort($result, function ($a, $b) {
+            return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->caption, $b->caption);
+        });
         return $result;
     }
 
@@ -166,14 +168,5 @@ class ImageService
     {
         return is_file($filename)
             && in_array(pathinfo($filename, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'JPG', 'JPEG']);
-    }
-
-    /**
-     * @return int
-     * @SuppressWarnings(PHPMD.UnusedPrivateMethod)
-     */
-    private function compareEntries(stdClass $a, stdClass $b)
-    {
-        return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->caption, $b->caption);
     }
 }
