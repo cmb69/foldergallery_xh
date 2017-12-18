@@ -10,3 +10,4 @@ $plugin_tx['foldergallery']['colorbox_imgError']="This image failed to load.";
 $plugin_tx['foldergallery']['alt_logo']="Empty Folder";
 $plugin_tx['foldergallery']['cf_thumb_size']="The height of the thumbnails in pixels.";
 $plugin_tx['foldergallery']['cf_folder_background']="A hexadecimal RGB color value with the format RRGGBB.";
+$plugin_tx['foldergallery']['cf_frontend']="The front-end for viewing the galleries.";

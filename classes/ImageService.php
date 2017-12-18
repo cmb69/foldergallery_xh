@@ -162,7 +162,9 @@ class ImageService
             }
         }
         $isDir = false;
-        return (object) compact('caption', 'filename', 'thumbnail', 'srcset', 'isDir');
+        list($width, $height) = getimagesize($filename);
+        $size = "{$width}x{$height}";
+        return (object) compact('caption', 'filename', 'thumbnail', 'srcset', 'isDir', 'size');
     }
 
     /**

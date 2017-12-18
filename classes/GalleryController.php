@@ -78,7 +78,10 @@ class GalleryController
 
     public function indexAction()
     {
-        $this->includeColorbox();
+        global $plugin_cf;
+
+        $frontend = $plugin_cf['foldergallery']['frontend'];
+        $this->{"include$frontend"}();
         $imageService = new ImageService("{$this->basefolder}{$this->currentSubfolder}", new ThumbnailService);
         $children = $imageService->findEntries();
         foreach ($children as $child) {
@@ -94,6 +97,38 @@ class GalleryController
                 'children' => $children
             ])
             ->render();
+    }
+
+    private function includePhotoswipe()
+    {
+        global $hjs, $bjs, $pth;
+
+        $hjs .= sprintf(
+            '<link rel="stylesheet" href="%sfoldergallery/lib/photoswipe/photoswipe.css">',
+            $pth['folder']['plugins']
+        );
+        $hjs .= sprintf(
+            '<link rel="stylesheet" href="%sfoldergallery/lib/photoswipe/default-skin/default-skin.css">',
+            $pth['folder']['plugins']
+        );
+        $hjs .= sprintf(
+            '<script src="%sfoldergallery/lib/photoswipe/photoswipe.min.js"></script>',
+            $pth['folder']['plugins']
+        );
+        $hjs .= sprintf(
+            '<script src="%sfoldergallery/lib/photoswipe/photoswipe-ui-default.min.js"></script>',
+            $pth['folder']['plugins']
+        );
+        ob_start();
+        (new View('foldergallery'))
+            ->template('photoswipe')
+            ->render();
+        $bjs .= ob_get_clean();
+        $filename = "{$pth['folder']['plugins']}foldergallery/foldergallery.min.js";
+        if (!file_exists($filename)) {
+            $filename = "{$pth['folder']['plugins']}foldergallery/foldergallery.js";
+        }
+        $bjs .= sprintf('<script src="%s"></script>', $filename);
     }
 
     private function includeColorbox()

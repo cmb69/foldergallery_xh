@@ -10,3 +10,4 @@ $plugin_tx['foldergallery']['colorbox_imgError']="Dieses Bild konnte nicht gelad
 $plugin_tx['foldergallery']['alt_logo']="Leerer Ordner";
 $plugin_tx['foldergallery']['cf_thumb_size']="Die Höhe der Vorschaubilder in Pixeln.";
 $plugin_tx['foldergallery']['cf_folder_background']="Ein hexadezimaler RGB Farbwert im Format RRGGBB.";
+$plugin_tx['foldergallery']['cf_frontend']="Das Frontend zum Betrachten der Galerien.";
