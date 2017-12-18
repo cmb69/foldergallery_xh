@@ -9,21 +9,23 @@
 <?php   endif?>
 <?php endforeach?>
     </div>
+    <div class="foldergallery_figures">
 <?php foreach ($children as $child):?>
 <?php   if ($child->isDir):?>
-    <figure class="foldergallery_folder">
-        <a href="<?=$child->url?>">
-            <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>">
-        </a> 
-        <figcaption><?=$child->caption?></figcaption>
-    </figure>
+        <figure class="foldergallery_folder">
+            <a href="<?=$child->url?>">
+                <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>">
+            </a> 
+            <figcaption><?=$child->caption?></figcaption>
+        </figure>
 <?php   else:?>
-    <figure class="foldergallery_image">
-        <a class="foldergallery_group" href="<?=$child->filename?>" title="<?=$child->caption?>" data-size="<?=$child->size?>">
-            <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>">
-        </a>
-        <figcaption><?=$child->caption?></figcaption>
-    </figure>
+        <figure class="foldergallery_image">
+            <a class="foldergallery_group" href="<?=$child->filename?>" data-size="<?=$child->size?>">
+                <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>">
+            </a>
+            <figcaption><?=$child->caption?></figcaption>
+        </figure>
 <?php   endif?>
 <?php endforeach?>
+    </div>
 </div>
