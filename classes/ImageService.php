@@ -41,6 +41,11 @@ class ImageService
     private $thumbSize;
 
     /**
+     * @var ?array
+     */
+    private $data;
+
+    /**
      * @param string $folder
      */
     public function __construct($folder, ThumbnailService $thumbnailService)
@@ -50,6 +55,7 @@ class ImageService
         $this->folder = $folder;
         $this->thumbnailService = $thumbnailService;
         $this->thumbSize = $plugin_cf['foldergallery']['thumb_size'];
+        $this->data = null;
     }
 
     /**
@@ -57,6 +63,7 @@ class ImageService
      */
     public function findEntries()
     {
+        $this->readImageData();
         $result = [];
         foreach (scandir($this->folder) as $entry) {
             if (strpos($entry, '.') === 0) {
@@ -76,6 +83,21 @@ class ImageService
     }
 
     /**
+     * @return void
+     */
+    private function readImageData()
+    {
+        global $sl;
+
+        if (is_readable("{$this->folder}foldergallery.php")) {
+            $data = include "{$this->folder}foldergallery.php";
+            if (isset($data[$sl])) {
+                $this->data = $data[$sl];
+            }
+        }
+    }
+
+    /**
      * @var string $entry
      * @return object
      */
@@ -91,7 +113,7 @@ class ImageService
             $srcset .= ", $thumb {$i}x";
         }
         return (object) array(
-            'caption' => $entry,
+            'caption' => $this->getCaption($entry),
             'basename' => $entry,
             'filename' => "{$this->folder}{$entry}",
             'thumbnail' => $thumbnail,
@@ -126,7 +148,7 @@ class ImageService
      */
     private function createImage($entry)
     {
-        $caption = $this->getImageCaption($entry);
+        $caption = $this->getCaption($entry);
         $filename = "{$this->folder}{$entry}";
         $srcset = '';
         $thumbnail = $this->thumbnailService->makeThumbnail($filename, $this->thumbSize);
@@ -147,17 +169,13 @@ class ImageService
      * @var string $entry
      * @return string
      */
-    private function getImageCaption($entry)
+    private function getCaption($entry)
     {
-        if (getimagesize("{$this->folder}$entry", $info)) {
-            if (isset($info['APP13'])) {
-                $iptc = iptcparse($info['APP13']);
-                if (isset($iptc['2#105'][0])) {
-                    return $iptc['2#105'][0];
-                }
-            }
+        if (isset($this->data[$entry])) {
+            return $this->data[$entry];
+        } else {
+            return pathinfo($entry, PATHINFO_FILENAME);
         }
-        return pathinfo($entry, PATHINFO_FILENAME);
     }
 
     /**
