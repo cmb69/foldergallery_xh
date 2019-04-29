@@ -27,6 +27,8 @@ class GalleryController
      * @var string
      */
     private $basefolder;
+    
+    private $folderName;
 
     /**
      * @var string
@@ -56,6 +58,7 @@ class GalleryController
         global $sn, $pth, $plugin_cf, $plugin_tx;
 
         $this->basefolder = "{$pth['folder']['images']}$basefolder/";
+        $this->folderName = str_replace('/','-',$basefolder);
         $this->currentSubfolder = $this->getCurrentSubfolder();
         $this->config = $plugin_cf['foldergallery'];
         $this->lang = $plugin_tx['foldergallery'];
@@ -90,6 +93,7 @@ class GalleryController
         }
         $view->children = $children;
         $view->folderImage = "{$pth['folder']['plugins']}foldergallery/images/folder.{$this->config['icon_format']}";
+        $view->folderName = $this->folderName;
         $view->render();
     }
 
@@ -102,7 +106,7 @@ class GalleryController
         $colorboxFolder = "{$pth['folder']['plugins']}foldergallery/colorbox/";
         include_jqueryplugin('colorbox', "{$colorboxFolder}jquery.colorbox-min.js");
         $hjs .= '<link rel="stylesheet" href="' . $colorboxFolder . 'colorbox.css" type="text/css">';
-        $config = array('rel' => 'foldergallery_group');
+	$config = array('rel' => $this->folderName, 'maxWidth' => '100%', 'maxHeight' => '100%');	//EM~ //
         foreach ($this->lang as $key => $value) {
             if (strpos($key, 'colorbox_') === 0) {
                 $config[substr($key, strlen('colorbox_'))] = $value;
@@ -112,7 +116,7 @@ class GalleryController
         $bjs .= <<<SCRIPT
 <script>
 jQuery(function ($) {
-    $(".foldergallery_group").colorbox($config);
+    $(".{$this->folderName}").colorbox($config);
 });
 </script>
 SCRIPT;
