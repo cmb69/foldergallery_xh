@@ -40,7 +40,7 @@
 <teplad version="1.1">
   <!-- the URL form this xml-file -->
   <!-- full URL with http(s) -->
-  <xml_url>https://raw.githubusercontent.com/cmb69/feedview_xh/master/teplad.xml</xml_url>
+  <xml_url>https://raw.githubusercontent.com/cmb69/foldergallery_xh/master/teplad.xml</xml_url>
   <!-- Attribute type for Data type: plugin, template or addon -->
   <!-- the name of the Plugin -->
   <name type="plugin">Foldergallery_XH</name>
