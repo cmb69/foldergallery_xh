@@ -14,14 +14,14 @@
 <?php   if ($child->isDir):?>
         <figure class="foldergallery_folder">
             <a href="<?=$child->url?>">
-                <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>">
+                <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>" alt="<?=$child->caption?>">
             </a> 
             <figcaption><?=$child->caption?></figcaption>
         </figure>
 <?php   else:?>
         <figure class="foldergallery_image">
             <a class="foldergallery_group" href="<?=$child->filename?>" data-size="<?=$child->size?>">
-                <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>">
+                <img src="<?=$child->thumbnail?>" srcset="<?=$child->srcset?>" alt="<?=$child->caption?>">
             </a>
             <figcaption><?=$child->caption?></figcaption>
         </figure>
