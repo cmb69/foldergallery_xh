@@ -21,9 +21,6 @@
 
 namespace Foldergallery;
 
-use Pfw\Url;
-use Pfw\View\View;
-
 class GalleryController
 {
     /**
@@ -46,9 +43,7 @@ class GalleryController
      */
     private $lang;
 
-    /**
-     * @var Url
-     */
+    /** @var string */
     private $pageUrl;
 
     /**
@@ -56,13 +51,13 @@ class GalleryController
      */
     public function __construct($basefolder)
     {
-        global $pth, $plugin_cf, $plugin_tx;
+        global $pth, $plugin_cf, $plugin_tx, $sn;
 
         $this->basefolder = "{$pth['folder']['images']}$basefolder/";
         $this->currentSubfolder = $this->getCurrentSubfolder();
         $this->config = $plugin_cf['foldergallery'];
         $this->lang = $plugin_tx['foldergallery'];
-        $this->pageUrl = Url::getCurrent();
+        $this->pageUrl = $sn . ($_SERVER["QUERY_STRING"] ? "?" . $_SERVER["QUERY_STRING"] : "");
     }
 
     /**
@@ -78,7 +73,7 @@ class GalleryController
 
     public function indexAction()
     {
-        global $plugin_cf;
+        global $pth, $plugin_cf, $plugin_tx;
 
         $frontend = $plugin_cf['foldergallery']['frontend'];
         $this->{"include$frontend"}();
@@ -87,21 +82,19 @@ class GalleryController
         foreach ($children as $child) {
             if ($child->isDir) {
                 $folder = "{$this->currentSubfolder}{$child->basename}";
-                $child->url = $this->pageUrl->with('foldergallery_folder', $folder);
+                $child->url = $this->urlWithFoldergallery($folder);
             }
         }
-        (new View('foldergallery'))
-            ->template('gallery')
-            ->data([
-                'breadcrumbs' => $this->getBreadcrumbs(),
-                'children' => $children
-            ])
-            ->render();
+        $view = new View($pth["folder"]["plugins"] . "foldergallery/views/", $plugin_tx["foldergallery"]);
+        echo $view->render("gallery", [
+            'breadcrumbs' => $this->getBreadcrumbs(),
+            'children' => $children
+        ]);
     }
 
     private function includePhotoswipe()
     {
-        global $hjs, $bjs, $pth;
+        global $hjs, $bjs, $pth, $plugin_tx;
 
         $hjs .= sprintf(
             '<link rel="stylesheet" href="%sfoldergallery/lib/photoswipe/photoswipe.css">',
@@ -120,9 +113,8 @@ class GalleryController
             $pth['folder']['plugins']
         );
         ob_start();
-        (new View('foldergallery'))
-            ->template('photoswipe')
-            ->render();
+        $view = new View($pth["folder"]["plugins"] . "foldergallery/views/", $plugin_tx["foldergallery"]);
+        echo $view->render("photoswipe", []);
         $bjs .= ob_get_clean();
         $filename = "{$pth['folder']['plugins']}foldergallery/foldergallery.min.js";
         if (!file_exists($filename)) {
@@ -165,9 +157,9 @@ SCRIPT;
         foreach ($breadcrumbs as $i => $breadcrumb) {
             if ($i < count($breadcrumbs) - 1) {
                 if (isset($breadcrumb->url)) {
-                    $breadcrumb->url = $this->pageUrl->with('foldergallery_folder', $breadcrumb->url);
+                    $breadcrumb->url = $this->urlWithFoldergallery($breadcrumb->url);
                 } else {
-                    $breadcrumb->url = $this->pageUrl->without('foldergallery_folder');
+                    $breadcrumb->url = $this->urlWithoutFoldergallery();
                 }
                 $breadcrumb->isLink = true;
             } else {
@@ -176,5 +168,15 @@ SCRIPT;
             }
         }
         return $breadcrumbs;
+    }
+
+    private function urlWithFoldergallery($value): string
+    {
+        return $this->urlWithoutFoldergallery() . "&foldergallery_folder=" . urlencode($value);
+    }
+
+    private function urlWithoutFoldergallery(): string
+    {
+        return preg_replace('/&foldergallery_folder=[^&]+/', "", $this->pageUrl);
     }
 }

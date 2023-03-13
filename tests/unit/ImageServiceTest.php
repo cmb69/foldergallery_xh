@@ -62,7 +62,8 @@ class ImageServiceTest extends PHPUnit_Framework_TestCase
                 'filename' => vfsStream::url('root/image.jpg'),
                 'isDir' => false,
                 'thumbnail' => 'thumb/nail',
-                'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x'
+                'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x',
+                'size' => "10x10",
             )
         );
         $this->assertEquals($expected, $this->subject->findEntries());
