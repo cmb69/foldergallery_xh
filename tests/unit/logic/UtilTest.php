@@ -35,11 +35,44 @@ class UtilTest extends TestCase
     public function breadcrumbs(): array
     {
         return [
-            ["foo/bar/", "Start", [
+            ["foo/bar", "Start", [
                 ['name' => 'Start', "url" => null],
                 ['name' => 'foo', 'url' => 'foo'],
                 ['name' => 'bar', 'url' => 'foo/bar']
             ]],
+            ["", "Start", [
+                ["name" => "Start", "url" => null],
+            ]],
+        ];
+    }
+    /** @dataProvider urlsWithFoldergallery */
+    public function testUrlWithFoldergallery(string $url, string $value, string $expected): void
+    {
+        $url = Util::urlWithFolderGallery($url, $value);
+        $this->assertEquals($expected, $url);
+    }
+
+    public function urlsWithFoldergallery(): array
+    {
+        return [
+            ["/?Gallery", "demo", "/?Gallery&foldergallery_folder=demo"],
+            ["/?Gallery&foldergallery_folder=old", "new", "/?Gallery&foldergallery_folder=new"],
+            ["/?Gallery", "my folder", "/?Gallery&foldergallery_folder=my+folder"],
+        ];
+    }
+
+    /** @dataProvider urlsWithoutFoldergallery */
+    public function testUrlWithoutFoldergallery(string $url, string $expected): void
+    {
+        $url = Util::urlWithoutFoldergallery($url);
+        $this->assertEquals($expected, $url);
+    }
+
+    public function urlsWithoutFoldergallery(): array
+    {
+        return [
+            ["/?Gallery", "/?Gallery"],
+            ["/?Gallery&foldergallery_folder=sub", "/?Gallery"],
         ];
     }
 }

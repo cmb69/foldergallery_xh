@@ -20,6 +20,7 @@
  */
 
 use Foldergallery\Dic;
+use Foldergallery\Infra\Request;
 
 const FOLDERGALLERY_VERSION = "1.0beta1";
 
@@ -27,12 +28,9 @@ const FOLDERGALLERY_VERSION = "1.0beta1";
  * @param string $basefolder
  * @return string
  */
-function foldergallery($basefolder = '')
+function foldergallery($basefolder = "")
 {
-    global $pth, $sn;
+    global $pth;
 
-    return Dic::makeGalleryController()(
-        $sn . ($_SERVER["QUERY_STRING"] ? "?" . $_SERVER["QUERY_STRING"] : ""),
-        "{$pth['folder']['images']}$basefolder/"
-    )->respond();
+    return Dic::makeGalleryController()(Request::current(), $pth["folder"]["images"] . $basefolder . "/")->respond();
 }

@@ -26,8 +26,8 @@ class Util
     /** @return list<array{name:string,url:?string}> */
     public static function breadcrumbs(string $path, string $firstName): array
     {
-        $result = explode('/', $path);
-        array_pop($result);
+        $result = explode('/', rtrim($path, "/"));
+        $result = array_filter($result);
         $url = '';
         foreach ($result as &$part) {
             $url .= "$part/";
@@ -35,5 +35,15 @@ class Util
         }
         array_unshift($result, ['name' => $firstName, "url" => null]);
         return $result;
+    }
+
+    public static function urlWithFolderGallery(string $url, string $value): string
+    {
+        return self::urlWithoutFoldergallery($url) . "&foldergallery_folder=" . urlencode($value);
+    }
+
+    public static function urlWithoutFoldergallery(string $url): string
+    {
+        return preg_replace('/&foldergallery_folder=[^&]+/', "", $url);
     }
 }

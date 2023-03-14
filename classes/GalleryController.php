@@ -21,9 +21,9 @@
 
 namespace Foldergallery;
 
-use Exception;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\Jquery;
+use Foldergallery\Infra\Request;
 use Foldergallery\Infra\Response;
 use Foldergallery\Infra\View;
 use Foldergallery\Logic\Util;
@@ -68,29 +68,18 @@ class GalleryController
         $this->view = $view;
     }
 
-    /**
-     * @return string
-     */
-    private function getCurrentSubfolder()
+    public function __invoke(Request $request, string $basefolder): Response
     {
-        if (!isset($_GET['foldergallery_folder'])) {
-            return '';
-        }
-        return preg_replace(array('/\\\\/', '/\.{1,2}\//'), '', "{$_GET['foldergallery_folder']}/");
-    }
-
-    public function __invoke(string $pageUrl, string $basefolder): Response
-    {
-        $children = $this->imageService->findEntries("{$basefolder}{$this->getCurrentSubfolder()}");
+        $children = $this->imageService->findEntries($basefolder . $request->folder());
         foreach ($children as &$child) {
             if ($child["isDir"]) {
-                $folder = "{$this->getCurrentSubfolder()}{$child["basename"]}";
-                $child["url"] = $this->urlWithFoldergallery($pageUrl, $folder);
+                $folder = $request->folder() . $child["basename"];
+                $child["url"] = Util::urlWithFoldergallery($request->url(), $folder);
             }
         }
         return $this->initializeFrontEnd($this->conf["frontend"])
             ->withOutput($this->view->render("gallery", [
-                'breadcrumbs' => $this->getBreadcrumbs($pageUrl),
+                'breadcrumbs' => $this->getBreadcrumbs($request),
                 'children' => $children
             ]));
     }
@@ -148,18 +137,18 @@ SCRIPT;
     }
 
     /** @return list<array{name:string,url:string,isLink:bool}> */
-    private function getBreadcrumbs(string $pageUrl)
+    private function getBreadcrumbs(Request $request)
     {
         $records = [];
-        $breadcrumbs = Util::breadcrumbs($this->getCurrentSubfolder(), $this->text['locator_start']);
+        $breadcrumbs = Util::breadcrumbs($request->folder(), $this->text['locator_start']);
         foreach ($breadcrumbs as $i => $breadcrumb) {
             $record = [];
             $record["name"] = $breadcrumb["name"];
             if ($i < count($breadcrumbs) - 1) {
                 if (isset($breadcrumb["url"])) {
-                    $record["url"] = $this->urlWithFoldergallery($pageUrl, $breadcrumb["url"]);
+                    $record["url"] = Util::urlWithFoldergallery($request->url(), $breadcrumb["url"]);
                 } else {
-                    $record["url"] = $this->urlWithoutFoldergallery($pageUrl);
+                    $record["url"] = Util::urlWithoutFoldergallery($request->url());
                 }
                 $record["isLink"] = true;
             } else {
@@ -169,16 +158,5 @@ SCRIPT;
             $records[] = $record;
         }
         return $records;
-    }
-
-    /** @param string $value */
-    private function urlWithFoldergallery(string $pageUrl, $value): string
-    {
-        return $this->urlWithoutFoldergallery($pageUrl) . "&foldergallery_folder=" . urlencode($value);
-    }
-
-    private function urlWithoutFoldergallery(string $pageUrl): string
-    {
-        return preg_replace('/&foldergallery_folder=[^&]+/', "", $pageUrl);
     }
 }

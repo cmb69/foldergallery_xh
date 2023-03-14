@@ -24,6 +24,7 @@ namespace Foldergallery;
 use ApprovalTests\Approvals;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\Jquery;
+use Foldergallery\Infra\Request;
 use Foldergallery\Infra\View;
 use PHPUnit\Framework\TestCase;
 
@@ -39,13 +40,12 @@ class GalleryControllerTest extends TestCase
             $this->jquery(),
             $this->view()
         );
-        $response = $sut("/?Gallery", "test");
+        $response = $sut($this->request(), "test");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersGallerySubfolder(): void
     {
-        $_GET = ["foldergallery_folder" => "sub"];
         $sut = new GalleryController(
             "./plugins/foldergallery/",
             $this->conf(),
@@ -54,7 +54,10 @@ class GalleryControllerTest extends TestCase
             $this->jquery(),
             $this->view()
         );
-        $response = $sut("/?Gallery&foldergallery_folder=sub", "test");
+        $request = $this->createMock(Request::class);
+        $request->method("url")->willReturn("/?Gallery&foldergallery_folder=sub");
+        $request->method("folder")->willReturn("sub/");
+        $response = $sut($request, "test");
         Approvals::verifyHtml($response->output());
     }
 
@@ -68,7 +71,7 @@ class GalleryControllerTest extends TestCase
             $this->jquery(),
             $this->view()
         );
-        $response = $sut("/?Gallery", "test");
+        $response = $sut($this->request(), "test");
         Approvals::verifyHtml($response->hjs());
     }
 
@@ -82,7 +85,7 @@ class GalleryControllerTest extends TestCase
             $this->jquery(),
             $this->view()
         );
-        $response = $sut("/?Gallery", "test");
+        $response = $sut($this->request(), "test");
         Approvals::verifyHtml($response->bjs());
     }
 
@@ -96,7 +99,7 @@ class GalleryControllerTest extends TestCase
             $this->jquery(true),
             $this->view()
         );
-        $response = $sut("/?Gallery", "test");
+        $response = $sut($this->request(), "test");
         Approvals::verifyHtml($response->hjs());
     }
 
@@ -110,7 +113,7 @@ class GalleryControllerTest extends TestCase
             $this->jquery(true),
             $this->view()
         );
-        $response = $sut("/?Gallery", "test");
+        $response = $sut($this->request(), "test");
         Approvals::verifyHtml($response->bjs());
     }
 
@@ -124,8 +127,16 @@ class GalleryControllerTest extends TestCase
             $this->jquery(),
             $this->view()
         );
-        $response = $sut("/?Gallery", "test");
+        $response = $sut($this->request(), "test");
         Approvals::verifyHtml($response->output());
+    }
+
+    private function request(): Request
+    {
+        $request = $this->createMock(Request::class);
+        $request->method("url")->willReturn("/?Gallery");
+        $request->method("folder")->willReturn("");
+        return $request;
     }
 
     private function imageService(): ImageService
