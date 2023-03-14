@@ -19,6 +19,8 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use Foldergallery\Dic;
+
 const FOLDERGALLERY_VERSION = "1.0beta1";
 
 /**
@@ -27,8 +29,10 @@ const FOLDERGALLERY_VERSION = "1.0beta1";
  */
 function foldergallery($basefolder = '')
 {
-    $gallery = new Foldergallery\GalleryController($basefolder);
-    ob_start();
-    $gallery->indexAction();
-    return ob_get_clean();
+    global $pth, $sn;
+
+    return Dic::makeGalleryController()(
+        $sn . ($_SERVER["QUERY_STRING"] ? "?" . $_SERVER["QUERY_STRING"] : ""),
+        "{$pth['folder']['images']}$basefolder/"
+    );
 }

@@ -25,9 +25,6 @@ use Foldergallery\Infra\ThumbnailService;
 
 class ImageService
 {
-    /** @var string */
-    private $folder;
-
     /** @var int */
     private $thumbSize;
 
@@ -39,12 +36,8 @@ class ImageService
      */
     private $data;
 
-    /**
-     * @param string $folder
-     */
-    public function __construct($folder, int $thumbSize, ThumbnailService $thumbnailService)
+    public function __construct(int $thumbSize, ThumbnailService $thumbnailService)
     {
-        $this->folder = $folder;
         $this->thumbSize = $thumbSize;
         $this->thumbnailService = $thumbnailService;
         $this->data = null;
@@ -53,19 +46,19 @@ class ImageService
     /**
      * @return object[]
      */
-    public function findEntries()
+    public function findEntries(string $folder)
     {
-        $this->readImageData();
+        $this->readImageData($folder);
         $result = [];
-        foreach (scandir($this->folder) as $entry) {
+        foreach (scandir($folder) as $entry) {
             if (strpos($entry, '.') === 0) {
                 continue;
             }
-            $filename = "{$this->folder}{$entry}";
+            $filename = "{$folder}{$entry}";
             if (is_dir($filename)) {
-                $result[] = $this->createDir($entry);
+                $result[] = $this->createDir($folder, $entry);
             } elseif ($this->isImageFile($filename)) {
-                $result[] = $this->createImage($entry);
+                $result[] = $this->createImage($folder, $entry);
             }
         }
         usort($result, function ($a, $b) {
@@ -77,12 +70,12 @@ class ImageService
     /**
      * @return void
      */
-    private function readImageData()
+    private function readImageData(string $folder)
     {
         global $sl;
 
-        if (is_readable("{$this->folder}foldergallery.php")) {
-            $data = include "{$this->folder}foldergallery.php";
+        if (is_readable("{$folder}foldergallery.php")) {
+            $data = include "{$folder}foldergallery.php";
             if (isset($data[$sl])) {
                 $this->data = $data[$sl];
             }
@@ -93,10 +86,10 @@ class ImageService
      * @param string $entry
      * @return object
      */
-    private function createDir($entry)
+    private function createDir(string $folder, $entry)
     {
-        $filename = "{$this->folder}{$entry}";
-        $images = $this->firstImagesIn($entry);
+        $filename = "{$folder}{$entry}";
+        $images = $this->firstImagesIn($folder, $entry);
         $srcset = '';
         $thumbnail = $this->thumbnailService->makeFolderThumbnail($filename, $images, $this->thumbSize);
         $srcset .= "$thumbnail 1x";
@@ -107,7 +100,7 @@ class ImageService
         return (object) array(
             'caption' => $this->getCaption($entry),
             'basename' => $entry,
-            'filename' => "{$this->folder}{$entry}",
+            'filename' => "{$folder}{$entry}",
             'thumbnail' => $thumbnail,
             'srcset' => $srcset,
             'isDir' => true
@@ -118,9 +111,9 @@ class ImageService
      * @param string $folder
      * @return string[]
      */
-    private function firstImagesIn($folder)
+    private function firstImagesIn(string $baseFolder, $folder)
     {
-        $folder = "{$this->folder}$folder/";
+        $folder = "{$baseFolder}$folder/";
         $result = [];
         foreach (scandir($folder) as $basename) {
             $filename = "{$folder}$basename";
@@ -138,10 +131,10 @@ class ImageService
      * @param string $entry
      * @return object
      */
-    private function createImage($entry)
+    private function createImage(string $folder, $entry)
     {
         $caption = $this->getCaption($entry);
-        $filename = "{$this->folder}{$entry}";
+        $filename = "{$folder}{$entry}";
         $srcset = '';
         $thumbnail = $this->thumbnailService->makeThumbnail($filename, $this->thumbSize);
         if ($thumbnail !== $filename) {

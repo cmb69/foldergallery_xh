@@ -42,7 +42,7 @@ class ImageServiceTest extends TestCase
         $thumbnailServiceStub = $this->createMock(ThumbnailService::class);
         $thumbnailServiceStub->method('makeThumbnail')->willReturn('thumb/nail');
         $thumbnailServiceStub->method('makeFolderThumbnail')->willReturn('thumb/nail');
-        $this->subject = new ImageService(vfsStream::url('root/'), 128, $thumbnailServiceStub);
+        $this->subject = new ImageService(128, $thumbnailServiceStub);
     }
 
     public function testFindEntries()
@@ -65,6 +65,6 @@ class ImageServiceTest extends TestCase
                 'size' => "10x10",
             )
         );
-        $this->assertEquals($expected, $this->subject->findEntries());
+        $this->assertEquals($expected, $this->subject->findEntries(vfsStream::url('root/')));
     }
 }

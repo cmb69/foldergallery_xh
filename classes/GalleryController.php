@@ -22,40 +22,38 @@
 namespace Foldergallery;
 
 use Foldergallery\Infra\ImageService;
-use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
 use Foldergallery\Logic\Util;
 use stdClass;
 
 class GalleryController
 {
-    /**
-     * @var string
-     */
-    private $basefolder;
-
-    /**
-     * @var string
-     */
-    private $currentSubfolder;
+    /** @var string */
+    private $pluginFolder;
 
     /** @var array<string,string> */
-    private $lang;
+    private $conf;
 
-    /** @var string */
-    private $pageUrl;
+    /** @var array<string,string> */
+    private $text;
+
+    /** @var ImageService */
+    private $imageService;
+
+    /** @var View */
+    private $view;
 
     /**
-     * @param string $basefolder
+     * @param array<string,string> $conf
+     * @param array<string,string> $text
      */
-    public function __construct($basefolder)
+    public function __construct(string $pluginFolder, array $conf, array $text, ImageService $imageService, View $view)
     {
-        global $pth, $plugin_tx, $sn;
-
-        $this->basefolder = "{$pth['folder']['images']}$basefolder/";
-        $this->currentSubfolder = $this->getCurrentSubfolder();
-        $this->lang = $plugin_tx['foldergallery'];
-        $this->pageUrl = $sn . ($_SERVER["QUERY_STRING"] ? "?" . $_SERVER["QUERY_STRING"] : "");
+        $this->pluginFolder = $pluginFolder;
+        $this->conf = $conf;
+        $this->text = $text;
+        $this->imageService = $imageService;
+        $this->view = $view;
     }
 
     /**
@@ -69,31 +67,19 @@ class GalleryController
         return preg_replace(array('/\\\\/', '/\.{1,2}\//'), '', "{$_GET['foldergallery_folder']}/");
     }
 
-    /** @return void */
-    public function indexAction()
+    public function __invoke(string $pageUrl, string $basefolder): string
     {
-        global $pth, $plugin_cf, $plugin_tx;
-
-        $frontend = $plugin_cf['foldergallery']['frontend'];
+        $frontend = $this->conf['frontend'];
         $this->{"include$frontend"}();
-        $imageService = new ImageService(
-            "{$this->basefolder}{$this->currentSubfolder}",
-            $plugin_cf['foldergallery']['thumb_size'],
-            new ThumbnailService(
-                "{$pth['folder']['plugins']}foldergallery/cache/",
-                hexdec($plugin_cf['foldergallery']['folder_background'])
-            )
-        );
-        $children = $imageService->findEntries();
+        $children = $this->imageService->findEntries("{$basefolder}{$this->getCurrentSubfolder()}");
         foreach ($children as $child) {
             if ($child->isDir) {
-                $folder = "{$this->currentSubfolder}{$child->basename}";
-                $child->url = $this->urlWithFoldergallery($folder);
+                $folder = "{$this->getCurrentSubfolder()}{$child->basename}";
+                $child->url = $this->urlWithFoldergallery($pageUrl, $folder);
             }
         }
-        $view = new View($pth["folder"]["plugins"] . "foldergallery/views/", $plugin_tx["foldergallery"]);
-        echo $view->render("gallery", [
-            'breadcrumbs' => $this->getBreadcrumbs(),
+        return $this->view->render("gallery", [
+            'breadcrumbs' => $this->getBreadcrumbs($pageUrl),
             'children' => $children
         ]);
     }
@@ -101,31 +87,30 @@ class GalleryController
     /** @return void */
     private function includePhotoswipe()
     {
-        global $hjs, $bjs, $pth, $plugin_tx;
+        global $hjs, $bjs;
 
         $hjs .= sprintf(
-            '<link rel="stylesheet" href="%sfoldergallery/lib/photoswipe/photoswipe.css">',
-            $pth['folder']['plugins']
+            '<link rel="stylesheet" href="%slib/photoswipe/photoswipe.css">',
+            $this->pluginFolder
         );
         $hjs .= sprintf(
-            '<link rel="stylesheet" href="%sfoldergallery/lib/photoswipe/default-skin/default-skin.css">',
-            $pth['folder']['plugins']
+            '<link rel="stylesheet" href="%slib/photoswipe/default-skin/default-skin.css">',
+            $this->pluginFolder
         );
         $hjs .= sprintf(
-            '<script src="%sfoldergallery/lib/photoswipe/photoswipe.min.js"></script>',
-            $pth['folder']['plugins']
+            '<script src="%slib/photoswipe/photoswipe.min.js"></script>',
+            $this->pluginFolder
         );
         $hjs .= sprintf(
-            '<script src="%sfoldergallery/lib/photoswipe/photoswipe-ui-default.min.js"></script>',
-            $pth['folder']['plugins']
+            '<script src="%slib/photoswipe/photoswipe-ui-default.min.js"></script>',
+            $this->pluginFolder
         );
         ob_start();
-        $view = new View($pth["folder"]["plugins"] . "foldergallery/views/", $plugin_tx["foldergallery"]);
-        echo $view->render("photoswipe", []);
+        echo $this->view->render("photoswipe", []);
         $bjs .= ob_get_clean();
-        $filename = "{$pth['folder']['plugins']}foldergallery/foldergallery.min.js";
+        $filename = "{$this->pluginFolder}foldergallery.min.js";
         if (!file_exists($filename)) {
-            $filename = "{$pth['folder']['plugins']}foldergallery/foldergallery.js";
+            $filename = "{$this->pluginFolder}foldergallery.js";
         }
         $bjs .= sprintf('<script src="%s"></script>', $filename);
     }
@@ -133,15 +118,15 @@ class GalleryController
     /** @return void */
     private function includeColorbox()
     {
-        global $pth, $hjs, $bjs;
+        global $hjs, $bjs;
 
-        include_once "{$pth['folder']['plugins']}jquery/jquery.inc.php";
+        include_once "{$this->pluginFolder}../jquery/jquery.inc.php";
         include_jquery();
-        $colorboxFolder = "{$pth['folder']['plugins']}foldergallery/colorbox/";
+        $colorboxFolder = "{$this->pluginFolder}colorbox/";
         include_jqueryplugin('colorbox', "{$colorboxFolder}jquery.colorbox-min.js");
         $hjs .= '<link rel="stylesheet" href="' . $colorboxFolder . 'colorbox.css" type="text/css">';
         $config = array('rel' => 'foldergallery_group', 'maxWidth' => '100%', 'maxHeight' => '100%');
-        foreach ($this->lang as $key => $value) {
+        foreach ($this->text as $key => $value) {
             if (strpos($key, 'colorbox_') === 0) {
                 $config[substr($key, strlen('colorbox_'))] = $value;
             }
@@ -157,18 +142,18 @@ SCRIPT;
     }
 
     /** @return list<stdClass> */
-    private function getBreadcrumbs()
+    private function getBreadcrumbs(string $pageUrl)
     {
         $result = [];
-        $breadcrumbs = Util::breadcrumbs($this->currentSubfolder, $this->lang['locator_start']);
+        $breadcrumbs = Util::breadcrumbs($this->getCurrentSubfolder(), $this->text['locator_start']);
         foreach ($breadcrumbs as $i => $breadcrumb) {
             $object = new stdClass;
             $object->name = $breadcrumb["name"];
             if ($i < count($breadcrumbs) - 1) {
                 if (isset($breadcrumb["url"])) {
-                    $object->url = $this->urlWithFoldergallery($breadcrumb["url"]);
+                    $object->url = $this->urlWithFoldergallery($pageUrl, $breadcrumb["url"]);
                 } else {
-                    $object->url = $this->urlWithoutFoldergallery();
+                    $object->url = $this->urlWithoutFoldergallery($pageUrl);
                 }
                 $object->isLink = true;
             } else {
@@ -181,13 +166,13 @@ SCRIPT;
     }
 
     /** @param string $value */
-    private function urlWithFoldergallery($value): string
+    private function urlWithFoldergallery(string $pageUrl, $value): string
     {
-        return $this->urlWithoutFoldergallery() . "&foldergallery_folder=" . urlencode($value);
+        return $this->urlWithoutFoldergallery($pageUrl) . "&foldergallery_folder=" . urlencode($value);
     }
 
-    private function urlWithoutFoldergallery(): string
+    private function urlWithoutFoldergallery(string $pageUrl): string
     {
-        return preg_replace('/&foldergallery_folder=[^&]+/', "", $this->pageUrl);
+        return preg_replace('/&foldergallery_folder=[^&]+/', "", $pageUrl);
     }
 }

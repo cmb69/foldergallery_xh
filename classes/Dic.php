@@ -21,16 +21,51 @@
 
 namespace Foldergallery;
 
+use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\SystemChecker;
+use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
 
 class Dic
 {
+    public static function makeGalleryController(): GalleryController
+    {
+        global $pth, $plugin_cf, $plugin_tx;
+
+        return new GalleryController(
+            $pth["folder"]["plugins"] . "foldergallery/",
+            $plugin_cf["foldergallery"],
+            $plugin_tx["foldergallery"],
+            self::makeImageService(),
+            self::makeView()
+        );
+    }
+
     public static function makeInfoController(): InfoController
     {
         return new InfoController(
             new SystemChecker,
             self::makeView()
+        );
+    }
+
+    private static function makeImageService(): ImageService
+    {
+        global $plugin_cf;
+
+        return new ImageService(
+            (int) $plugin_cf['foldergallery']['thumb_size'],
+            self::makeThumbnailService()
+        );
+    }
+
+    private static function makeThumbnailService(): ThumbnailService
+    {
+        global $pth, $plugin_cf;
+
+        return new ThumbnailService(
+            "{$pth['folder']['plugins']}foldergallery/cache/",
+            hexdec($plugin_cf['foldergallery']['folder_background'])
         );
     }
 
