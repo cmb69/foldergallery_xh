@@ -39,7 +39,7 @@ class View
     /** @param scalar $args */
     public function text(string $key, ...$args): string
     {
-        return sprintf(XH_hsc($this->text[$key]), ...$args);
+        return sprintf($this->esc($this->text[$key]), ...$args);
     }
 
     /** @param scalar $args */
@@ -55,5 +55,11 @@ class View
         ob_start();
         include $this->templateFolder . $_template . ".php";
         return ob_get_clean();
+    }
+
+    /** @param scalar $value */
+    public function esc($value): string
+    {
+        return XH_hsc((string) $value);
     }
 }

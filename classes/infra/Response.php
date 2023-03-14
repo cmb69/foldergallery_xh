@@ -34,6 +34,9 @@ class Response
     private $output;
 
     /** @var string|null */
+    private $title = null;
+
+    /** @var string|null */
     private $hjs = null;
 
     /** @var string|null */
@@ -43,6 +46,13 @@ class Response
     {
         $that = clone $this;
         $that->output .= $output;
+        return $that;
+    }
+
+    public function withTitle(string $title): self
+    {
+        $that = clone $this;
+        $that->title = $title;
         return $that;
     }
 
@@ -65,6 +75,11 @@ class Response
         return $this->output;
     }
 
+    public function title(): ?string
+    {
+        return $this->title;
+    }
+
     public function hjs(): ?string
     {
         return $this->hjs;
@@ -77,8 +92,11 @@ class Response
 
     public function respond(): string
     {
-        global $hjs, $bjs;
+        global $title, $hjs, $bjs;
 
+        if ($this->title !== null) {
+            $title = $this->title;
+        }
         if ($this->hjs !== null) {
             $hjs .= $this->hjs;
         }

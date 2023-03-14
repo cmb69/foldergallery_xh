@@ -21,114 +21,109 @@
 
 namespace Foldergallery;
 
+use Foldergallery\Infra\Response;
 use Foldergallery\Infra\SystemChecker;
 use Foldergallery\Infra\View;
 
 class InfoController
 {
+    /** @var string */
+    private $pluginFolder;
+
     /** @var SystemChecker */
     private $systemChecker;
 
     /** @var View */
     private $view;
 
-    public function __construct(SystemChecker $systemChecker, View $view)
+    public function __construct(string $pluginFolder, SystemChecker $systemChecker, View $view)
     {
+        $this->pluginFolder = $pluginFolder;
         $this->systemChecker = $systemChecker;
         $this->view = $view;
     }
 
-    public function defaultAction(): string
+    public function __invoke(): Response
     {
-        global $pth;
-
-        return $this->view->render("info", [
-            'logo' => "{$pth['folder']['plugins']}foldergallery/foldergallery.png",
-            'version' => FOLDERGALLERY_VERSION,
-            'checks' => $this->checks(),
-        ]);
+        return Response::create($this->view->render("info", [
+            "version" => FOLDERGALLERY_VERSION,
+            "checks" => $this->checks(),
+        ]))->withTitle($this->view->esc("Foldergallery " . FOLDERGALLERY_VERSION));
     }
 
-    /** @return list<array{state:string,label:string,stateLabel:string}> */
+    /** @return list<array{class:string,key:string,arg:string,statekey:string}> */
     private function checks(): array
     {
-        global $pth;
-
         return [
             $this->checkPhpVersion("5.4.0"),
             $this->checkExtension("gd"),
             $this->checkExtension("json"),
             $this->checkXhVersion("1.6.3"),
             $this->checkPlugin("jquery"),
-            $this->checkWritability("{$pth['folder']['plugins']}foldergallery/cache/"),
-            $this->checkWritability("{$pth['folder']['plugins']}foldergallery/config/"),
-            $this->checkWritability("{$pth['folder']['plugins']}foldergallery/css/"),
-            $this->checkWritability("{$pth['folder']['plugins']}foldergallery/languages/"),
+            $this->checkWritability($this->pluginFolder . "cache/"),
+            $this->checkWritability($this->pluginFolder . "config/"),
+            $this->checkWritability($this->pluginFolder . "css/"),
+            $this->checkWritability($this->pluginFolder . "languages/"),
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
+    /** @return array{class:string,key:string,arg:string,statekey:string} */
     private function checkPhpVersion(string $version): array
     {
-        global $plugin_tx;
-
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? "success" : "fail";
         return [
-            "state" => $state,
-            "label" => sprintf($plugin_tx["foldergallery"]["syscheck_phpversion"], $version),
-            "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
+            "class" => "xh_$state",
+            "key" => "syscheck_phpversion",
+            "arg" => $version,
+            "statekey" => "syscheck_$state",
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
+    /** @return array{class:string,key:string,arg:string,statekey:string} */
     private function checkExtension(string $name): array
     {
-        global $plugin_tx;
-
         $state = $this->systemChecker->checkExtension($name) ? "success" : "fail";
         return [
-            "state" => $state,
-            "label" => sprintf($plugin_tx["foldergallery"]["syscheck_extension"], $name),
-            "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
+            "class" => "xh_$state",
+            "key" => "syscheck_extension",
+            "arg" => $name,
+            "statekey" => "syscheck_$state",
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
+    /** @return array{class:string,key:string,arg:string,statekey:string} */
     private function checkXhVersion(string $version): array
     {
-        global $plugin_tx;
-
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? "success" : "fail";
         return [
-            "state" => $state,
-            "label" => sprintf($plugin_tx["foldergallery"]["syscheck_xhversion"], $version),
-            "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
+            "class" => "xh_$state",
+            "key" => "syscheck_xhversion",
+            "arg" => $version,
+            "statekey" => "syscheck_$state",
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
+    /** @return array{class:string,key:string,arg:string,statekey:string} */
     private function checkPlugin(string $name): array
     {
-        global $plugin_tx;
-
         $state = $this->systemChecker->checkPlugin($name) ? "success" : "fail";
         return [
-            "state" => $state,
-            "label" => sprintf($plugin_tx["foldergallery"]["syscheck_plugin"], $name),
-            "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
+            "class" => "xh_$state",
+            "key" => "syscheck_plugin",
+            "arg" => $name,
+            "statekey" => "syscheck_$state",
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
+    /** @return array{class:string,key:string,arg:string,statekey:string} */
     private function checkWritability(string $folder): array
     {
-        global $plugin_tx;
-
         $state = $this->systemChecker->checkWritability($folder) ? "success" : "warning";
         return [
-            "state" => $state,
-            "label" => sprintf($plugin_tx["foldergallery"]["syscheck_writable"], $folder),
-            "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
+            "class" => "xh_$state",
+            "key" => "syscheck_writable",
+            "arg" => $folder,
+            "statekey" => "syscheck_$state",
         ];
     }
 }

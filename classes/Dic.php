@@ -45,7 +45,10 @@ class Dic
 
     public static function makeInfoController(): InfoController
     {
+        global $pth;
+
         return new InfoController(
+            $pth["folder"]["plugins"] . "foldergallery/",
             new SystemChecker,
             self::makeView()
         );
