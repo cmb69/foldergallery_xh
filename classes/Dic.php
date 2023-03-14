@@ -22,6 +22,7 @@
 namespace Foldergallery;
 
 use Foldergallery\Infra\ImageService;
+use Foldergallery\Infra\Jquery;
 use Foldergallery\Infra\SystemChecker;
 use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
@@ -37,6 +38,7 @@ class Dic
             $plugin_cf["foldergallery"],
             $plugin_tx["foldergallery"],
             self::makeImageService(),
+            new Jquery($pth["folder"]["plugins"] . "jquery/"),
             self::makeView()
         );
     }

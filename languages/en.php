@@ -9,6 +9,8 @@ $plugin_tx['foldergallery']['colorbox_close']="close";
 $plugin_tx['foldergallery']['colorbox_imgError']="This image failed to load.";
 $plugin_tx['foldergallery']['alt_logo']="Empty Folder";
 
+$plugin_tx['foldergallery']['error_frontend']="The front-end '%s' is not supported!";
+
 $plugin_tx['foldergallery']['syscheck_extension']="the PHP extension '%s' is loaded";
 $plugin_tx['foldergallery']['syscheck_fail']="failure";
 $plugin_tx['foldergallery']['syscheck_message']="Checking that %1\$s … %2\$s";

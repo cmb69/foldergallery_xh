@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Foldergallery_XH.
  *
@@ -19,20 +19,30 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Foldergallery\Dic;
+namespace Foldergallery\Infra;
 
-const FOLDERGALLERY_VERSION = "1.0beta1";
-
-/**
- * @param string $basefolder
- * @return string
- */
-function foldergallery($basefolder = '')
+/** @codeCoverageIgnore */
+class Jquery
 {
-    global $pth, $sn;
+    /** @var string */
+    private $jqueryFolder;
 
-    return Dic::makeGalleryController()(
-        $sn . ($_SERVER["QUERY_STRING"] ? "?" . $_SERVER["QUERY_STRING"] : ""),
-        "{$pth['folder']['images']}$basefolder/"
-    )->respond();
+    public function __construct(string $jqueryFolder)
+    {
+        $this->jqueryFolder = $jqueryFolder;
+    }
+
+    /** @return void */
+    public function include()
+    {
+        include_once $this->jqueryFolder . "jquery.inc.php";
+        include_jQuery();
+    }
+
+    /** @return void */
+    public function includePlugin(string $name, string $path)
+    {
+        include_once $this->jqueryFolder . "jquery.inc.php";
+        include_jQueryPlugin($name, $path);
+    }
 }
