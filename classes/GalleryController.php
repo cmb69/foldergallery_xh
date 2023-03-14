@@ -33,14 +33,7 @@ class GalleryController
      */
     private $currentSubfolder;
 
-    /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * @var array
-     */
+    /** @var array<string,string> */
     private $lang;
 
     /** @var string */
@@ -51,11 +44,10 @@ class GalleryController
      */
     public function __construct($basefolder)
     {
-        global $pth, $plugin_cf, $plugin_tx, $sn;
+        global $pth, $plugin_tx, $sn;
 
         $this->basefolder = "{$pth['folder']['images']}$basefolder/";
         $this->currentSubfolder = $this->getCurrentSubfolder();
-        $this->config = $plugin_cf['foldergallery'];
         $this->lang = $plugin_tx['foldergallery'];
         $this->pageUrl = $sn . ($_SERVER["QUERY_STRING"] ? "?" . $_SERVER["QUERY_STRING"] : "");
     }
@@ -71,6 +63,7 @@ class GalleryController
         return preg_replace(array('/\\\\/', '/\.{1,2}\//'), '', "{$_GET['foldergallery_folder']}/");
     }
 
+    /** @return void */
     public function indexAction()
     {
         global $pth, $plugin_cf, $plugin_tx;
@@ -92,6 +85,7 @@ class GalleryController
         ]);
     }
 
+    /** @return void */
     private function includePhotoswipe()
     {
         global $hjs, $bjs, $pth, $plugin_tx;
@@ -123,6 +117,7 @@ class GalleryController
         $bjs .= sprintf('<script src="%s"></script>', $filename);
     }
 
+    /** @return void */
     private function includeColorbox()
     {
         global $pth, $hjs, $bjs;
@@ -148,9 +143,7 @@ jQuery(function ($) {
 SCRIPT;
     }
 
-    /**
-     * @return string
-     */
+    /** @return array<object> */
     private function getBreadcrumbs()
     {
         $breadcrumbs = (new BreadcrumbService($this->currentSubfolder))->getBreadcrumbs();
@@ -170,6 +163,7 @@ SCRIPT;
         return $breadcrumbs;
     }
 
+    /** @param string $value */
     private function urlWithFoldergallery($value): string
     {
         return $this->urlWithoutFoldergallery() . "&foldergallery_folder=" . urlencode($value);

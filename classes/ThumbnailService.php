@@ -21,6 +21,7 @@
 
 namespace Foldergallery;
 
+use GdImage;
 use stdClass;
 
 class ThumbnailService
@@ -44,7 +45,7 @@ class ThumbnailService
     }
 
     /**
-     * @param string $scrPath
+     * @param string $srcPath
      * @param string[] $images
      * @param int $dstHeight
      * @return string
@@ -62,9 +63,10 @@ class ThumbnailService
     }
 
     /**
-     * @param resource $im
+     * @param resource|GdImage $im
      * @param string $filename
      * @param int $index
+     * @return void
      */
     private function copyResizedAndCropped($im, $filename, $index)
     {
@@ -86,13 +88,13 @@ class ThumbnailService
         }
         $size = imagesx($im);
         $dx = $dy = ($index * 5 + 1)/16 * $size;
-        $dw = $dh = 9/16 * $size;
+        $dw = $dh = (int) round(9/16 * $size);
         imagecopyresampled($im, $im2, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
     }
 
     /**
      * @param string $srcPath
-     * @param string $dstHeight
+     * @param int $dstHeight
      * @return string
      */
     public function makeThumbnail($srcPath, $dstHeight)

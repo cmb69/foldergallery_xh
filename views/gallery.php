@@ -1,3 +1,13 @@
+<?php
+
+use Foldergallery\View;
+
+/**
+ * @var View $this
+ * @var list<stdClass> $breadcrumbs
+ * @var list<stdClass> $children
+ */
+?>
 <div class="foldergallery">
     <div class="foldergallery_locator">
 <?php foreach ($breadcrumbs as $breadcrumb):?>

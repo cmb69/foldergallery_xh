@@ -1,3 +1,14 @@
+<?php
+
+use Foldergallery\View;
+
+/**
+ * @var View $this
+ * @var string $version
+ * @var string $logo
+ * @var list<stdClass> $checks
+ */
+?>
 <h1>Foldergallery</h1>
 <img src="<?=$logo?>" alt="<?=$this->text('alt_logo')?>">
 <p>Version: <?=$version?></p>

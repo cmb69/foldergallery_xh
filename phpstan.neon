@@ -1,0 +1,13 @@
+parameters:
+  level: 6
+  paths:
+    - classes
+    - views
+    - admin.php
+    - index.php
+  bootstrapFiles:
+    - phpstan.php
+  scanFiles:
+    - ../../cmsimple/adminfuncs.php
+    - ../../cmsimple/functions.php
+    - ../jquery/jquery.inc.php

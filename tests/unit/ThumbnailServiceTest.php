@@ -21,21 +21,22 @@
 
 namespace Foldergallery;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 
-class ThumbnailServiceTest extends PHPUnit_Framework_TestCase
+class ThumbnailServiceTest extends TestCase
 {
     /**
      * @var ThumbnailService
      */
     private $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        global $pth;
+        global $pth, $plugin_cf;
 
+        $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
         vfsStream::setup('root');
         mkdir(vfsStream::url('root/foldergallery/cache/'), 0777, true);
         $this->setUpImages();

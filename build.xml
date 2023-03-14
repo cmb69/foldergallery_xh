@@ -2,37 +2,41 @@
 
 <project name="Foldergallery" default="help">
 
-  <fileset id="php-sources" dir=".">
-    <include name="classes/*.php"/>
-  </fileset>
-
-  <fileset id="unit-tests" dir="tests/unit">
-    <include name="*Test.php"/>
-  </fileset>
-
   <target name="help" description="lists available targets">
     <exec command="phing -l" outputProperty="help"/>
     <echo>${help}</echo>
   </target>
 
   <target name="sniff" description="checks adherence to coding standards">
-    <phpcodesniffer standard="PSR2" haltonerror="true">
-      <fileset refid="php-sources"/>
-      <fileset refid="unit-tests"/>
-    </phpcodesniffer>
+    <exec executable="phpcs" passthru="true" checkreturn="true">
+      <arg line="--standard=PSR2 --runtime-set ignore_warnings_on_exit true classes index.php"/>
+    </exec>
+  </target>
+
+  <target name="stan" description="run static analysis">
+    <if>
+      <versioncompare version="${php.version}" desiredVersion="8.0.0" operator="ge"/>
+      <then>
+        <exec executable="phpstan" passthru="true" checkreturn="true">
+          <arg line="--ansi analyze"/>
+        </exec>
+      </then>
+      <else>
+        <exec executable="phpstan" passthru="true" checkreturn="true">
+          <arg line="--ansi -cphpstan7.neon analyze"/>
+        </exec>
+      </else>
+    </if>
   </target>
 
   <target name="unit-tests" description="runs all unit tests">
-    <phpunit bootstrap="tests/unit/bootstrap.php" haltonerror="true" haltonfailure="true">
-      <formatter type="plain" usefile="false"/>
-      <batchtest>
-        <fileset refid="unit-tests"/>
-      </batchtest>
-    </phpunit>
+    <exec executable="phpunit" passthru="true" checkreturn="true"/>
   </target>
 
+  <target name="check" description="runs all checks" depends="sniff,stan,unit-tests"/>
+
   <target name="coverage" description="generates coverage report">
-    <exec command="phpdbg -qrr vendor/phpunit/phpunit/phpunit --configuration coverage.xml" logoutput="true"/>
+    <exec command="phpunit --coverage-html tests/coverage" passthru="true" checkreturn="true"/>
   </target>
 
   <target name="build">
@@ -44,7 +48,8 @@
         <exclude name="tests/**"/>
         <exclude name="build.xml"/>
         <exclude name="composer.*"/>
-        <exclude name="coverage.xml"/>
+        <exclude name="phpstan*.*"/>
+        <exclude name="phpunit.xml"/>
         <exclude name="teplad.xml"/>
       </fileset>
     </move>

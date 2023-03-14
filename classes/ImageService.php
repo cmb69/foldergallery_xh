@@ -41,7 +41,7 @@ class ImageService
     private $thumbSize;
 
     /**
-     * @var ?array
+     * @var ?array<mixed>
      */
     private $data;
 
@@ -98,7 +98,7 @@ class ImageService
     }
 
     /**
-     * @var string $entry
+     * @param string $entry
      * @return object
      */
     private function createDir($entry)
@@ -123,7 +123,7 @@ class ImageService
     }
 
     /**
-     * @var string $folder
+     * @param string $folder
      * @return string[]
      */
     private function firstImagesIn($folder)
@@ -143,7 +143,7 @@ class ImageService
     }
 
     /**
-     * @var string $entry
+     * @param string $entry
      * @return object
      */
     private function createImage($entry)
@@ -168,7 +168,7 @@ class ImageService
     }
 
     /**
-     * @var string $entry
+     * @param string $entry
      * @return string
      */
     private function getCaption($entry)

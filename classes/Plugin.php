@@ -25,11 +25,12 @@ class Plugin
 {
     const VERSION = '1.0beta1';
 
+    /** @return void */
     public function run()
     {
         global $admin, $action, $o;
 
-        if (XH_ADM) {
+        if (defined("XH_ADM") && XH_ADM) {
             XH_registerStandardPluginMenuItems(false);
             if (XH_wantsPluginAdministration('foldergallery')) {
                 $o .= print_plugin_admin('off');
@@ -40,7 +41,7 @@ class Plugin
                         $o .= ob_get_clean();
                         break;
                     default:
-                        $o .= plugin_admin_common($action, $admin, 'foldergallery');
+                        $o .= plugin_admin_common();
                 }
             }
         }

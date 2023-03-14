@@ -29,17 +29,20 @@ class View
     /** @var array<string,string> */
     private $text;
 
+    /** @param array<string,string> $text */
     public function __construct(string $templateFolder, array $text)
     {
         $this->templateFolder = $templateFolder;
         $this->text = $text;
     }
 
+    /** @param scalar $args */
     public function text(string $key, ...$args): string
     {
         return sprintf(XH_hsc($this->text[$key]), ...$args);
     }
 
+    /** @param array<string,mixed> $_data */
     public function render(string $_template, array $_data): string
     {
         extract($_data);

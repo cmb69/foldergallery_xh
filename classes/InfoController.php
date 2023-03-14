@@ -48,7 +48,7 @@ class InfoController
         ]);
     }
 
-    /** @return list<array{state:string,label:string,stateLabel:string}> */
+    /** @return list<stdClass> */
     private function checks(): array
     {
         global $pth;
@@ -66,7 +66,6 @@ class InfoController
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkPhpVersion(string $version): stdClass
     {
         global $plugin_tx;
@@ -79,7 +78,6 @@ class InfoController
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkExtension(string $name): stdClass
     {
         global $plugin_tx;
@@ -92,7 +90,6 @@ class InfoController
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkXhVersion(string $version): stdClass
     {
         global $plugin_tx;
@@ -117,7 +114,6 @@ class InfoController
         ];
     }
 
-    /** @return array{state:string,label:string,stateLabel:string} */
     private function checkWritability(string $folder): stdClass
     {
         global $plugin_tx;

@@ -5,3 +5,5 @@
 /foldergallery.min.js
 /cache/*.jpg
 /composer.lock
+/.phpunit.cache
+/tools

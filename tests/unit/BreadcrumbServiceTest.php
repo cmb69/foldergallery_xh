@@ -21,16 +21,16 @@
 
 namespace Foldergallery;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class BreadcrumbServiceTest extends PHPUnit_Framework_TestCase
+class BreadcrumbServiceTest extends TestCase
 {
     /**
      * @var BreadcrumbService
      */
     private $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         global $plugin_tx;
 
