@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Foldergallery_XH.
  *
@@ -23,30 +23,18 @@ namespace Foldergallery;
 
 use PHPUnit\Framework\TestCase;
 
-class BreadcrumbServiceTest extends TestCase
+class DicTest extends TestCase
 {
-    /**
-     * @var BreadcrumbService
-     */
-    private $subject;
-
-    protected function setUp(): void
+    public function setUp(): void
     {
-        global $plugin_tx;
+        global $pth, $plugin_tx;
 
-        $plugin_tx = array(
-            'foldergallery' => ['locator_start' => 'Start']
-        );
-        $this->subject = new BreadcrumbService('foo/bar/');
+        $pth = ["folder" => ["plugins" => ""]];
+        $plugin_tx = ["foldergallery" => []];
     }
 
-    public function testGetBreadcrumbs()
+    public function testMakesInfoController(): void
     {
-        $expected = array(
-            (object) ['name' => 'Start'],
-            (object) ['name' => 'foo', 'url' => 'foo'],
-            (object) ['name' => 'bar', 'url' => 'foo/bar']
-        );
-        $this->assertEquals($expected, $this->subject->getBreadcrumbs());
+        $this->assertInstanceOf(InfoController::class, Dic::makeInfoController());
     }
 }

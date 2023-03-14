@@ -19,35 +19,29 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery;
+namespace Foldergallery\Infra;
 
-class View
+/** @codeCoverageIgnore */
+class SystemChecker
 {
-    /** @var string */
-    private $templateFolder;
-
-    /** @var array<string,string> */
-    private $text;
-
-    /** @param array<string,string> $text */
-    public function __construct(string $templateFolder, array $text)
+    public function checkVersion(string $actual, string $minimum): bool
     {
-        $this->templateFolder = $templateFolder;
-        $this->text = $text;
+        return version_compare($actual, $minimum) >= 0;
     }
 
-    /** @param scalar $args */
-    public function text(string $key, ...$args): string
+    public function checkExtension(string $name): bool
     {
-        return sprintf(XH_hsc($this->text[$key]), ...$args);
+        return extension_loaded($name);
     }
 
-    /** @param array<string,mixed> $_data */
-    public function render(string $_template, array $_data): string
+    public function checkPlugin(string $name): bool
     {
-        extract($_data);
-        ob_start();
-        include $this->templateFolder . $_template . ".php";
-        return ob_get_clean();
+        global $pth;
+        return is_dir($pth["folder"]["plugins"] . $name);
+    }
+
+    public function checkWritability(string $path): bool
+    {
+        return is_writable($path);
     }
 }

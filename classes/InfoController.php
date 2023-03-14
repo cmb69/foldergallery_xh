@@ -21,6 +21,8 @@
 
 namespace Foldergallery;
 
+use Foldergallery\Infra\SystemChecker;
+use Foldergallery\Infra\View;
 use stdClass;
 
 class InfoController
@@ -28,22 +30,22 @@ class InfoController
     /** @var SystemChecker */
     private $systemChecker;
 
-    public function __construct()
+    /** @var View */
+    private $view;
+
+    public function __construct(SystemChecker $systemChecker, View $view)
     {
-        $this->systemChecker = new SystemChecker();
+        $this->systemChecker = $systemChecker;
+        $this->view = $view;
     }
 
-    /**
-     * @return void
-     */
-    public function defaultAction()
+    public function defaultAction(): string
     {
-        global $pth, $plugin_tx;
+        global $pth;
 
-        $view = new View($pth["folder"]["plugins"] . "foldergallery/views/", $plugin_tx["foldergallery"]);
-        echo $view->render("info", [
+        return $this->view->render("info", [
             'logo' => "{$pth['folder']['plugins']}foldergallery/foldergallery.png",
-            'version' => Plugin::VERSION,
+            'version' => FOLDERGALLERY_VERSION,
             'checks' => $this->checks(),
         ]);
     }

@@ -19,26 +19,20 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery;
+namespace Foldergallery\Infra;
 
-use stdClass;
+use Foldergallery\Infra\ThumbnailService;
 
 class ImageService
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $folder;
 
-    /**
-     * @var ThumbnailService
-     */
-    private $thumbnailService;
-
-    /**
-     * @var int
-     */
+    /** @var int */
     private $thumbSize;
+
+    /** @var ThumbnailService */
+    private $thumbnailService;
 
     /**
      * @var ?array<mixed>
@@ -48,13 +42,11 @@ class ImageService
     /**
      * @param string $folder
      */
-    public function __construct($folder, ThumbnailService $thumbnailService)
+    public function __construct($folder, int $thumbSize, ThumbnailService $thumbnailService)
     {
-        global $plugin_cf;
-
         $this->folder = $folder;
+        $this->thumbSize = $thumbSize;
         $this->thumbnailService = $thumbnailService;
-        $this->thumbSize = $plugin_cf['foldergallery']['thumb_size'];
         $this->data = null;
     }
 

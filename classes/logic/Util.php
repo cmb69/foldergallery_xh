@@ -19,44 +19,21 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery;
+namespace Foldergallery\Logic;
 
-class BreadcrumbService
+class Util
 {
-    /**
-     * @var string
-     */
-    private $folder;
-
-    /**
-     * @var string
-     */
-    private $firstBreadcrumbName;
-
-    /**
-     * @param string $folder
-     */
-    public function __construct($folder)
+    /** @return list<array{name:string,url:?string}> */
+    public static function breadcrumbs(string $path, string $firstName): array
     {
-        global $plugin_tx;
-
-        $this->folder = $folder;
-        $this->firstBreadcrumbName = $plugin_tx['foldergallery']['locator_start'];
-    }
-
-    /**
-     * @return object[]
-     */
-    public function getBreadcrumbs()
-    {
-        $result = explode('/', $this->folder);
+        $result = explode('/', $path);
         array_pop($result);
         $url = '';
         foreach ($result as &$part) {
             $url .= "$part/";
-            $part = (object) array('name' => $part, 'url' => rtrim($url, '/'));
+            $part = ['name' => $part, 'url' => rtrim($url, '/')];
         }
-        array_unshift($result, (object) array('name' => $this->firstBreadcrumbName));
+        array_unshift($result, ['name' => $firstName, "url" => null]);
         return $result;
     }
 }

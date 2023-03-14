@@ -19,11 +19,10 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery;
+namespace Foldergallery\Infra;
 
-use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\TestCase;
 
 class ImageServiceTest extends TestCase
 {
@@ -34,9 +33,6 @@ class ImageServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        global $plugin_cf;
-
-        $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
         vfsStream::setup('root');
         mkdir(vfsStream::url('root/foo'), 0777, true);
         file_put_contents(vfsStream::url('root/foo.txt'), 'blah');
@@ -46,7 +42,7 @@ class ImageServiceTest extends TestCase
         $thumbnailServiceStub = $this->createMock(ThumbnailService::class);
         $thumbnailServiceStub->method('makeThumbnail')->willReturn('thumb/nail');
         $thumbnailServiceStub->method('makeFolderThumbnail')->willReturn('thumb/nail');
-        $this->subject = new ImageService(vfsStream::url('root/'), $thumbnailServiceStub);
+        $this->subject = new ImageService(vfsStream::url('root/'), 128, $thumbnailServiceStub);
     }
 
     public function testFindEntries()

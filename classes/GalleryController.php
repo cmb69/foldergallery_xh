@@ -21,6 +21,12 @@
 
 namespace Foldergallery;
 
+use Foldergallery\Infra\ImageService;
+use Foldergallery\Infra\ThumbnailService;
+use Foldergallery\Infra\View;
+use Foldergallery\Logic\Util;
+use stdClass;
+
 class GalleryController
 {
     /**
@@ -70,7 +76,14 @@ class GalleryController
 
         $frontend = $plugin_cf['foldergallery']['frontend'];
         $this->{"include$frontend"}();
-        $imageService = new ImageService("{$this->basefolder}{$this->currentSubfolder}", new ThumbnailService);
+        $imageService = new ImageService(
+            "{$this->basefolder}{$this->currentSubfolder}",
+            $plugin_cf['foldergallery']['thumb_size'],
+            new ThumbnailService(
+                "{$pth['folder']['plugins']}foldergallery/cache/",
+                hexdec($plugin_cf['foldergallery']['folder_background'])
+            )
+        );
         $children = $imageService->findEntries();
         foreach ($children as $child) {
             if ($child->isDir) {
@@ -143,24 +156,28 @@ jQuery(function ($) {
 SCRIPT;
     }
 
-    /** @return array<object> */
+    /** @return list<stdClass> */
     private function getBreadcrumbs()
     {
-        $breadcrumbs = (new BreadcrumbService($this->currentSubfolder))->getBreadcrumbs();
+        $result = [];
+        $breadcrumbs = Util::breadcrumbs($this->currentSubfolder, $this->lang['locator_start']);
         foreach ($breadcrumbs as $i => $breadcrumb) {
+            $object = new stdClass;
+            $object->name = $breadcrumb["name"];
             if ($i < count($breadcrumbs) - 1) {
-                if (isset($breadcrumb->url)) {
-                    $breadcrumb->url = $this->urlWithFoldergallery($breadcrumb->url);
+                if (isset($breadcrumb["url"])) {
+                    $object->url = $this->urlWithFoldergallery($breadcrumb["url"]);
                 } else {
-                    $breadcrumb->url = $this->urlWithoutFoldergallery();
+                    $object->url = $this->urlWithoutFoldergallery();
                 }
-                $breadcrumb->isLink = true;
+                $object->isLink = true;
             } else {
-                $breadcrumb->url = null;
-                $breadcrumb->isLink = false;
+                $object->url = null;
+                $object->isLink = false;
             }
+            $result[] = $object;
         }
-        return $breadcrumbs;
+        return $result;
     }
 
     /** @param string $value */

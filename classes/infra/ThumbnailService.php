@@ -19,29 +19,23 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery;
+namespace Foldergallery\Infra;
 
 use GdImage;
 use stdClass;
 
 class ThumbnailService
 {
-    /**
-     * @var string
-     */
-    private $cache;
+    /** @var string */
+    private $cacheFolder;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $folderBackground;
 
-    public function __construct()
+    public function __construct(string $cacheFolder, int $folderBackground)
     {
-        global $pth, $plugin_cf;
-
-        $this->cache = "{$pth['folder']['plugins']}foldergallery/cache/";
-        $this->folderBackground = hexdec($plugin_cf['foldergallery']['folder_background']);
+        $this->cacheFolder = $cacheFolder;
+        $this->folderBackground = $folderBackground;
     }
 
     /**
@@ -52,7 +46,7 @@ class ThumbnailService
      */
     public function makeFolderThumbnail($srcPath, array $images, $dstHeight)
     {
-        $dstPath = $this->cache . sha1("$srcPath." . implode('.', $images) . ".$dstHeight") . '.jpg';
+        $dstPath = $this->cacheFolder . sha1("$srcPath." . implode('.', $images) . ".$dstHeight") . '.jpg';
         $dst = imagecreatetruecolor($dstHeight, $dstHeight);
         imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, $this->folderBackground);
         foreach ($images as $i => $basename) {
@@ -107,7 +101,7 @@ class ThumbnailService
         ) {
             return $srcPath;
         }
-        $dstPath = $this->cache . sha1("$srcPath.$dstWidth.$dstHeight") . '.jpg';
+        $dstPath = $this->cacheFolder . sha1("$srcPath.$dstWidth.$dstHeight") . '.jpg';
         if (!file_exists($dstPath)) {
             return $this->doMakeThumbnail(
                 (object) ['path' => $srcPath, 'width' => $srcWidth, 'height' => $srcHeight],

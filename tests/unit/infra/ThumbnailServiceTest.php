@@ -19,11 +19,11 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery;
+namespace Foldergallery\Infra;
 
+use Foldergallery\Infra\ThumbnailService;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
 
 class ThumbnailServiceTest extends TestCase
 {
@@ -34,16 +34,13 @@ class ThumbnailServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        global $pth, $plugin_cf;
-
-        $plugin_cf = XH_includeVar("./config/config.php", "plugin_cf");
         vfsStream::setup('root');
         mkdir(vfsStream::url('root/foldergallery/cache/'), 0777, true);
         $this->setUpImages();
-        $pth = array(
-            'folder' => ['plugins' => vfsStream::url('root/')]
+        $this->subject = new ThumbnailService(
+            vfsStream::url('root/foldergallery/cache/'),
+            hexdec("ffdd44")
         );
-        $this->subject = new ThumbnailService;
     }
 
     private function setUpImages()
@@ -76,5 +73,14 @@ class ThumbnailServiceTest extends TestCase
         $this->assertSame(96, $info[0]);
         $this->assertSame(128, $info[1]);
         $this->assertSame(IMG_JPEG, $info[2]);
+    }
+
+    public function testFolderThumbnail(): void
+    {
+        $expected = "vfs://root/foldergallery/cache/60dd3bc42e82660290e280ca4b791264a1aa40f3.jpg";
+        $actual = $this->subject->makeFolderThumbnail("vfs://root/", ["landscape.jpg", "portrait.jpg"], 128);
+        $this->assertEquals($expected, $actual);
+        $info = getimagesize($expected);
+        $this->assertEquals([128, 128, IMG_JPEG], array_slice($info, 0, 3));
     }
 }

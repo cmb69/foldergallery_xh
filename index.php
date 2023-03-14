@@ -19,6 +19,8 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const FOLDERGALLERY_VERSION = "1.0beta1";
+
 /**
  * @param string $basefolder
  * @return string
@@ -30,5 +32,3 @@ function foldergallery($basefolder = '')
     $gallery->indexAction();
     return ob_get_clean();
 }
-
-(new Foldergallery\Plugin)->run();

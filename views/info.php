@@ -1,6 +1,6 @@
 <?php
 
-use Foldergallery\View;
+use Foldergallery\Infra\View;
 
 /**
  * @var View $this

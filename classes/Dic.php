@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Foldergallery_XH.
  *
@@ -19,22 +19,27 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Foldergallery\Dic;
+namespace Foldergallery;
 
-/**
- * @var string $admin
- * @var string $o
- */
+use Foldergallery\Infra\SystemChecker;
+use Foldergallery\Infra\View;
 
-XH_registerStandardPluginMenuItems(false);
+class Dic
+{
+    public static function makeInfoController(): InfoController
+    {
+        return new InfoController(
+            new SystemChecker,
+            self::makeView()
+        );
+    }
 
-if (XH_wantsPluginAdministration("foldergallery")) {
-    $o .= print_plugin_admin("off");
-    switch ($admin) {
-        case "":
-            $o .= Dic::makeInfoController()->defaultAction();
-            break;
-        default:
-            $o .= plugin_admin_common();
+    private static function makeView(): View
+    {
+        global $pth, $plugin_tx;
+        return new View(
+            $pth["folder"]["plugins"] . "foldergallery/views/",
+            $plugin_tx["foldergallery"]
+        );
     }
 }

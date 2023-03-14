@@ -19,31 +19,27 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery;
+namespace Foldergallery\Logic;
 
-class Plugin
+use PHPUnit\Framework\TestCase;
+
+class UtilTest extends TestCase
 {
-    const VERSION = '1.0beta1';
-
-    /** @return void */
-    public function run()
+    /** @dataProvider breadcrumbs */
+    public function testBreadcrumbs(string $folder, string $first, array $expected)
     {
-        global $admin, $action, $o;
+        $breadcrumbs = Util::breadcrumbs($folder, $first);
+        $this->assertEquals($expected, $breadcrumbs);
+    }
 
-        if (defined("XH_ADM") && XH_ADM) {
-            XH_registerStandardPluginMenuItems(false);
-            if (XH_wantsPluginAdministration('foldergallery')) {
-                $o .= print_plugin_admin('off');
-                switch ($admin) {
-                    case '':
-                        ob_start();
-                        (new InfoController)->defaultAction();
-                        $o .= ob_get_clean();
-                        break;
-                    default:
-                        $o .= plugin_admin_common();
-                }
-            }
-        }
+    public function breadcrumbs(): array
+    {
+        return [
+            ["foo/bar/", "Start", [
+                ['name' => 'Start', "url" => null],
+                ['name' => 'foo', 'url' => 'foo'],
+                ['name' => 'bar', 'url' => 'foo/bar']
+            ]],
+        ];
     }
 }
