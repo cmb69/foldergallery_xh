@@ -23,7 +23,6 @@ namespace Foldergallery;
 
 use Foldergallery\Infra\SystemChecker;
 use Foldergallery\Infra\View;
-use stdClass;
 
 class InfoController
 {
@@ -50,7 +49,7 @@ class InfoController
         ]);
     }
 
-    /** @return list<stdClass> */
+    /** @return list<array{state:string,label:string,stateLabel:string}> */
     private function checks(): array
     {
         global $pth;
@@ -68,60 +67,65 @@ class InfoController
         ];
     }
 
-    private function checkPhpVersion(string $version): stdClass
+    /** @return array{state:string,label:string,stateLabel:string} */
+    private function checkPhpVersion(string $version): array
     {
         global $plugin_tx;
 
         $state = $this->systemChecker->checkVersion(PHP_VERSION, $version) ? "success" : "fail";
-        return (object) [
+        return [
             "state" => $state,
             "label" => sprintf($plugin_tx["foldergallery"]["syscheck_phpversion"], $version),
             "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
         ];
     }
 
-    private function checkExtension(string $name): stdClass
+    /** @return array{state:string,label:string,stateLabel:string} */
+    private function checkExtension(string $name): array
     {
         global $plugin_tx;
 
         $state = $this->systemChecker->checkExtension($name) ? "success" : "fail";
-        return (object) [
+        return [
             "state" => $state,
             "label" => sprintf($plugin_tx["foldergallery"]["syscheck_extension"], $name),
             "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
         ];
     }
 
-    private function checkXhVersion(string $version): stdClass
+    /** @return array{state:string,label:string,stateLabel:string} */
+    private function checkXhVersion(string $version): array
     {
         global $plugin_tx;
 
         $state = $this->systemChecker->checkVersion(CMSIMPLE_XH_VERSION, "CMSimple_XH $version") ? "success" : "fail";
-        return (object) [
+        return [
             "state" => $state,
             "label" => sprintf($plugin_tx["foldergallery"]["syscheck_xhversion"], $version),
             "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
         ];
     }
 
-    private function checkPlugin(string $name): stdClass
+    /** @return array{state:string,label:string,stateLabel:string} */
+    private function checkPlugin(string $name): array
     {
         global $plugin_tx;
 
         $state = $this->systemChecker->checkPlugin($name) ? "success" : "fail";
-        return (object) [
+        return [
             "state" => $state,
             "label" => sprintf($plugin_tx["foldergallery"]["syscheck_plugin"], $name),
             "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],
         ];
     }
 
-    private function checkWritability(string $folder): stdClass
+    /** @return array{state:string,label:string,stateLabel:string} */
+    private function checkWritability(string $folder): array
     {
         global $plugin_tx;
 
         $state = $this->systemChecker->checkWritability($folder) ? "success" : "warning";
-        return (object) [
+        return [
             "state" => $state,
             "label" => sprintf($plugin_tx["foldergallery"]["syscheck_writable"], $folder),
             "stateLabel" => $plugin_tx["foldergallery"]["syscheck_$state"],

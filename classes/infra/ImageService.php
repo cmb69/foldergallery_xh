@@ -44,7 +44,7 @@ class ImageService
     }
 
     /**
-     * @return object[]
+     * @return array<array{caption:string,basename:?string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:?string}>
      */
     public function findEntries(string $folder)
     {
@@ -62,7 +62,7 @@ class ImageService
             }
         }
         usort($result, function ($a, $b) {
-            return 2 * ($b->isDir - $a->isDir) + strnatcasecmp($a->filename, $b->filename);
+            return 2 * ($b["isDir"] - $a["isDir"]) + strnatcasecmp($a["filename"], $b["filename"]);
         });
         return $result;
     }
@@ -84,7 +84,7 @@ class ImageService
 
     /**
      * @param string $entry
-     * @return object
+     * @return array{caption:string,basename:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:null}
      */
     private function createDir(string $folder, $entry)
     {
@@ -97,14 +97,15 @@ class ImageService
             $thumb = $this->thumbnailService->makeFolderThumbnail($filename, $images, $i * $this->thumbSize);
             $srcset .= ", $thumb {$i}x";
         }
-        return (object) array(
+        return [
             'caption' => $this->getCaption($entry),
             'basename' => $entry,
             'filename' => "{$folder}{$entry}",
             'thumbnail' => $thumbnail,
             'srcset' => $srcset,
-            'isDir' => true
-        );
+            'isDir' => true,
+            "size" => null,
+        ];
     }
 
     /**
@@ -129,7 +130,7 @@ class ImageService
 
     /**
      * @param string $entry
-     * @return object
+     * @return array{caption:string,basename:null,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string}
      */
     private function createImage(string $folder, $entry)
     {
@@ -149,7 +150,15 @@ class ImageService
         $isDir = false;
         list($width, $height) = getimagesize($filename);
         $size = "{$width}x{$height}";
-        return (object) compact('caption', 'filename', 'thumbnail', 'srcset', 'isDir', 'size');
+        return [
+            "caption" => $caption,
+            "basename" => null,
+            "filename" => $filename,
+            "thumbnail" => $thumbnail,
+            "srcset" => $srcset,
+            "isDir" => $isDir,
+            "size" => $size,
+        ];
     }
 
     /**

@@ -6,7 +6,7 @@ use Foldergallery\Infra\View;
  * @var View $this
  * @var string $version
  * @var string $logo
- * @var list<stdClass> $checks
+ * @var list<array{state:string,label:string,stateLabel:string}> $checks
  */
 ?>
 <h1>Foldergallery</h1>
@@ -35,6 +35,6 @@ use Foldergallery\Infra\View;
 <h2><?=$this->text('syscheck_title')?></h2>
 <div class="foldergallery_syscheck">
 <?php foreach ($checks as $check):?>
-    <p class="xh_<?=$check->state?>"><?=$this->text('syscheck_message', $check->label, $check->stateLabel)?></p>
+    <p class="xh_<?=$check['state']?>"><?=$this->text('syscheck_message', $check['label'], $check['stateLabel'])?></p>
 <?php endforeach?>
 </div>

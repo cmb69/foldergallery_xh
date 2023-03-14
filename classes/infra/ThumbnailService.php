@@ -22,7 +22,6 @@
 namespace Foldergallery\Infra;
 
 use GdImage;
-use stdClass;
 
 class ThumbnailService
 {
@@ -94,7 +93,7 @@ class ThumbnailService
     public function makeThumbnail($srcPath, $dstHeight)
     {
         list($srcWidth, $srcHeight, $type) = getimagesize($srcPath);
-        $dstWidth = round($srcWidth / $srcHeight * $dstHeight);
+        $dstWidth = (int) round($srcWidth / $srcHeight * $dstHeight);
         if ($dstWidth > $srcWidth || $dstHeight > $srcHeight
             || $dstWidth == $srcWidth && $dstHeight == $srcHeight
             || $type != IMG_JPEG
@@ -104,46 +103,52 @@ class ThumbnailService
         $dstPath = $this->cacheFolder . sha1("$srcPath.$dstWidth.$dstHeight") . '.jpg';
         if (!file_exists($dstPath)) {
             return $this->doMakeThumbnail(
-                (object) ['path' => $srcPath, 'width' => $srcWidth, 'height' => $srcHeight],
-                (object) ['path' => $dstPath, 'width' => $dstWidth, 'height' => $dstHeight]
+                ['path' => $srcPath, 'width' => $srcWidth, 'height' => $srcHeight],
+                ['path' => $dstPath, 'width' => $dstWidth, 'height' => $dstHeight]
             );
         }
         return $dstPath;
     }
 
     /**
+     * @param array{path:string,width:int,height:int} $src
+     * @param array{path:string,width:int,height:int} $dst
      * @return string
      */
-    private function doMakeThumbnail(stdClass $src, stdClass $dst)
+    private function doMakeThumbnail(array $src, array $dst)
     {
-        if (!(($src->image = imagecreatefromjpeg($src->path))
-            && $this->resize($src, $dst)
-            && imagejpeg($dst->image, $dst->path))
+        if (!(($srcImage = imagecreatefromjpeg($src["path"]))
+            && ($dstImage = $this->resize($srcImage, $src, $dst))
+            && imagejpeg($dstImage, $dst["path"]))
         ) {
-            return $src->path;
+            return $src["path"];
         }
-        return $dst->path;
+        return $dst["path"];
     }
 
     /**
-     * @return bool
+     * @param resource|GdImage $srcImage
+     * @param array{path:string,width:int,height:int} $src
+     * @param array{path:string,width:int,height:int} $dst
+     * @return resource|GdImage|null
      */
-    private function resize(stdClass $src, stdClass $dst)
+    private function resize($srcImage, array $src, array $dst)
     {
-        if (!($dst->image = imagecreatetruecolor($dst->width, $dst->height))) {
-            return false;
+        if (!($dstImage = imagecreatetruecolor($dst["width"], $dst["height"]))) {
+            return null;
         }
-        return imagecopyresampled(
-            $dst->image,
-            $src->image,
+        $success = imagecopyresampled(
+            $dstImage,
+            $srcImage,
             0,
             0,
             0,
             0,
-            $dst->width,
-            $dst->height,
-            $src->width,
-            $src->height
+            $dst["width"],
+            $dst["height"],
+            $src["width"],
+            $src["height"]
         );
+        return $success ? $dstImage : null;
     }
 }

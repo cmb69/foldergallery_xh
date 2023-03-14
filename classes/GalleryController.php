@@ -24,7 +24,6 @@ namespace Foldergallery;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\View;
 use Foldergallery\Logic\Util;
-use stdClass;
 
 class GalleryController
 {
@@ -72,10 +71,10 @@ class GalleryController
         $frontend = $this->conf['frontend'];
         $this->{"include$frontend"}();
         $children = $this->imageService->findEntries("{$basefolder}{$this->getCurrentSubfolder()}");
-        foreach ($children as $child) {
-            if ($child->isDir) {
-                $folder = "{$this->getCurrentSubfolder()}{$child->basename}";
-                $child->url = $this->urlWithFoldergallery($pageUrl, $folder);
+        foreach ($children as &$child) {
+            if ($child["isDir"]) {
+                $folder = "{$this->getCurrentSubfolder()}{$child["basename"]}";
+                $child["url"] = $this->urlWithFoldergallery($pageUrl, $folder);
             }
         }
         return $this->view->render("gallery", [
@@ -141,28 +140,28 @@ jQuery(function ($) {
 SCRIPT;
     }
 
-    /** @return list<stdClass> */
+    /** @return list<array{name:string,url:string,isLink:bool}> */
     private function getBreadcrumbs(string $pageUrl)
     {
-        $result = [];
+        $records = [];
         $breadcrumbs = Util::breadcrumbs($this->getCurrentSubfolder(), $this->text['locator_start']);
         foreach ($breadcrumbs as $i => $breadcrumb) {
-            $object = new stdClass;
-            $object->name = $breadcrumb["name"];
+            $record = [];
+            $record["name"] = $breadcrumb["name"];
             if ($i < count($breadcrumbs) - 1) {
                 if (isset($breadcrumb["url"])) {
-                    $object->url = $this->urlWithFoldergallery($pageUrl, $breadcrumb["url"]);
+                    $record["url"] = $this->urlWithFoldergallery($pageUrl, $breadcrumb["url"]);
                 } else {
-                    $object->url = $this->urlWithoutFoldergallery($pageUrl);
+                    $record["url"] = $this->urlWithoutFoldergallery($pageUrl);
                 }
-                $object->isLink = true;
+                $record["isLink"] = true;
             } else {
-                $object->url = null;
-                $object->isLink = false;
+                $record["url"] = null;
+                $record["isLink"] = false;
             }
-            $result[] = $object;
+            $records[] = $record;
         }
-        return $result;
+        return $records;
     }
 
     /** @param string $value */

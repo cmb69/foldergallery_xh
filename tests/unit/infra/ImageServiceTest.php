@@ -47,24 +47,23 @@ class ImageServiceTest extends TestCase
 
     public function testFindEntries()
     {
-        $expected = array(
-            (object) array(
-                'caption' => 'foo',
-                'basename' => 'foo',
-                'filename' => vfsStream::url('root/foo'),
-                'isDir' => true,
-                'thumbnail' => 'thumb/nail',
-                'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x'
-            ),
-            (object) array(
-                'caption' => 'image',
-                'filename' => vfsStream::url('root/image.jpg'),
-                'isDir' => false,
-                'thumbnail' => 'thumb/nail',
-                'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x',
-                'size' => "10x10",
-            )
-        );
+        $expected = array([
+            'caption' => 'foo',
+            'basename' => 'foo',
+            'filename' => vfsStream::url('root/foo'),
+            'isDir' => true,
+            'thumbnail' => 'thumb/nail',
+            'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x',
+            "size" => null,
+        ], [
+            'caption' => 'image',
+            "basename" => null,
+            'filename' => vfsStream::url('root/image.jpg'),
+            'isDir' => false,
+            'thumbnail' => 'thumb/nail',
+            'srcset' => 'thumb/nail 1x, thumb/nail 2x, thumb/nail 3x',
+            'size' => "10x10",
+        ]);
         $this->assertEquals($expected, $this->subject->findEntries(vfsStream::url('root/')));
     }
 }
