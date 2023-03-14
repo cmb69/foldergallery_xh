@@ -127,10 +127,10 @@ class ThumbnailService
     }
 
     /**
-     * @param resource|GdImage $srcImage
+     * @param GdImage $srcImage
      * @param array{path:string,width:int,height:int} $src
      * @param array{path:string,width:int,height:int} $dst
-     * @return resource|GdImage|null
+     * @return GdImage|null
      */
     private function resize($srcImage, array $src, array $dst)
     {
