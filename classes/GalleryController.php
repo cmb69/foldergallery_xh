@@ -140,7 +140,7 @@ SCRIPT;
     private function getBreadcrumbs(Request $request)
     {
         $records = [];
-        $breadcrumbs = Util::breadcrumbs($request->folder(), $this->text['locator_start']);
+        $breadcrumbs = Util::breadcrumbs($request->folder(), $this->view->plain("locator_start"));
         foreach ($breadcrumbs as $i => $breadcrumb) {
             $record = [];
             $record["name"] = $breadcrumb["name"];

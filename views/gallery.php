@@ -2,40 +2,43 @@
 
 use Foldergallery\Infra\View;
 
+if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
+
 /**
  * @var View $this
  * @var list<array{name:string,url:string,isLink:bool}> $breadcrumbs
  * @var array<array{caption:string,basename?:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size?:string,url:string}> $children
  */
 ?>
+<!-- foldergallery gallery -->
 <div class="foldergallery">
-    <div class="foldergallery_locator">
-<?php foreach ($breadcrumbs as $breadcrumb):?>
-<?php   if ($breadcrumb['isLink']):?>
-        <a href="<?=$breadcrumb['url']?>"><?=$breadcrumb['name']?></a>
-        <?=$this->text('locator_separator')?>
-<?php   else:?>
-        <span><?=$breadcrumb['name']?></span>
-<?php   endif?>
-<?php endforeach?>
-    </div>
-    <div class="foldergallery_figures">
-<?php foreach ($children as $child):?>
-<?php   if ($child['isDir']):?>
-        <figure class="foldergallery_folder">
-            <a href="<?=$child['url']?>">
-                <img src="<?=$child['thumbnail']?>" srcset="<?=$child['srcset']?>" alt="<?=$child['caption']?>">
-            </a> 
-            <figcaption><?=$child['caption']?></figcaption>
-        </figure>
-<?php   else:?>
-        <figure class="foldergallery_image">
-            <a class="foldergallery_group" href="<?=$child['filename']?>" data-size="<?=$child['size']?>">
-                <img src="<?=$child['thumbnail']?>" srcset="<?=$child['srcset']?>" alt="<?=$child['caption']?>">
-            </a>
-            <figcaption><?=$child['caption']?></figcaption>
-        </figure>
-<?php   endif?>
-<?php endforeach?>
-    </div>
+  <div class="foldergallery_locator">
+<?foreach ($breadcrumbs as $breadcrumb):?>
+<?  if ($breadcrumb['isLink']):?>
+    <a href="<?=$breadcrumb['url']?>"><?=$breadcrumb['name']?></a>
+    <?=$this->text('locator_separator')?>
+<?  else:?>
+    <span><?=$breadcrumb['name']?></span>
+<?  endif?>
+<?endforeach?>
+  </div>
+  <div class="foldergallery_figures">
+<?foreach ($children as $child):?>
+<?  if ($child['isDir']):?>
+    <figure class="foldergallery_folder">
+      <a href="<?=$child['url']?>">
+        <img src="<?=$child['thumbnail']?>" srcset="<?=$child['srcset']?>" alt="<?=$child['caption']?>">
+      </a> 
+      <figcaption><?=$child['caption']?></figcaption>
+    </figure>
+<?  else:?>
+    <figure class="foldergallery_image">
+      <a class="foldergallery_group" href="<?=$child['filename']?>" data-size="<?=$child['size']?>">
+        <img src="<?=$child['thumbnail']?>" srcset="<?=$child['srcset']?>" alt="<?=$child['caption']?>">
+      </a>
+      <figcaption><?=$child['caption']?></figcaption>
+    </figure>
+<?  endif?>
+<?endforeach?>
+  </div>
 </div>

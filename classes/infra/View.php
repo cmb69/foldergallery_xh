@@ -43,6 +43,12 @@ class View
     }
 
     /** @param scalar $args */
+    public function plain(string $key, ...$args): string
+    {
+        return sprintf($this->text[$key], ...$args);
+    }
+
+    /** @param scalar $args */
     public function error(string $key, ...$args): string
     {
         return XH_message("fail", $this->text[$key], ...$args) . "\n";
@@ -51,15 +57,21 @@ class View
     /** @param array<string,mixed> $_data */
     public function render(string $_template, array $_data): string
     {
+        array_walk_recursive($_data, function (&$value) {
+            assert(is_null($value) || is_scalar($value));
+            if (is_string($value)) {
+                $value = $this->esc($value);
+            }
+        });
         extract($_data);
         ob_start();
         include $this->templateFolder . $_template . ".php";
         return ob_get_clean();
     }
 
-    /** @param scalar $value */
+    /** @param string $value */
     public function esc($value): string
     {
-        return XH_hsc((string) $value);
+        return XH_hsc($value);
     }
 }
