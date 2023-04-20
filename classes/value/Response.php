@@ -39,16 +39,6 @@ class Response
     /** @var string|null */
     private $hjs = null;
 
-    /** @var string|null */
-    private $bjs = null;
-
-    public function withOutput(string $output): self
-    {
-        $that = clone $this;
-        $that->output .= $output;
-        return $that;
-    }
-
     public function withTitle(string $title): self
     {
         $that = clone $this;
@@ -60,13 +50,6 @@ class Response
     {
         $that = clone $this;
         $that->hjs = $hjs;
-        return $that;
-    }
-
-    public function withBjs(string $bjs): self
-    {
-        $that = clone $this;
-        $that->bjs = $bjs;
         return $that;
     }
 
@@ -83,10 +66,5 @@ class Response
     public function hjs(): ?string
     {
         return $this->hjs;
-    }
-
-    public function bjs(): ?string
-    {
-        return $this->bjs;
     }
 }

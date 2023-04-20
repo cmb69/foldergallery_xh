@@ -36,9 +36,6 @@ class GalleryController
     /** @var array<string,string> */
     private $conf;
 
-    /** @var array<string,string> */
-    private $text;
-
     /** @var ImageService */
     private $imageService;
 
@@ -48,21 +45,16 @@ class GalleryController
     /** @var View */
     private $view;
 
-    /**
-     * @param array<string,string> $conf
-     * @param array<string,string> $text
-     */
+    /** @param array<string,string> $conf */
     public function __construct(
         string $pluginFolder,
         array $conf,
-        array $text,
         ImageService $imageService,
         Jquery $jquery,
         View $view
     ) {
         $this->pluginFolder = $pluginFolder;
         $this->conf = $conf;
-        $this->text = $text;
         $this->imageService = $imageService;
         $this->jquery = $jquery;
         $this->view = $view;
@@ -77,14 +69,15 @@ class GalleryController
                 $child["url"] = Util::urlWithFoldergallery($request->url(), $folder);
             }
         }
-        return $this->initializeFrontEnd($this->conf["frontend"])
-            ->withOutput($this->view->render("gallery", [
-                'breadcrumbs' => $this->getBreadcrumbs($request),
-                'children' => $children
-            ]));
+        [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
+        return Response::create($output . $this->view->render("gallery", [
+            "breadcrumbs" => $this->getBreadcrumbs($request),
+            "children" => $children
+        ]))->withHjs($hjs);
     }
 
-    private function initializeFrontEnd(string $frontEnd): Response
+    /** @return array{string,string} */
+    private function initializeFrontEnd(string $frontEnd): array
     {
         switch ($frontEnd) {
             case "Photoswipe":
@@ -92,45 +85,48 @@ class GalleryController
             case "Colorbox":
                 return $this->includeColorbox();
             default:
-                return Response::create($this->view->error("error_frontend", $frontEnd));
+                return ["", $this->view->error("error_frontend", $frontEnd)];
         }
     }
 
-    private function includePhotoswipe(): Response
+    /** @return array{string,string} */
+    private function includePhotoswipe(): array
     {
-        $photoswipeFolder = $this->pluginFolder . "lib/photoswipe/";
-        $hjs = "<link rel=\"stylesheet\" href=\"{$photoswipeFolder}photoswipe.css\">\n"
-            . "<link rel=\"stylesheet\" href=\"{$photoswipeFolder}default-skin/default-skin.css\">\n"
-            . "<script src=\"{$photoswipeFolder}photoswipe.min.js\"></script>\n"
-            . "<script src=\"{$photoswipeFolder}photoswipe-ui-default.min.js\"></script>\n";
-        $bjs = $this->view->render("photoswipe", []);
-        $filename = "{$this->pluginFolder}foldergallery.min.js";
-        $bjs .= sprintf("<script src=\"%s\"></script>\n", $filename);
-        return Response::create()->withHjs($hjs)->withBjs($bjs);
+        return [
+            $this->view->render("photoswipe_head", [
+                "stylesheet" => $this->pluginFolder . "lib/photoswipe/photoswipe.css",
+                "skin_stylesheet" => $this->pluginFolder . "lib/photoswipe/default-skin/default-skin.css",
+                "script" => $this->pluginFolder . "lib/photoswipe/photoswipe.min.js",
+                "skin_script" => $this->pluginFolder . "lib/photoswipe/photoswipe-ui-default.min.js",
+            ]),
+            $this->view->render("photoswipe", [
+                "script" => $this->pluginFolder . "foldergallery.min.js",
+            ]),
+        ];
     }
 
-    private function includeColorbox(): Response
+    /** @return array{string,string} */
+    private function includeColorbox(): array
     {
         $this->jquery->include();
-        $colorboxFolder = $this->pluginFolder . "colorbox/";
-        $this->jquery->includePlugin("colorbox", "{$colorboxFolder}jquery.colorbox-min.js");
-        $hjs = "<link rel=\"stylesheet\" href=\"{$colorboxFolder}colorbox.css\" type=\"text/css\">\n";
-        $config = array('rel' => 'foldergallery_group', 'maxWidth' => '100%', 'maxHeight' => '100%');
-        foreach ($this->text as $key => $value) {
-            if (strpos($key, 'colorbox_') === 0) {
-                $config[substr($key, strlen('colorbox_'))] = $value;
-            }
-        }
-        $config = json_encode($config);
-        $bjs = <<<SCRIPT
-<script>
-jQuery(function ($) {
-    $(".foldergallery_group").colorbox($config);
-});
-</script>
-
-SCRIPT;
-        return Response::create()->withHjs($hjs)->withBjs($bjs);
+        $this->jquery->includePlugin("colorbox", $this->pluginFolder . "lib/colorbox/jquery.colorbox-min.js");
+        return [
+            $this->view->render("colorbox_head", [
+                "stylesheet" => $this->pluginFolder . "lib/colorbox/colorbox.css",
+            ]),
+            $this->view->render("colorbox", [
+                "config" => [
+                    "rel" => "foldergallery_group",
+                    "maxWidth" => "100%",
+                    "maxHeight" => "100%",
+                    "current" => $this->view->plain("colorbox_current"),
+                    "previous" => $this->view->plain("colorbox_previous"),
+                    "next" => $this->view->plain("colorbox_next"),
+                    "close" => $this->view->plain("colorbox_close"),
+                    "imgError" => $this->view->plain("colorbox_imgError"),
+                ],
+            ]),
+        ];
     }
 
     /** @return list<array{name:string,url:string,isLink:bool}> */

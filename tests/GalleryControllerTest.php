@@ -35,7 +35,6 @@ class GalleryControllerTest extends TestCase
         $sut = new GalleryController(
             "./plugins/foldergallery/",
             $this->conf(),
-            $this->text(),
             $this->imageService(),
             $this->jquery(),
             $this->view()
@@ -48,8 +47,7 @@ class GalleryControllerTest extends TestCase
     {
         $sut = new GalleryController(
             "./plugins/foldergallery/",
-            $this->conf(),
-            $this->text(),
+            $this->conf("Colorbox"),
             $this->imageService(),
             $this->jquery(),
             $this->view()
@@ -66,27 +64,12 @@ class GalleryControllerTest extends TestCase
         $sut = new GalleryController(
             "./plugins/foldergallery/",
             $this->conf(),
-            $this->text(),
             $this->imageService(),
             $this->jquery(),
             $this->view()
         );
         $response = $sut($this->request(), "test");
         Approvals::verifyHtml($response->hjs());
-    }
-
-    public function testRendersBjs(): void
-    {
-        $sut = new GalleryController(
-            "./plugins/foldergallery/",
-            $this->conf(),
-            $this->text(),
-            $this->imageService(),
-            $this->jquery(),
-            $this->view()
-        );
-        $response = $sut($this->request(), "test");
-        Approvals::verifyHtml($response->bjs());
     }
 
     public function testRendersColorboxHjs(): void
@@ -94,7 +77,6 @@ class GalleryControllerTest extends TestCase
         $sut = new GalleryController(
             "./plugins/foldergallery/",
             $this->conf("Colorbox"),
-            $this->text(),
             $this->imageService(),
             $this->jquery(true),
             $this->view()
@@ -103,26 +85,11 @@ class GalleryControllerTest extends TestCase
         Approvals::verifyHtml($response->hjs());
     }
 
-    public function testRendersColorboxBjs(): void
-    {
-        $sut = new GalleryController(
-            "./plugins/foldergallery/",
-            $this->conf("Colorbox"),
-            $this->text(),
-            $this->imageService(),
-            $this->jquery(true),
-            $this->view()
-        );
-        $response = $sut($this->request(), "test");
-        Approvals::verifyHtml($response->bjs());
-    }
-
     public function testUnsupportedFrontEnd(): void
     {
         $sut = new GalleryController(
             "./plugins/foldergallery/",
             $this->conf("Unsupported"),
-            $this->text(),
             $this->imageService(),
             $this->jquery(),
             $this->view()
@@ -152,7 +119,7 @@ class GalleryControllerTest extends TestCase
         if ($used) {
             $jquery->expects($this->once())->method("include");
             $jquery->expects($this->once())->method("includePlugin")
-                ->with("colorbox", "./plugins/foldergallery/colorbox/jquery.colorbox-min.js");
+                ->with("colorbox", "./plugins/foldergallery/lib/colorbox/jquery.colorbox-min.js");
         }
         return $jquery;
     }

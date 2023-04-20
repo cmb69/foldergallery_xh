@@ -31,12 +31,10 @@ class Dic
 {
     public static function makeGalleryController(): GalleryController
     {
-        global $pth, $plugin_cf, $plugin_tx;
-
+        global $pth, $plugin_cf;
         return new GalleryController(
             $pth["folder"]["plugins"] . "foldergallery/",
             $plugin_cf["foldergallery"],
-            $plugin_tx["foldergallery"],
             self::makeImageService(),
             new Jquery($pth["folder"]["plugins"] . "jquery/"),
             self::makeView()

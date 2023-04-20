@@ -1,6 +1,10 @@
 <?php
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
+
+/**
+ * @var string $script
+ */
 ?>
 <!-- foldergallery photoswipe -->
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
@@ -35,3 +39,4 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
     </div>
   </div>
 </div>
+<script type="module" src="<?=$script?>"></script>

@@ -54,6 +54,12 @@ class View
         return XH_message("fail", $this->text[$key], ...$args) . "\n";
     }
 
+    /** @param mixed $value */
+    public function json($value): string
+    {
+        return json_encode($value, JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    }
+
     /** @param array<string,mixed> $_data */
     public function render(string $_template, array $_data): string
     {

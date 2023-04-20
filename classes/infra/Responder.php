@@ -27,15 +27,12 @@ class Responder
 {
     public static function respond(Response $response): string
     {
-        global $title, $hjs, $bjs;
+        global $title, $hjs;
         if ($response->title() !== null) {
             $title = $response->title();
         }
         if ($response->hjs() !== null) {
             $hjs .= $response->hjs();
-        }
-        if ($response->bjs() !== null) {
-            $bjs .= $response->bjs();
         }
         return $response->output();
     }
