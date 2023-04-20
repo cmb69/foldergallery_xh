@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Foldergallery_XH.
  *
@@ -19,19 +19,24 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Foldergallery\Dic;
-use Foldergallery\Infra\Request;
-use Foldergallery\Infra\Responder;
+namespace Foldergallery\Infra;
 
-const FOLDERGALLERY_VERSION = "1.0beta1";
+use Foldergallery\Value\Response;
 
-/**
- * @param string $basefolder
- * @return string
- */
-function foldergallery($basefolder = "")
+class Responder
 {
-    global $pth;
-    $folder = $pth["folder"]["images"] . $basefolder . "/";
-    return Responder::respond(Dic::makeGalleryController()(Request::current(), $folder));
+    public static function respond(Response $response): string
+    {
+        global $title, $hjs, $bjs;
+        if ($response->title() !== null) {
+            $title = $response->title();
+        }
+        if ($response->hjs() !== null) {
+            $hjs .= $response->hjs();
+        }
+        if ($response->bjs() !== null) {
+            $bjs .= $response->bjs();
+        }
+        return $response->output();
+    }
 }

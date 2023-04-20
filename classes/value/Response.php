@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2017 Christoph M. Becker
+ * Copyright 2023 Christoph M. Becker
  *
  * This file is part of Foldergallery_XH.
  *
@@ -19,7 +19,7 @@
  * along with Foldergallery_XH.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Foldergallery\Infra;
+namespace Foldergallery\Value;
 
 class Response
 {
@@ -88,21 +88,5 @@ class Response
     public function bjs(): ?string
     {
         return $this->bjs;
-    }
-
-    public function respond(): string
-    {
-        global $title, $hjs, $bjs;
-
-        if ($this->title !== null) {
-            $title = $this->title;
-        }
-        if ($this->hjs !== null) {
-            $hjs .= $this->hjs;
-        }
-        if ($this->bjs !== null) {
-            $bjs .= $this->bjs;
-        }
-        return $this->output;
     }
 }

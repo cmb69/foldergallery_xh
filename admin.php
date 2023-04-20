@@ -20,6 +20,7 @@
  */
 
 use Foldergallery\Dic;
+use Foldergallery\Infra\Responder;
 
 /**
  * @var string $admin
@@ -32,7 +33,7 @@ if (XH_wantsPluginAdministration("foldergallery")) {
     $o .= print_plugin_admin("off");
     switch ($admin) {
         case "":
-            $o .= Dic::makeInfoController()()->respond();
+            $o .= Responder::respond(Dic::makeInfoController()());
             break;
         default:
             $o .= plugin_admin_common();

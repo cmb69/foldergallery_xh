@@ -24,9 +24,9 @@ namespace Foldergallery;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\Jquery;
 use Foldergallery\Infra\Request;
-use Foldergallery\Infra\Response;
 use Foldergallery\Infra\View;
 use Foldergallery\Logic\Util;
+use Foldergallery\Value\Response;
 
 class GalleryController
 {
