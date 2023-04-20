@@ -3,7 +3,9 @@
 <project name="Foldergallery" default="help">
 
   <target name="help" description="lists available targets">
-    <exec command="phing -l" outputProperty="help"/>
+    <exec executable="phing" outputProperty="help">
+      <arg line="-l"/>
+    </exec>
     <echo>${help}</echo>
   </target>
 
@@ -13,7 +15,7 @@
     </exec>
   </target>
 
-  <target name="stan" description="run static analysis">
+  <target name="stan" description="runs static analysis">
     <if>
       <versioncompare version="${php.version}" desiredVersion="8.0.0" operator="ge"/>
       <then>
@@ -29,20 +31,31 @@
     </if>
   </target>
 
-  <target name="unit-tests" description="runs all unit tests">
+  <target name="test" description="runs all developer tests">
     <exec executable="phpunit" passthru="true" checkreturn="true"/>
   </target>
 
-  <target name="check" description="runs all checks" depends="sniff,stan,unit-tests"/>
+  <target name="check" description="runs all checks" depends="sniff,stan,test"/>
 
   <target name="coverage" description="generates coverage report">
-    <exec command="phpunit --coverage-html tests/coverage" passthru="true" checkreturn="true"/>
+    <exec executable="phpunit" passthru="true" checkreturn="true">
+      <arg line="--coverage-html coverage"/>
+    </exec>
   </target>
 
-  <target name="build">
-    <exec command="git archive -o export.zip HEAD" checkreturn="true"/>
+  <target name="build" description="builds distributable package">
+    <exec executable="git" checkreturn="true">
+      <arg line="archive -o export.zip HEAD"/>
+    </exec>
     <unzip file="export.zip" todir="export"/>
     <delete file="export.zip"/>
+    <exec executable="uglifyjs" checkreturn="true">
+      <arg file="export/foldergallery.min.js"/>
+      <arg value="--compress"/>
+      <arg value="--mangle"/>
+      <arg value="--output"/>
+      <arg file="export/foldergallery.min.js"/>
+    </exec>
     <move todir="dist">
       <fileset dir="export">
         <include name="views/*.php"/>
@@ -55,6 +68,8 @@
     </move>
     <move todir="dist">
       <fileset dir="export">
+        <exclude name=".github/**"/>
+        <exclude name=".phive/**"/>
         <exclude name="tests/**"/>
         <exclude name="build.xml"/>
         <exclude name="composer.*"/>

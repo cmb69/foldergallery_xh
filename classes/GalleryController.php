@@ -105,9 +105,6 @@ class GalleryController
             . "<script src=\"{$photoswipeFolder}photoswipe-ui-default.min.js\"></script>\n";
         $bjs = $this->view->render("photoswipe", []);
         $filename = "{$this->pluginFolder}foldergallery.min.js";
-        if (!file_exists($filename)) {
-            $filename = "{$this->pluginFolder}foldergallery.js";
-        }
         $bjs .= sprintf("<script src=\"%s\"></script>\n", $filename);
         return Response::create()->withHjs($hjs)->withBjs($bjs);
     }

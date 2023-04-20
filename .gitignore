@@ -1,9 +1,6 @@
-/vendor
-/tests/coverage
-/classes.svg
-/README.htm
-/foldergallery.min.js
-/cache/*.jpg
-/composer.lock
 /.phpunit.cache
+/cache/*.jpg
+/coverage
 /tools
+/vendor
+/composer.lock
