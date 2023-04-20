@@ -80,8 +80,8 @@ class ThumbnailService
             $sh = $h - $d;
         }
         $size = imagesx($im);
-        $dx = $dy = ($index * 5 + 1)/16 * $size;
-        $dw = $dh = (int) round(9/16 * $size);
+        $dx = $dy = ($index * 5 + 1) / 16 * $size;
+        $dw = $dh = (int) round(9 / 16 * $size);
         imagecopyresampled($im, $im2, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
     }
 
@@ -94,7 +94,8 @@ class ThumbnailService
     {
         list($srcWidth, $srcHeight, $type) = getimagesize($srcPath);
         $dstWidth = (int) round($srcWidth / $srcHeight * $dstHeight);
-        if ($dstWidth > $srcWidth || $dstHeight > $srcHeight
+        if (
+            $dstWidth > $srcWidth || $dstHeight > $srcHeight
             || $dstWidth == $srcWidth && $dstHeight == $srcHeight
             || $type != IMG_JPEG
         ) {
@@ -117,7 +118,8 @@ class ThumbnailService
      */
     private function doMakeThumbnail(array $src, array $dst)
     {
-        if (!(($srcImage = imagecreatefromjpeg($src["path"]))
+        if (
+            !(($srcImage = imagecreatefromjpeg($src["path"]))
             && ($dstImage = $this->resize($srcImage, $src, $dst))
             && imagejpeg($dstImage, $dst["path"]))
         ) {

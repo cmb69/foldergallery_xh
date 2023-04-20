@@ -49,7 +49,7 @@ class Dic
 
         return new InfoController(
             $pth["folder"]["plugins"] . "foldergallery/",
-            new SystemChecker,
+            new SystemChecker(),
             self::makeView()
         );
     }

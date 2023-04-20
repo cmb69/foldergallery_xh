@@ -25,7 +25,7 @@ class Response
 {
     public static function create(string $output = ""): self
     {
-        $that = new self;
+        $that = new self();
         $that->output = $output;
         return $that;
     }
