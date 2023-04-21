@@ -37,16 +37,12 @@ class ThumbnailService
         $this->folderBackground = $folderBackground;
     }
 
-    /**
-     * @param string $srcPath
-     * @param string[] $images
-     * @param int $dstHeight
-     * @return string
-     */
-    public function makeFolderThumbnail($srcPath, array $images, $dstHeight)
+    /** @param list<string> $images */
+    public function makeFolderThumbnail(string $srcPath, array $images, int $dstHeight): string
     {
         $dstPath = $this->cacheFolder . sha1("$srcPath." . implode('.', $images) . ".$dstHeight") . '.jpg';
         $dst = imagecreatetruecolor($dstHeight, $dstHeight);
+        assert($dst !== false); // TODO invalid assertion?
         imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, $this->folderBackground);
         foreach ($images as $i => $basename) {
             $this->copyResizedAndCropped($dst, "$srcPath/$basename", $i);
@@ -56,26 +52,25 @@ class ThumbnailService
     }
 
     /**
-     * @param resource|GdImage $im
-     * @param string $filename
-     * @param int $index
+     * @param GdImage $im
      * @return void
      */
-    private function copyResizedAndCropped($im, $filename, $index)
+    private function copyResizedAndCropped($im, string $filename, int $index)
     {
         $im2 = imagecreatefromjpeg($filename);
-        $w = imagesx($im2);
-        $h = imagesy($im2);
+        assert($im2 !== false);  // TODO invalid assertion
+        $w = (int) imagesx($im2);
+        $h = (int) imagesy($im2);
         $d = $w - $h;
         if ($d >= 0) {
-            $sx = round($d / 2);
+            $sx = (int) round($d / 2);
             $sy = 0;
             $sw = $w - $d;
             $sh = $h;
         } else {
             $d = abs($d);
             $sx = 0;
-            $sy = round($d / 2);
+            $sy = (int) round($d / 2);
             $sw = $w;
             $sh = $h - $d;
         }
@@ -85,14 +80,11 @@ class ThumbnailService
         imagecopyresampled($im, $im2, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
     }
 
-    /**
-     * @param string $srcPath
-     * @param int $dstHeight
-     * @return string
-     */
-    public function makeThumbnail($srcPath, $dstHeight)
+    public function makeThumbnail(string $srcPath, int $dstHeight): string
     {
-        list($srcWidth, $srcHeight, $type) = getimagesize($srcPath);
+        $size = getimagesize($srcPath);
+        assert($size !== false); // TODO invalid assertion
+        list($srcWidth, $srcHeight, $type) = $size;
         $dstWidth = (int) round($srcWidth / $srcHeight * $dstHeight);
         if (
             $dstWidth > $srcWidth || $dstHeight > $srcHeight
@@ -114,9 +106,8 @@ class ThumbnailService
     /**
      * @param array{path:string,width:int,height:int} $src
      * @param array{path:string,width:int,height:int} $dst
-     * @return string
      */
-    private function doMakeThumbnail(array $src, array $dst)
+    private function doMakeThumbnail(array $src, array $dst): string
     {
         if (
             !(($srcImage = imagecreatefromjpeg($src["path"]))

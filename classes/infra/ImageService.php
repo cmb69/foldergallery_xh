@@ -31,9 +31,7 @@ class ImageService
     /** @var ThumbnailService */
     private $thumbnailService;
 
-    /**
-     * @var ?array<mixed>
-     */
+    /** @var array<string,string>|null */
     private $data;
 
     public function __construct(int $thumbSize, ThumbnailService $thumbnailService)
@@ -43,14 +41,14 @@ class ImageService
         $this->data = null;
     }
 
-    /**
-     * @return array<array{caption:string,basename:?string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:?string}>
-     */
-    public function findEntries(string $folder)
+    /** @return array<array{caption:string,basename:?string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:?string}> */
+    public function findEntries(string $folder): array
     {
         $this->readImageData($folder);
         $result = [];
-        foreach (scandir($folder) as $entry) {
+        $entries = scandir($folder);
+        assert($entries !== false); // TODO invalid assertion
+        foreach ($entries as $entry) {
             if (strpos($entry, '.') === 0) {
                 continue;
             }
@@ -67,9 +65,7 @@ class ImageService
         return $result;
     }
 
-    /**
-     * @return void
-     */
+    /** @return void */
     private function readImageData(string $folder)
     {
         global $sl;
@@ -82,11 +78,8 @@ class ImageService
         }
     }
 
-    /**
-     * @param string $entry
-     * @return array{caption:string,basename:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:null}
-     */
-    private function createDir(string $folder, $entry)
+    /** @return array{caption:string,basename:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:null} */
+    private function createDir(string $folder, string $entry): array
     {
         $filename = "{$folder}{$entry}";
         $images = $this->firstImagesIn($folder, $entry);
@@ -108,15 +101,14 @@ class ImageService
         ];
     }
 
-    /**
-     * @param string $folder
-     * @return string[]
-     */
-    private function firstImagesIn(string $baseFolder, $folder)
+    /** @return list<string> */
+    private function firstImagesIn(string $baseFolder, string $folder): array
     {
         $folder = "{$baseFolder}$folder/";
         $result = [];
-        foreach (scandir($folder) as $basename) {
+        $entries = scandir($folder);
+        assert($entries !== false); // TODO invalid assertion
+        foreach ($entries as $basename) {
             $filename = "{$folder}$basename";
             if ($basename[0] !== '.' && $this->isImageFile($filename)) {
                 $result[] = $basename;
@@ -128,11 +120,8 @@ class ImageService
         return $result;
     }
 
-    /**
-     * @param string $entry
-     * @return array{caption:string,basename:null,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string}
-     */
-    private function createImage(string $folder, $entry)
+    /** @return array{caption:string,basename:null,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string} */
+    private function createImage(string $folder, string $entry): array
     {
         $caption = $this->getCaption($entry);
         $filename = "{$folder}{$entry}";
@@ -148,7 +137,9 @@ class ImageService
             }
         }
         $isDir = false;
-        list($width, $height) = getimagesize($filename);
+        $size = getimagesize($filename);
+        assert($size !== false); // TODO invalid assertion
+        list($width, $height) = $size;
         $size = "{$width}x{$height}";
         return [
             "caption" => $caption,
@@ -161,11 +152,7 @@ class ImageService
         ];
     }
 
-    /**
-     * @param string $entry
-     * @return string
-     */
-    private function getCaption($entry)
+    private function getCaption(string $entry): string
     {
         if (isset($this->data[$entry])) {
             return $this->data[$entry];
@@ -174,11 +161,7 @@ class ImageService
         }
     }
 
-    /**
-     * @param string $filename
-     * @return bool
-     */
-    private function isImageFile($filename)
+    private function isImageFile(string $filename): bool
     {
         return is_file($filename)
             && in_array(pathinfo($filename, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'JPG', 'JPEG']);

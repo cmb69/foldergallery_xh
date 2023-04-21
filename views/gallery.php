@@ -7,7 +7,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 /**
  * @var View $this
  * @var list<array{name:string,url:string,isLink:bool}> $breadcrumbs
- * @var array<array{caption:string,basename?:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size?:string,url:string}> $children
+ * @var array<array{caption:string,basename:string|null,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string|null,url:string}> $children
  */
 ?>
 <!-- foldergallery gallery -->

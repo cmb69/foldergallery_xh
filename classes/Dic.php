@@ -68,7 +68,7 @@ class Dic
 
         return new ThumbnailService(
             "{$pth['folder']['plugins']}foldergallery/cache/",
-            hexdec($plugin_cf['foldergallery']['folder_background'])
+            (int) hexdec($plugin_cf['foldergallery']['folder_background'])
         );
     }
 

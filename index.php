@@ -25,11 +25,7 @@ use Foldergallery\Infra\Responder;
 
 const FOLDERGALLERY_VERSION = "1.0beta1";
 
-/**
- * @param string $basefolder
- * @return string
- */
-function foldergallery($basefolder = "")
+function foldergallery(string $basefolder = ""): string
 {
     global $pth;
     $folder = $pth["folder"]["images"] . $basefolder . "/";

@@ -57,7 +57,7 @@ class View
     /** @param mixed $value */
     public function json($value): string
     {
-        return json_encode($value, JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        return (string) json_encode($value, JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 
     /** @param array<string,mixed> $_data */
@@ -72,7 +72,7 @@ class View
         extract($_data);
         ob_start();
         include $this->templateFolder . $_template . ".php";
-        return ob_get_clean();
+        return (string) ob_get_clean();
     }
 
     /** @param string $value */

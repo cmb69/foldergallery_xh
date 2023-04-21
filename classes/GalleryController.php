@@ -129,7 +129,7 @@ class GalleryController
         ];
     }
 
-    /** @return list<array{name:string,url:string,isLink:bool}> */
+    /** @return list<array{name:string,url:string|null,isLink:bool}> */
     private function getBreadcrumbs(Request $request)
     {
         $records = [];

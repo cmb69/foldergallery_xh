@@ -29,10 +29,10 @@ class Util
         $result = explode('/', rtrim($path, "/"));
         $result = array_filter($result);
         $url = '';
-        foreach ($result as &$part) {
+        $result = array_map(function ($part) use (&$url) {
             $url .= "$part/";
-            $part = ['name' => $part, 'url' => rtrim($url, '/')];
-        }
+            return ['name' => $part, 'url' => rtrim($url, '/')];
+        }, $result);
         array_unshift($result, ['name' => $firstName, "url" => null]);
         return $result;
     }
@@ -44,6 +44,6 @@ class Util
 
     public static function urlWithoutFoldergallery(string $url): string
     {
-        return preg_replace('/&foldergallery_folder=[^&]+/', "", $url);
+        return (string) preg_replace('/&foldergallery_folder=[^&]+/', "", $url);
     }
 }
