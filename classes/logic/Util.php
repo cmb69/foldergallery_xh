@@ -36,14 +36,4 @@ class Util
         array_unshift($result, ['name' => $firstName, "url" => null]);
         return $result;
     }
-
-    public static function urlWithFolderGallery(string $url, string $value): string
-    {
-        return self::urlWithoutFoldergallery($url) . "&foldergallery_folder=" . urlencode($value);
-    }
-
-    public static function urlWithoutFoldergallery(string $url): string
-    {
-        return (string) preg_replace('/&foldergallery_folder=[^&]+/', "", $url);
-    }
 }
