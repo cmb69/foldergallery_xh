@@ -1,189 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="sk" xml:lang="sk">
 <head>
-<meta http-equiv="content-type" content="text/html;charset=utf-8">
-<title>Foldergallery_XH – Návod</title>
-<link rel="stylesheet" type="text/css" href="./stylesheet.css">
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Foldergallery_XH – NÃ¡vod</title>
+  <style type="text/css">
+    body {
+        font-family: Georgia, serif;
+        line-height: 1.5;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        background: #ffffe1;
+        max-width: 32em;
+    }
+    p {
+        text-align: justify;
+    }
+    pre {
+        color: black;
+        background: #ffe;
+        overflow: auto;
+        padding: 0.2em 0.5em;
+        border: 1px solid silver;
+    }
+  </style>
 </head>
-
 <body>
-
-<article>
-<h1>Foldergallery_XH – Návod</h1>
-<img src="../foldergallery.png" class="logo" alt="Empty Folder">
-<p>	
-	Foldergallery_XH umožňuje zobrazovanie obrázkových galérií
-	na webstránkach CMSimple_XH. Na rozdiel od množstva existujúcich
-	pluginov sú galérie vytvárané automaticky zo všetkých obrázkov 
-	v uvedenom adresári, takže sa nemusia vytvárať v správcovskom
-	prostredí. To robí Foldergallery_XH vhodnou hlavne pre veľké zbierky
-	a pre použitie s <a href="http://3-magi.net/?CMSimple_XH/Extedit_XH">Extedit_XH</a>.
-</p>
-
-<nav id="nav">
-<h2>Obsah</h2>
+<h1 id="foldergallery_xh">Foldergallery_XH</h1>
+<p>Foldergallery_XH umožňuje zobrazovanie obrázkových galérií na webstránkach CMSimple_XH. Na rozdiel od množstva existujúcich pluginov sú galérie vytvárané automaticky zo všetkých obrázkov v uvedenom adresári, takže sa nemusia vytvárať v správcovskom prostredí. To robí Foldergallery_XH vhodnou hlavne pre veľké zbierky a pre použitie s <a href="https://github.com/cmb69/extedit_xh">Extedit_XH</a>.</p>
 <ul>
-<li><a href="#notice">Dôležité upozornenie</a></li>
-<li><a href="#requirements">Požiadavky</a></li>
-<li><a href="#installation">Inštalácia</a></li>
-<li><a href="#settings">Nastavenie</a></li>
-<li><a href="#usage">Použitie</a></li>
-<li><a href="#limitations">Obmedzenia</a></li>
-<li><a href="#license">Licencia</a></li>
-<li><a href="#credits">Záruky</a></li>
+<li><a href="#požiadavky">Požiadavky</a></li>
+<li><a href="#download">Download</a></li>
+<li><a href="#inštalácia">Inštalácia</a></li>
+<li><a href="#nastavenie">Nastavenie</a></li>
+<li><a href="#použitie">Použitie</a></li>
+<li><a href="#obmedzenia">Obmedzenia</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#licencia">Licencia</a></li>
+<li><a href="#záruky">Záruky</a></li>
 </ul>
-</nav>
-
-<section id="notice">
-<h2>Dôležité upozornenie</h2>
-<p class="important">
-    Foldergallery_XH nemohla byť otestovaná vo všetkých prostrediach. Je to tzv. beta verzia. Používajte uvážlivo!
-</p>
-</section>
-
-<section id="requirements">
-<h2>Požiadavky</h2>
-<p>
-    <ins>Foldergallery_XH requires CMSimple_XH ≥ 1.6.3, and PHP ≥
-    5.4.0 with the GD and JSON extensions.</ins>
-</p>
-</section>
-
-<section id="installation">
-<h2>Inštalácia</h2>
-<p>
-    Inštalácia prebieha rovnako ako pri väčšine CMSimple_XH pluginov.
-    Viac na <a href="http://www.cmsimple-xh.org/wiki/doku.php/installation">
-    CMSimple_XH wiki</a>.
-</p>
-<ol>
-<li class="important">
-    Urobte najprv zálohu dát na Vašom serveri.
-</li>
-<li>
-    Rozbaľte archív vo Vašom počítači.
-</li>
-<li>
-    Uložte celý adresár foldergallery/ na Váš server do adresára /plugins.
-</li>
-<li>
-    Nastavte prístupové práva pre podadresáre cache/, config/, css/ a languages/.
-</li>
-<li class="important">
-    Otvorte v správcovskom prostredí <em>Plugins</em>→<em>Foldergallery</em> a uistite sa, že sú splnené všetky potrebné podmienky.
-</li>
+<h2 id="požiadavky">Požiadavky</h2>
+<p>Foldergallery_XH is a plugin for <a href="https://www.cmsimple-xh.org/">CMSimple_XH</a>. It requires CMSimple_XH ≥ 1.6.3, and PHP ≥ 5.4.0 with the GD and JSON extensions.</p>
+<h2 id="download">Download</h2>
+<p>The <a href="https://github.com/cmb69/foldergallery_xh/releases/latest">lastest release</a> is available for download on Github.</p>
+<h2 id="inštalácia">Inštalácia</h2>
+<p>Inštalácia prebieha rovnako ako pri väčšine CMSimple_XH pluginov. Viac na <a href="https://wiki.cmsimple-xh.org/?for-users/working-with-the-cms/plugins">CMSimple_XH Wiki</a>.</p>
+<ol type="1">
+<li><strong>Urobte najprv zálohu dát na Vašom serveri.</strong></li>
+<li>Rozbaľte archív vo Vašom počítači.</li>
+<li>Uložte celý adresár <code>foldergallery/</code> na Váš server do adresára <code>plugins/</code>.</li>
+<li>Nastavte prístupové práva pre podadresáre <code>cache/</code>, <code>config/</code>, <code>css/</code> a <code>languages/</code>.</li>
+<li>Otvorte v správcovskom prostredí <code>Plugins</code> → <code>Foldergallery</code> a uistite sa, že sú splnené všetky potrebné podmienky.</li>
 </ol>
-</section>
-
-<section id="settings">
-<h2>Nastavenie</h2>
-<p>
-	Nastavenie pluginu sa robí rovnako ako pri iných pluginoch CMSimple_XH v správcovskom prostredí stránky. Otvorte <em>Plugins</em>→<em>Foldergallery</em>.
-</p>
-<p>
-	Zmeny nastavení môžete urobiť v Foldergallery_XH v <em>Config</em>. Vysvetlivky sa zobrazia prechodom na ikonu pomocníka..
-</p>
-<p>
-	Jazykové prostredie si aktuaizujete prekladom položiek v <em>Language</em>. Formulácie môžete prepísať do Vášho jazyka, ak tento nie je v archíve, alebo ich môžete upraviť podľa Vašich potrieb.
-</p>
-<p>
-	Vzhľad Foldergallery_XH môžete upraviť pod <em>Stylesheet</em>.
-</p>
-</section>
-
-<section id="usage">
-<h2>Použitie</h2>
-<p>
-    Galérie pripravíte uložením obrázkov do adresára /userfiles/images,
-    alebo umiestnením celých "obrázkových" podadresárov pomocou FTP alebo správcu súborov. Názvy obrázkov preberá Foldergallery_XH z názvov súborov, alebo z  Exif <em>Popis obrázku</em>, ak je táto informácia uložená v obrázku.
-</p>
-<p>
-	Ak chcete zobraziť všetky obrázky z adresára /userfiles/images,
-	použite na stránke príkaz::
-</p>
-<pre>{{{foldergallery}}}</pre>
-<p>
-    Ak chcete zobraziť všetky obrázky z konkrétneho podadresára/podadresárov, 
-    použite:
-    <code>NAZOV PODADRESARA</code>
-</p>
-<pre>{{{foldergallery 'NAZOV PODADRESAR'}}}</pre>
-</section>
-
-<section id="limitations">
-<h2>Obmedzenia</h2>
-<p>
-    Zatiaľ sa dá na jednej stránke použiť iba jedna galéria.
-</p>
-<p>
-	<ins>Only JPEG images are supported; other image formats are ignored.</ins>
-</p>
-<ins><p>
-    It takes some time to create the thumbnails, so many large images in the
-    same folder may trigger a PHP timeout (CMSimple_XH reports a fatal error in
-    this case). You may have to refresh your browser several times
-    (<code>F5</code>), until all thumbnails have been created. To avoid that
-    this happens to visitors of your website, it is recommended to have a look
-    at the folder preview immediately after uploading a bunch of images.
-</p></ins>
-</section>
-
-<section id="license">
-<h2>Licencia</h2>
-<p>
-    Na Foldergallery_XH sa vzťahuje licencia
-    <a href="http://www.gnu.org/licenses/gpl.html">GPLv3</a>.
-</p>
-<p>
-    &copy; 2017 Christoph M. Becker
-</p>
-<ins><p>
-    Slovak translation © 2017 Dr. Martin Sereday
-</p></ins>
-</section>
-
-<section id="credits">
-<h2>Záruky</h2>
-<p>
-    Plugin je inšpirovaný <a
-    href="https://www.drupal.org/project/fast_gallery">Fast Gallery</a> Drupal
-    module.
-</p>
-<p>
-    Foldergallery_XH využíva <a
-    href="http://www.jacklmoore.com/colorbox/">Colorbox</a> by Jack Moore
-    <ins>and <a href="http://photoswipe.com/">PhotoSwipe</a> by Dmitry Semenov</ins>.
-    <ins>Thanks for releasing these great scripts under MIT license.</ins>
-</p>
-<p>
-	Logo pluginu navrhol <a
-    href="http://www.everaldo.com/">Everaldo Coelho</a>. Ďakujem za pockytnutie ikony v zmysle licencie GPL.
-</p>
-
-<p>
-    Ikona adresárov je z <a
-    href="https://commons.wikimedia.org/wiki/File:Human-folder.svg">Wikimedia
-    Commons</a>. Ďakujem za jej poskytnutie v  zmysle licencie CC BY-SA 2.5.
-</p>
-
-<p>
-    Ďakujem celej komunite <a
-    href="http://www.cmsimpleforum.com">CMSimple_XH forum</a> za návrhy,
-    rady a testovanie. Osobitne ďakujem <i>frase</i> a <i>lck</i> za testovanie a postrehy v začiatkoch.
-    <ins>Also many thanks to <i>bemerkenswelt</i> who inspired the use of <a
-    href="http://photoswipe.com/">PhotoSwipe</a>. And many thanks to
-    <i>frase</i> for pointing me to the flex layout model.</ins>
-</p>
-<p>
-    Nakoniec, nemenej, veľka patrí <a href="http://harteg.dk/">Petrovi
-    Hartegovi</a>, otcovi CMSimple a všetkým vývojárom <a
-    href="http://www.cmsimple-xh.org">CMSimple_XH</a>, bez pomoci ktorých by tento skvelý CMSimple_XH nikdy neexistoval.
-</p>
-</section>
-
-</article>
-
+<h2 id="nastavenie">Nastavenie</h2>
+<p>Nastavenie pluginu sa robí rovnako ako pri iných pluginoch CMSimple_XH v správcovskom prostredí stránky. Otvorte <code>Plugins</code> → <code>Foldergallery</code>.</p>
+<p>Zmeny nastavení môžete urobiť v Foldergallery_XH v <code>Config</code>. Vysvetlivky sa zobrazia prechodom na ikonu pomocníka.</p>
+<p>Jazykové prostredie si aktuaizujete prekladom položiek v <code>Language</code>. Formulácie môžete prepísať do Vášho jazyka, ak tento nie je v archíve, alebo ich môžete upraviť podľa Vašich potrieb.</p>
+<p>Vzhľad Foldergallery_XH môžete upraviť pod <code>Stylesheet</code>.</p>
+<h2 id="použitie">Použitie</h2>
+<p>Galérie pripravíte uložením obrázkov do adresára <code>userfiles/images/</code>, alebo umiestnením celých “obrázkových” podadresárov pomocou FTP alebo správcu súborov. Názvy obrázkov preberá Foldergallery_XH z názvov súborov, alebo z Exif <code>ImageDescription</code>, ak je táto informácia uložená v obrázku.</p>
+<p>Ak chcete zobraziť všetky obrázky z adresára <code>userfiles/images/</code>, použite na stránke príkaz::</p>
+<pre><code>{{{foldergallery()}}}</code></pre>
+<p>Ak chcete zobraziť všetky obrázky z konkrétneho podadresára/podadresárov, použite:</p>
+<pre><code>{{{foldergallery(&#39;%NAZOV PODADRESAR%&#39;}}}</code></pre>
+<h2 id="obmedzenia">Obmedzenia</h2>
+<p>Zatiaľ sa dá na jednej stránke použiť iba jedna galéria.</p>
+<p>Only JPEG images are supported; other image formats are ignored.</p>
+<p>It takes some time to create the thumbnails, so many large images in the same folder may trigger a PHP timeout (CMSimple_XH reports a fatal error in this case). You may have to refresh your browser (<code>F5</code>) several times, until all thumbnails have been created. To avoid that this happens to visitors of your Website, it is recommended to have a look at the folder preview immediately after uploading a bunch of images.</p>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p>Report bugs and ask for support either on <a href="https://github.com/cmb69/foldergallery_xh/issues">Github</a> or in the <a href="https://cmsimpleforum.com/">CMSimple_XH Forum</a>.</p>
+<h2 id="licencia">Licencia</h2>
+<p>Foldergallery_XH je slobodný softvér: môžete ho šíriť a upravovať podľa ustanovení Všeobecnej verejnej licencie GNU (GNU General Public Licence), vydávanej nadáciou Free Software Foundation a to buď podľa 3. verzie tejto Licencie, alebo (podľa vášho uváženia) ktorejkoľvek neskoršej verzie.</p>
+<p>Foldergallery_XH je rozširovaný v nádeji, že bude užitočný, avšak <em>BEZ AKEJKOĽVEK ZÁRUKY</em>. Neposkytujú sa ani odvodené záruky <em>PREDAJNOSTI</em> alebo <em>VHODNOSTI PRE URČITÝ ÚČEL</em>. Ďalšie podrobnosti hľadajte vo Všeobecnej verejne licencii GNU.</p>
+<p>Kópiu Všeobecnej verejnej licencie GNU ste mali dostať spolu s Foldergallery_XH. Ak sa tak nestalo, nájdete ju tu: <a href="https://www.gnu.org/licenses/" class="uri">https://www.gnu.org/licenses/</a>.</p>
+<p>© 2017 Christoph M. Becker</p>
+<p>Slovak translation © 2017 Dr. Martin Sereday</p>
+<h2 id="záruky">Záruky</h2>
+<p>Plugin je inšpirovaný <a href="https://www.drupal.org/project/fast_gallery">Fast Gallery</a> Drupal module.</p>
+<p>Foldergallery_XH využíva <a href="https://www.jacklmoore.com/colorbox/">Colorbox</a> by Jack Moore and <a href="https://photoswipe.com/">PhotoSwipe</a> by Dmitry Semenov. Thanks for releasing these great scripts under MIT license.</p>
+<p>Logo pluginu navrhol <a href="http://www.everaldo.com/">Everaldo Coelho</a>. Ďakujem za pockytnutie ikony v zmysle licencie GPL.</p>
+<p>Ďakujem celej komunite <a href="https://www.cmsimpleforum.com">CMSimple_XH Forum</a> za návrhy, rady a testovanie. Osobitne ďakujem <em>frase</em> a <em>lck</em> za testovanie a postrehy v začiatkoch. Also many thanks to <em>bemerkenswelt</em> who inspired the use of <a href="https://photoswipe.com/">PhotoSwipe</a>. And many thanks to <em>frase</em> for pointing me to the flex layout model.</p>
+<p>Nakoniec, nemenej, veľka patrí <a href="https://harteg.dk/">Petrovi Hartegovi</a>, otcovi CMSimple a všetkým vývojárom <a href="https://www.cmsimple-xh.org">CMSimple_XH</a>, bez pomoci ktorých by tento skvelý CMSimple_XH nikdy neexistoval.</p>
 </body>
-
 </html>
