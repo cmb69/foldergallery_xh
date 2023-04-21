@@ -21,38 +21,17 @@
 
 namespace Foldergallery\Infra;
 
-use Foldergallery\Value\Url;
-
-class Request
+class FakeRequest extends Request
 {
-    /** @codeCoverageIgnore */
-    public static function current(): self
+    private $options;
+
+    public function __construct(array $options)
     {
-        return new self();
+        $this->options = $options;
     }
 
-    public function url(): Url
-    {
-        $rest = $this->query();
-        if ($rest !== "") {
-            $rest = "?" . $rest;
-        }
-        return Url::from(CMSIMPLE_URL . $rest);
-    }
-
-    public function folder(): string
-    {
-        $folder = $this->url()->param("foldergallery_folder");
-        if (!is_string($folder)) {
-            return "";
-        }
-        $folder = preg_replace(array('/\\\\/', '/\.{1,2}\//', '/\/+$/'), "", $folder . "/");
-        return $folder === "" ? $folder : $folder . "/";
-    }
-
-    /** @codeCoverageIgnore */
     protected function query(): string
     {
-        return $_SERVER["QUERY_STRING"];
+        return $this->options["query"] ?? "";
     }
 }

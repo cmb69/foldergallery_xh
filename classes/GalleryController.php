@@ -66,7 +66,7 @@ class GalleryController
         foreach ($children as &$child) {
             if ($child["isDir"]) {
                 $folder = $request->folder() . $child["basename"];
-                $child["url"] = Util::urlWithFoldergallery($request->url(), $folder);
+                $child["url"] = $request->url()->with("foldergallery_folder", $folder)->relative();
             }
         }
         [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
@@ -139,9 +139,9 @@ class GalleryController
             $record["name"] = $breadcrumb["name"];
             if ($i < count($breadcrumbs) - 1) {
                 if (isset($breadcrumb["url"])) {
-                    $record["url"] = Util::urlWithFoldergallery($request->url(), $breadcrumb["url"]);
+                    $record["url"] = $request->url()->with("foldergallery_folder", $breadcrumb["url"])->relative();
                 } else {
-                    $record["url"] = Util::urlWithoutFoldergallery($request->url());
+                    $record["url"] = $request->url()->without("foldergallery_folder")->relative();
                 }
                 $record["isLink"] = true;
             } else {

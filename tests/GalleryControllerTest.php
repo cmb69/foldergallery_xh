@@ -22,10 +22,12 @@
 namespace Foldergallery;
 
 use ApprovalTests\Approvals;
+use Foldergallery\Infra\FakeRequest;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\Jquery;
 use Foldergallery\Infra\Request;
 use Foldergallery\Infra\View;
+use Foldergallery\Value\Url;
 use PHPUnit\Framework\TestCase;
 
 class GalleryControllerTest extends TestCase
@@ -59,23 +61,21 @@ class GalleryControllerTest extends TestCase
 
     public function testRendersGallery(): void
     {
-        $response = $this->sut()($this->request(), "test");
+        $response = $this->sut()(new FakeRequest(["query" => "Gallery"]), "test");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersGallerySubfolder(): void
     {
         $this->conf["frontend"] = "Colorbox";
-        $request = $this->createMock(Request::class);
-        $request->method("url")->willReturn("/?Gallery&foldergallery_folder=sub");
-        $request->method("folder")->willReturn("sub/");
+        $request = new FakeRequest(["query" => "Gallery&foldergallery_folder=sub"]);
         $response = $this->sut()($request, "test");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersHjs(): void
     {
-        $response = $this->sut()($this->request(), "test");
+        $response = $this->sut()(new FakeRequest(["query" => "Gallery"]), "test");
         Approvals::verifyHtml($response->hjs());
     }
 
@@ -85,23 +85,15 @@ class GalleryControllerTest extends TestCase
         $this->jquery->expects($this->once())->method("include");
         $this->jquery->expects($this->once())->method("includePlugin")
             ->with("colorbox", "./plugins/foldergallery/lib/colorbox/jquery.colorbox-min.js");
-        $response = $this->sut()($this->request(), "test");
+        $response = $this->sut()(new FakeRequest(["query" => "Gallery"]), "test");
         Approvals::verifyHtml($response->hjs());
     }
 
     public function testUnsupportedFrontEnd(): void
     {
         $this->conf["frontend"] = "Unsupported";
-        $response = $this->sut()($this->request(), "test");
+        $response = $this->sut()(new FakeRequest(["query" => "Gallery"]), "test");
         Approvals::verifyHtml($response->output());
-    }
-
-    private function request(): Request
-    {
-        $request = $this->createMock(Request::class);
-        $request->method("url")->willReturn("/?Gallery");
-        $request->method("folder")->willReturn("");
-        return $request;
     }
 
     private function image(): array

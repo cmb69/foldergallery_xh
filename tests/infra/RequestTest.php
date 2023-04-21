@@ -25,29 +25,10 @@ use PHPUnit\Framework\TestCase;
 
 class RequestTest extends TestCase
 {
-    /** @dataProvider urls */
-    public function testUrl(string $sn, string $queryString, string $expected): void
-    {
-        $sut = $this->sut();
-        $sut->method("sn")->willReturn($sn);
-        $sut->method("queryString")->willReturn($queryString);
-        $url = $sut->url();
-        $this->assertEquals($expected, $url);
-    }
-
-    public function urls(): array
-    {
-        return [
-            ["/", "", "/"],
-            ["/", "Gallery", "/?Gallery"],
-        ];
-    }
-
     /** @dataProvider folders */
     public function testFolder(string $queryString, string $expected): void
     {
-        $sut = $this->sut();
-        $sut->method("queryString")->willReturn($queryString);
+        $sut = new FakeRequest(["query" => $queryString]);
         $folder = $sut->folder();
         $this->assertEquals($expected, $folder);
     }
@@ -62,16 +43,5 @@ class RequestTest extends TestCase
             ["foldergallery_folder=\\", ""],
             ["foldergallery_folder=..", ""],
         ];
-    }
-
-    private function sut(): Request
-    {
-        return $this->getMockBuilder(Request::class)
-        ->disableOriginalConstructor()
-        ->disableOriginalClone()
-        ->disableArgumentCloning()
-        ->disallowMockingUnknownTypes()
-        ->onlyMethods(["queryString", "sn"])
-        ->getMock();
     }
 }
