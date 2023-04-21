@@ -30,71 +30,69 @@ use PHPUnit\Framework\TestCase;
 
 class GalleryControllerTest extends TestCase
 {
+    private $pluginFolder;
+    private $conf;
+    private $imageService;
+    private $jquery;
+    private $view;
+
+    public function setUp(): void
+    {
+        $this->pluginFolder = "./plugins/foldergallery/";
+        $this->conf = XH_includeVar("./config/config.php", "plugin_cf")["foldergallery"];
+        $this->imageService = $this->createMock(ImageService::class);
+        $this->imageService->method("findEntries")->willReturn([$this->subfolder(), $this->image()]);
+        $this->jquery = $this->createMock(Jquery::class);
+        $this->view = new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["foldergallery"]);
+    }
+
+    private function sut(): GalleryController
+    {
+        return new GalleryController(
+            $this->pluginFolder,
+            $this->conf,
+            $this->imageService,
+            $this->jquery,
+            $this->view
+        );
+    }
+
     public function testRendersGallery(): void
     {
-        $sut = new GalleryController(
-            "./plugins/foldergallery/",
-            $this->conf(),
-            $this->imageService(),
-            $this->jquery(),
-            $this->view()
-        );
-        $response = $sut($this->request(), "test");
+        $response = $this->sut()($this->request(), "test");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersGallerySubfolder(): void
     {
-        $sut = new GalleryController(
-            "./plugins/foldergallery/",
-            $this->conf("Colorbox"),
-            $this->imageService(),
-            $this->jquery(),
-            $this->view()
-        );
+        $this->conf["frontend"] = "Colorbox";
         $request = $this->createMock(Request::class);
         $request->method("url")->willReturn("/?Gallery&foldergallery_folder=sub");
         $request->method("folder")->willReturn("sub/");
-        $response = $sut($request, "test");
+        $response = $this->sut()($request, "test");
         Approvals::verifyHtml($response->output());
     }
 
     public function testRendersHjs(): void
     {
-        $sut = new GalleryController(
-            "./plugins/foldergallery/",
-            $this->conf(),
-            $this->imageService(),
-            $this->jquery(),
-            $this->view()
-        );
-        $response = $sut($this->request(), "test");
+        $response = $this->sut()($this->request(), "test");
         Approvals::verifyHtml($response->hjs());
     }
 
     public function testRendersColorboxHjs(): void
     {
-        $sut = new GalleryController(
-            "./plugins/foldergallery/",
-            $this->conf("Colorbox"),
-            $this->imageService(),
-            $this->jquery(true),
-            $this->view()
-        );
-        $response = $sut($this->request(), "test");
+        $this->conf["frontend"] = "Colorbox";
+        $this->jquery->expects($this->once())->method("include");
+        $this->jquery->expects($this->once())->method("includePlugin")
+            ->with("colorbox", "./plugins/foldergallery/lib/colorbox/jquery.colorbox-min.js");
+        $response = $this->sut()($this->request(), "test");
         Approvals::verifyHtml($response->hjs());
     }
 
     public function testUnsupportedFrontEnd(): void
     {
-        $sut = new GalleryController(
-            "./plugins/foldergallery/",
-            $this->conf("Unsupported"),
-            $this->imageService(),
-            $this->jquery(),
-            $this->view()
-        );
-        $response = $sut($this->request(), "test");
+        $this->conf["frontend"] = "Unsupported";
+        $response = $this->sut()($this->request(), "test");
         Approvals::verifyHtml($response->output());
     }
 
@@ -104,41 +102,6 @@ class GalleryControllerTest extends TestCase
         $request->method("url")->willReturn("/?Gallery");
         $request->method("folder")->willReturn("");
         return $request;
-    }
-
-    private function imageService(): ImageService
-    {
-        $service = $this->createMock(ImageService::class);
-        $service->method("findEntries")->willReturn([$this->subfolder(), $this->image()]);
-        return $service;
-    }
-
-    private function jquery(bool $used = false): Jquery
-    {
-        $jquery = $this->createMock(Jquery::class);
-        if ($used) {
-            $jquery->expects($this->once())->method("include");
-            $jquery->expects($this->once())->method("includePlugin")
-                ->with("colorbox", "./plugins/foldergallery/lib/colorbox/jquery.colorbox-min.js");
-        }
-        return $jquery;
-    }
-
-    private function view(): View
-    {
-        return new View("./views/", $this->text());
-    }
-
-    private function conf(string $frontEnd = "Photoswipe"): array
-    {
-        $conf = XH_includeVar("./config/config.php", "plugin_cf")["foldergallery"];
-        $conf["frontend"] = $frontEnd;
-        return $conf;
-    }
-
-    private function text(): array
-    {
-        return XH_includeVar("./languages/en.php", "plugin_tx")["foldergallery"];
     }
 
     private function image(): array
