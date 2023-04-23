@@ -86,15 +86,6 @@ Es kann nur eine einzige Galerie auf jeder Seite angezeigt werden.
 
 Es werden nur JPEG-Bilder unterstützt; andere Bildformate werden ignoriert.
 
-Es erfodert eine gewisse Zeit um die Vorschaubilder zu erzeugen, so dass
-viele große Bilder in einem Ordner einen PHP-Timeout auslösen können
-(CMSimple_XH meldet in diesem Fall einen fatalen Fehler). Es kann also sein,
-dass Sie Ihren Browser mehrere Male aktualisieren müssen (`F5`)
-bis alle Vorschaubilder erzeugt wurden. Um zu verhindern, dass dies
-Besuchern Ihrer Website passiert, wird empfohlen die Ordnerübersicht
-anzuschauen, unmittelbar nachdem Sie eine größere Anzahl von Bildern hoch
-geladen haben.
-
 ## Problembehebung
 
 Melden Sie Programmfehler und stellen Sie Supportanfragen entweder auf

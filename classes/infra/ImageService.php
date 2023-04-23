@@ -21,27 +21,12 @@
 
 namespace Foldergallery\Infra;
 
-use Foldergallery\Infra\ThumbnailService;
-
 class ImageService
 {
-    /** @var int */
-    private $thumbSize;
-
-    /** @var ThumbnailService */
-    private $thumbnailService;
-
     /** @var array<string,string>|null */
-    private $data;
+    private $data = null;
 
-    public function __construct(int $thumbSize, ThumbnailService $thumbnailService)
-    {
-        $this->thumbSize = $thumbSize;
-        $this->thumbnailService = $thumbnailService;
-        $this->data = null;
-    }
-
-    /** @return array<array{caption:string,basename:?string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:?string}> */
+    /** @return array<array{caption:string,basename:?string,filename:string,isDir:bool,size:?string}> */
     public function findEntries(string $folder): array
     {
         $this->readImageData($folder);
@@ -78,31 +63,20 @@ class ImageService
         }
     }
 
-    /** @return array{caption:string,basename:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:null} */
+    /** @return array{caption:string,basename:string,filename:string,isDir:bool,size:null} */
     private function createDir(string $folder, string $entry): array
     {
-        $filename = "{$folder}{$entry}";
-        $images = $this->firstImagesIn($folder, $entry);
-        $srcset = '';
-        $thumbnail = $this->thumbnailService->makeFolderThumbnail($filename, $images, $this->thumbSize);
-        $srcset .= "$thumbnail 1x";
-        foreach (range(2, 3) as $i) {
-            $thumb = $this->thumbnailService->makeFolderThumbnail($filename, $images, $i * $this->thumbSize);
-            $srcset .= ", $thumb {$i}x";
-        }
         return [
             'caption' => $this->getCaption($entry),
             'basename' => $entry,
             'filename' => "{$folder}{$entry}",
-            'thumbnail' => $thumbnail,
-            'srcset' => $srcset,
             'isDir' => true,
             "size" => null,
         ];
     }
 
     /** @return list<string> */
-    private function firstImagesIn(string $baseFolder, string $folder): array
+    public function readFirstImagesIn(string $baseFolder, string $folder): array
     {
         $folder = "{$baseFolder}$folder/";
         $result = [];
@@ -111,7 +85,10 @@ class ImageService
         foreach ($entries as $basename) {
             $filename = "{$folder}$basename";
             if ($basename[0] !== '.' && $this->isImageFile($filename)) {
-                $result[] = $basename;
+                if (!($image = $this->readImage($filename))) {
+                    continue;
+                }
+                $result[] = $image;
             }
             if (count($result) === 2) {
                 break;
@@ -120,22 +97,11 @@ class ImageService
         return $result;
     }
 
-    /** @return array{caption:string,basename:null,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string} */
+    /** @return array{caption:string,basename:null,filename:string,isDir:bool,size:string} */
     private function createImage(string $folder, string $entry): array
     {
         $caption = $this->getCaption($entry);
         $filename = "{$folder}{$entry}";
-        $srcset = '';
-        $thumbnail = $this->thumbnailService->makeThumbnail($filename, $this->thumbSize);
-        if ($thumbnail !== $filename) {
-            $srcset .= "$thumbnail 1x";
-            foreach (range(2, 3) as $i) {
-                $thumb = $this->thumbnailService->makeThumbnail($filename, $i * $this->thumbSize);
-                if ($thumb !== $filename) {
-                    $srcset .= ", $thumb {$i}x";
-                }
-            }
-        }
         $isDir = false;
         $size = getimagesize($filename);
         assert($size !== false); // TODO invalid assertion
@@ -145,8 +111,6 @@ class ImageService
             "caption" => $caption,
             "basename" => null,
             "filename" => $filename,
-            "thumbnail" => $thumbnail,
-            "srcset" => $srcset,
             "isDir" => $isDir,
             "size" => $size,
         ];
@@ -165,5 +129,10 @@ class ImageService
     {
         return is_file($filename)
             && in_array(pathinfo($filename, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'JPG', 'JPEG']);
+    }
+
+    public function readImage(string $filename): ?string
+    {
+        return file_get_contents($filename) ?: null;
     }
 }

@@ -23,22 +23,18 @@ namespace Foldergallery\Infra;
 
 use Foldergallery\Infra\ThumbnailService;
 use PHPUnit\Framework\TestCase;
-use org\bovigo\vfs\vfsStream;
 
 class ThumbnailServiceTest extends TestCase
 {
-    /**
-     * @var ThumbnailService
-     */
     private $subject;
+
+    private $landscape;
+    private $portrait;
 
     protected function setUp(): void
     {
-        vfsStream::setup('root');
-        mkdir(vfsStream::url('root/foldergallery/cache/'), 0777, true);
         $this->setUpImages();
         $this->subject = new ThumbnailService(
-            vfsStream::url('root/foldergallery/cache/'),
             hexdec("ffdd44")
         );
     }
@@ -47,18 +43,20 @@ class ThumbnailServiceTest extends TestCase
     {
         $im = imagecreatetruecolor(1024, 768);
         imagefilledrectangle($im, 0, 0, 999, 999, 0xffffff);
-        imagejpeg($im, vfsStream::url('root/landscape.jpg'));
+        ob_start();
+        imagejpeg($im);
+        $this->landscape = ob_get_clean();
         $im = imagecreatetruecolor(768, 1024);
         imagefilledrectangle($im, 0, 0, 999, 999, 0xffffff);
-        imagejpeg($im, vfsStream::url('root/portrait.jpg'));
+        ob_start();
+        imagejpeg($im);
+        $this->portrait = ob_get_clean();
     }
 
     public function testLandscape()
     {
-        $expected = 'vfs://root/foldergallery/cache/dc8f662fdb72d3fb9e296b6a4dfd70337d9a45b1.jpg';
-        $actual = $this->subject->makeThumbnail(vfsStream::url('root/landscape.jpg'), 128);
-        $this->assertSame($expected, $actual);
-        $info = getimagesize($expected);
+        $actual = $this->subject->makeThumbnail($this->landscape, 128);
+        $info = getimagesizefromstring($actual);
         $this->assertSame(171, $info[0]);
         $this->assertSame(128, $info[1]);
         $this->assertSame(IMG_JPEG, $info[2]);
@@ -66,10 +64,8 @@ class ThumbnailServiceTest extends TestCase
 
     public function testPortrait()
     {
-        $expected = 'vfs://root/foldergallery/cache/63147356af2b30823235333ffd4c9a14ec0b403f.jpg';
-        $actual = $this->subject->makeThumbnail(vfsStream::url('root/portrait.jpg'), 128);
-        $this->assertSame($expected, $actual);
-        $info = getimagesize($expected);
+        $actual = $this->subject->makeThumbnail($this->portrait, 128);
+        $info = getimagesizefromstring($actual);
         $this->assertSame(96, $info[0]);
         $this->assertSame(128, $info[1]);
         $this->assertSame(IMG_JPEG, $info[2]);
@@ -77,10 +73,8 @@ class ThumbnailServiceTest extends TestCase
 
     public function testFolderThumbnail(): void
     {
-        $expected = "vfs://root/foldergallery/cache/60dd3bc42e82660290e280ca4b791264a1aa40f3.jpg";
-        $actual = $this->subject->makeFolderThumbnail("vfs://root/", ["landscape.jpg", "portrait.jpg"], 128);
-        $this->assertEquals($expected, $actual);
-        $info = getimagesize($expected);
+        $actual = $this->subject->makeFolderThumbnail([$this->landscape, $this->portrait], 128);
+        $info = getimagesizefromstring($actual);
         $this->assertEquals([128, 128, IMG_JPEG], array_slice($info, 0, 3));
     }
 }

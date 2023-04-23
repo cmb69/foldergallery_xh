@@ -30,8 +30,18 @@ class Response
         return $that;
     }
 
+    public static function createImage(string $data, int $maxAge, int $now): self
+    {
+        $that = new self();
+        $that->image = [$data, $maxAge, $now];
+        return $that;
+    }
+
     /** @var string */
     private $output;
+
+    /** @var array{string,int,int}|null */
+    private $image = null;
 
     /** @var string|null */
     private $title = null;
@@ -56,6 +66,12 @@ class Response
     public function output(): string
     {
         return $this->output;
+    }
+
+    /** @return array{string,int,int}|null */
+    public function image()
+    {
+        return $this->image;
     }
 
     public function title(): ?string

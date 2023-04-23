@@ -81,13 +81,6 @@ Only a single gallery can be shown on each page.
 
 Only JPEG images are supported; other image formats are ignored.
 
-It takes some time to create the thumbnails, so many large images in the
-same folder may trigger a PHP timeout (CMSimple_XH reports a fatal error in
-this case). You may have to refresh your browser (`F5`) several times,
-until all thumbnails have been created. To avoid that
-this happens to visitors of your Website, it is recommended to have a look
-at the folder preview immediately after uploading a bunch of images.
-
 ## Troubleshooting
 
 Report bugs and ask for support either on

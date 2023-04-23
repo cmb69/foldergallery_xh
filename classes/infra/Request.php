@@ -50,9 +50,35 @@ class Request
         return $folder === "" ? $folder : $folder . "/";
     }
 
+    public function thumb(): string
+    {
+        $thumb = $this->url()->param("foldergallery_thumb");
+        if (!is_string($thumb)) {
+            return "";
+        }
+        return basename($thumb);
+    }
+
+    public function size(): string
+    {
+        $size = $this->url()->param("foldergallery_size");
+        if (!is_string($size)) {
+            return "1x";
+        }
+        if (!in_array($size, ["1x", "2x", "3x"], true)) {
+            return "1x";
+        }
+        return $size;
+    }
+
     /** @codeCoverageIgnore */
     protected function query(): string
     {
         return $_SERVER["QUERY_STRING"];
+    }
+
+    public function time(): int
+    {
+        return (int) $_SERVER["REQUEST_TIME"];
     }
 }

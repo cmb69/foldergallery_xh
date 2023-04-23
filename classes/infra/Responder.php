@@ -28,6 +28,18 @@ class Responder
     public static function respond(Response $response): string
     {
         global $title, $hjs;
+        if ($response->image() !== null) {
+            while (ob_get_level()) {
+                ob_end_clean();
+            }
+            [$data, $maxAge, $now] = $response->image();
+            header("Content-Type: image/jpeg");
+            header("Cache-Control: private, max-age=" . $maxAge);
+            header("Pragma: ", true);
+            header("Expires: " . date("r", $now + $maxAge));
+            echo $data;
+            exit;
+        }
         if ($response->title() !== null) {
             $title = $response->title();
         }

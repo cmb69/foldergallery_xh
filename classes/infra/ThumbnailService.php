@@ -25,42 +25,37 @@ use GdImage;
 
 class ThumbnailService
 {
-    /** @var string */
-    private $cacheFolder;
-
     /** @var int */
     private $folderBackground;
 
-    public function __construct(string $cacheFolder, int $folderBackground)
+    public function __construct(int $folderBackground)
     {
-        $this->cacheFolder = $cacheFolder;
         $this->folderBackground = $folderBackground;
     }
 
     /** @param list<string> $images */
-    public function makeFolderThumbnail(string $srcPath, array $images, int $dstHeight): string
+    public function makeFolderThumbnail(array $images, int $dstHeight): string
     {
-        $dstPath = $this->cacheFolder . sha1("$srcPath." . implode('.', $images) . ".$dstHeight") . '.jpg';
         $dst = imagecreatetruecolor($dstHeight, $dstHeight);
         assert($dst !== false); // TODO invalid assertion?
         imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, $this->folderBackground);
-        foreach ($images as $i => $basename) {
-            $this->copyResizedAndCropped($dst, "$srcPath/$basename", $i);
+        foreach ($images as $i => $data) {
+            $src = imagecreatefromstring($data);
+            assert($src !== false);  // TODO invalid assertion
+            $this->copyResizedAndCropped($dst, $src, $i);
         }
-        imagejpeg($dst, $dstPath);
-        return $dstPath;
+        return $this->jpegData($dst);
     }
 
     /**
      * @param GdImage $im
+     * @param GdImage $src
      * @return void
      */
-    private function copyResizedAndCropped($im, string $filename, int $index)
+    private function copyResizedAndCropped($im, $src, int $index)
     {
-        $im2 = imagecreatefromjpeg($filename);
-        assert($im2 !== false);  // TODO invalid assertion
-        $w = (int) imagesx($im2);
-        $h = (int) imagesy($im2);
+        $w = (int) imagesx($src);
+        $h = (int) imagesy($src);
         $d = $w - $h;
         if ($d >= 0) {
             $sx = (int) round($d / 2);
@@ -77,12 +72,12 @@ class ThumbnailService
         $size = imagesx($im);
         $dx = $dy = ($index * 5 + 1) / 16 * $size;
         $dw = $dh = (int) round(9 / 16 * $size);
-        imagecopyresampled($im, $im2, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
+        imagecopyresampled($im, $src, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
     }
 
-    public function makeThumbnail(string $srcPath, int $dstHeight): string
+    public function makeThumbnail(string $data, int $dstHeight): string
     {
-        $size = getimagesize($srcPath);
+        $size = getimagesizefromstring($data);
         assert($size !== false); // TODO invalid assertion
         list($srcWidth, $srcHeight, $type) = $size;
         $dstWidth = (int) round($srcWidth / $srcHeight * $dstHeight);
@@ -91,43 +86,24 @@ class ThumbnailService
             || $dstWidth == $srcWidth && $dstHeight == $srcHeight
             || $type != IMG_JPEG
         ) {
-            return $srcPath;
+            return $data;
         }
-        $dstPath = $this->cacheFolder . sha1("$srcPath.$dstWidth.$dstHeight") . '.jpg';
-        if (!file_exists($dstPath)) {
-            return $this->doMakeThumbnail(
-                ['path' => $srcPath, 'width' => $srcWidth, 'height' => $srcHeight],
-                ['path' => $dstPath, 'width' => $dstWidth, 'height' => $dstHeight]
-            );
+        if (!($srcImage = imagecreatefromstring($data))) {
+            return $data;
         }
-        return $dstPath;
-    }
-
-    /**
-     * @param array{path:string,width:int,height:int} $src
-     * @param array{path:string,width:int,height:int} $dst
-     */
-    private function doMakeThumbnail(array $src, array $dst): string
-    {
-        if (
-            !(($srcImage = imagecreatefromjpeg($src["path"]))
-            && ($dstImage = $this->resize($srcImage, $src, $dst))
-            && imagejpeg($dstImage, $dst["path"]))
-        ) {
-            return $src["path"];
+        if (!($dstImage = $this->resize($srcImage, $srcWidth, $srcHeight, $dstWidth, $dstHeight))) {
+            return $data;
         }
-        return $dst["path"];
+        return $this->jpegData($dstImage);
     }
 
     /**
      * @param GdImage $srcImage
-     * @param array{path:string,width:int,height:int} $src
-     * @param array{path:string,width:int,height:int} $dst
      * @return GdImage|null
      */
-    private function resize($srcImage, array $src, array $dst)
+    private function resize($srcImage, int $w1, int $h1, int $w2, int $h2)
     {
-        if (!($dstImage = imagecreatetruecolor($dst["width"], $dst["height"]))) {
+        if (!($dstImage = imagecreatetruecolor($w2, $h2))) {
             return null;
         }
         $success = imagecopyresampled(
@@ -137,11 +113,19 @@ class ThumbnailService
             0,
             0,
             0,
-            $dst["width"],
-            $dst["height"],
-            $src["width"],
-            $src["height"]
+            $w2,
+            $h2,
+            $w1,
+            $h1
         );
         return $success ? $dstImage : null;
+    }
+
+    /** @param GdImage $image */
+    private function jpegData($image): string
+    {
+        ob_start();
+        imagejpeg($image);
+        return (string) ob_get_clean();
     }
 }

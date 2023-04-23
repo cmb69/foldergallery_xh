@@ -36,6 +36,7 @@ class Dic
             $pth["folder"]["plugins"] . "foldergallery/",
             $plugin_cf["foldergallery"],
             self::makeImageService(),
+            self::makeThumbnailService(),
             new Jquery($pth["folder"]["plugins"] . "jquery/"),
             self::makeView()
         );
@@ -54,20 +55,13 @@ class Dic
 
     private static function makeImageService(): ImageService
     {
-        global $plugin_cf;
-
-        return new ImageService(
-            (int) $plugin_cf['foldergallery']['thumb_size'],
-            self::makeThumbnailService()
-        );
+        return new ImageService();
     }
 
     private static function makeThumbnailService(): ThumbnailService
     {
-        global $pth, $plugin_cf;
-
+        global $plugin_cf;
         return new ThumbnailService(
-            "{$pth['folder']['plugins']}foldergallery/cache/",
             (int) hexdec($plugin_cf['foldergallery']['folder_background'])
         );
     }
