@@ -84,7 +84,7 @@ class ThumbnailService
         if (
             $dstWidth > $srcWidth || $dstHeight > $srcHeight
             || $dstWidth == $srcWidth && $dstHeight == $srcHeight
-            || $type != IMG_JPEG
+            || $type != IMAGETYPE_JPEG
         ) {
             return $data;
         }

@@ -59,7 +59,7 @@ class ThumbnailServiceTest extends TestCase
         $info = getimagesizefromstring($actual);
         $this->assertSame(171, $info[0]);
         $this->assertSame(128, $info[1]);
-        $this->assertSame(IMG_JPEG, $info[2]);
+        $this->assertSame(IMAGETYPE_JPEG, $info[2]);
     }
 
     public function testPortrait()
@@ -68,13 +68,13 @@ class ThumbnailServiceTest extends TestCase
         $info = getimagesizefromstring($actual);
         $this->assertSame(96, $info[0]);
         $this->assertSame(128, $info[1]);
-        $this->assertSame(IMG_JPEG, $info[2]);
+        $this->assertSame(IMAGETYPE_JPEG, $info[2]);
     }
 
     public function testFolderThumbnail(): void
     {
         $actual = $this->subject->makeFolderThumbnail([$this->landscape, $this->portrait], 128);
         $info = getimagesizefromstring($actual);
-        $this->assertEquals([128, 128, IMG_JPEG], array_slice($info, 0, 3));
+        $this->assertEquals([128, 128, IMAGETYPE_JPEG], array_slice($info, 0, 3));
     }
 }
