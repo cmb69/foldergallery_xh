@@ -21,7 +21,7 @@ ebenso für die Verwendung mit [Extedit_XH](https://github.com/cmb69/extedit_xh)
 ## Voraussetzungen
 
 Foldergallery_XH ist ein Plugin für [CMSimple_XH](https://cmsimple-xh.org/de/).
-Es benötigt CMSimple_XH ≥ 1.7.0, und PHP ≥ 5.4.0 mit der GD und JSON Extension.
+Es benötigt CMSimple_XH ≥ 1.7.0, und PHP ≥ 7.1.0 mit der GD und JSON Extension.
 
 ## Download
 

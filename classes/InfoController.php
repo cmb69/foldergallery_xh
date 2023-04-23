@@ -55,7 +55,7 @@ class InfoController
     private function checks(): array
     {
         return [
-            $this->checkPhpVersion("5.4.0"),
+            $this->checkPhpVersion("7.1.0"),
             $this->checkExtension("gd"),
             $this->checkExtension("json"),
             $this->checkXhVersion("1.7.0"),
