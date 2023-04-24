@@ -2,9 +2,12 @@
 
 $plugin_tx['foldergallery']['locator_start']="Start";
 $plugin_tx['foldergallery']['locator_separator']=" > ";
+
 $plugin_tx['foldergallery']['colorbox_current']="Bild {current} von {total}";
 $plugin_tx['foldergallery']['colorbox_previous']="Zurück";
 $plugin_tx['foldergallery']['colorbox_next']="Vor";
+$plugin_tx['foldergallery']['colorbox_start_slideshow']="Diashow starten";
+$plugin_tx['foldergallery']['colorbox_stop_slideshow']="Diashow anhalten";
 $plugin_tx['foldergallery']['colorbox_close']="Schließen";
 $plugin_tx['foldergallery']['colorbox_imgError']="Dieses Bild konnte nicht geladen werden.";
 
@@ -24,3 +27,6 @@ $plugin_tx['foldergallery']['cf_thumb_size']="Die Höhe der Vorschaubilder in Pi
 $plugin_tx['foldergallery']['cf_thumb_crop']="Ob die Vorschaubilder beschnitten werden sollen, damit sich das Seitenverhältnis dem durchschnittlichen Seitenverhältnis der Galerie annähert.";
 $plugin_tx['foldergallery']['cf_folder_background']="Ein hexadezimaler RGB Farbwert im Format RRGGBB.";
 $plugin_tx['foldergallery']['cf_frontend']="Das Frontend zum Betrachten der Galerien.";
+$plugin_tx['foldergallery']['cf_colorbox_slideshow']="Ob eine Diashow angeboten wird. Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
+$plugin_tx['foldergallery']['cf_colorbox_slideshow_auto']="Ob die Diashow automatisch startet. Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
+$plugin_tx['foldergallery']['cf_colorbox_slideshow_speed']="Die Geschwindigkeit der Diashow (in Millisekunden). Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
