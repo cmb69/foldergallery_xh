@@ -21,6 +21,8 @@
 
 namespace Foldergallery\Infra;
 
+use Foldergallery\Value\Image;
+
 class ImageService
 {
     /** @var array<string,string>|null */
@@ -75,7 +77,7 @@ class ImageService
         ];
     }
 
-    /** @return list<string> */
+    /** @return list<Image> */
     public function readFirstImagesIn(string $baseFolder, string $folder): array
     {
         $folder = "{$baseFolder}$folder/";
@@ -131,8 +133,15 @@ class ImageService
             && in_array(pathinfo($filename, PATHINFO_EXTENSION), ['jpg', 'jpeg', 'JPG', 'JPEG']);
     }
 
-    public function readImage(string $filename): ?string
+    public function readImage(string $filename): ?Image
     {
-        return file_get_contents($filename) ?: null;
+        if (!($data = file_get_contents($filename))) {
+            return null;
+        }
+        $orientation = 0;
+        if (extension_loaded("exif") && ($exif = exif_read_data($filename))) {
+            $orientation = $exif["Orientation"] ?? 0;
+        }
+        return new Image($data, $orientation);
     }
 }

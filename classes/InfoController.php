@@ -58,6 +58,7 @@ class InfoController
             $this->checkPhpVersion("7.1.0"),
             $this->checkExtension("gd"),
             $this->checkExtension("json"),
+            $this->checkExtension("exif", false),
             $this->checkXhVersion("1.7.0"),
             $this->checkPlugin("jquery"),
             $this->checkWritability($this->pluginFolder . "cache/"),
@@ -80,9 +81,9 @@ class InfoController
     }
 
     /** @return array{class:string,key:string,arg:string,statekey:string} */
-    private function checkExtension(string $name): array
+    private function checkExtension(string $name, bool $mandatory = true): array
     {
-        $state = $this->systemChecker->checkExtension($name) ? "success" : "fail";
+        $state = $this->systemChecker->checkExtension($name) ? "success" : ($mandatory ? "fail" : "warning");
         return [
             "class" => "xh_$state",
             "key" => "syscheck_extension",

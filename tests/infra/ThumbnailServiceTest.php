@@ -22,59 +22,116 @@
 namespace Foldergallery\Infra;
 
 use Foldergallery\Infra\ThumbnailService;
+use Foldergallery\Value\Image;
 use PHPUnit\Framework\TestCase;
 
 class ThumbnailServiceTest extends TestCase
 {
     private $subject;
 
-    private $landscape;
-    private $portrait;
-
     protected function setUp(): void
     {
-        $this->setUpImages();
         $this->subject = new ThumbnailService(
             hexdec("ffdd44")
         );
     }
 
-    private function setUpImages()
+    /** @dataProvider landscapeThumbnailData */
+    public function testLandscapeThumbnail(Image $image, array $expected): void
     {
-        $im = imagecreatetruecolor(1024, 768);
-        imagefilledrectangle($im, 0, 0, 999, 999, 0xffffff);
-        ob_start();
-        imagejpeg($im);
-        $this->landscape = ob_get_clean();
-        $im = imagecreatetruecolor(768, 1024);
-        imagefilledrectangle($im, 0, 0, 999, 999, 0xffffff);
-        ob_start();
-        imagejpeg($im);
-        $this->portrait = ob_get_clean();
+        $data = $this->subject->makeThumbnail($image, 64);
+        $im = imagecreatefromstring($data);
+        $this->assertEquals(128, imagesx($im));
+        $this->assertEquals(64, imagesy($im));
+        imagetruecolortopalette($im, false, 4);
+        $colors = $this->colors($im);
+        $this->assertEquals($colors[$expected[0]], imagecolorat($im, 31, 15));
+        $this->assertEquals($colors[$expected[1]], imagecolorat($im, 95, 15));
+        $this->assertEquals($colors[$expected[2]], imagecolorat($im, 31, 47));
+        $this->assertEquals($colors[$expected[3]], imagecolorat($im, 95, 47));
     }
 
-    public function testLandscape()
+    public function landscapeThumbnailData(): array
     {
-        $actual = $this->subject->makeThumbnail($this->landscape, 128);
-        $info = getimagesizefromstring($actual);
-        $this->assertSame(171, $info[0]);
-        $this->assertSame(128, $info[1]);
-        $this->assertSame(IMAGETYPE_JPEG, $info[2]);
+        return [
+            "orient 1" => [new Image($this->landscape(), 1), ["red", "green", "blue", "white"]],
+            "orient 2" => [new Image($this->landscape(), 2), ["green", "red", "white", "blue"]],
+            "orient 3" => [new Image($this->landscape(), 3), ["white", "blue", "green", "red"]],
+            "orient 4" => [new Image($this->landscape(), 4), ["blue", "white", "red", "green"]],
+            "orient 5" => [new Image($this->portrait(), 5), ["red", "blue", "green", "white"]],
+            "orient 6" => [new Image($this->portrait(), 6), ["blue", "red", "white", "green"]],
+            "orient 7" => [new Image($this->portrait(), 7), ["white", "green", "blue", "red"]],
+            "orient 8" => [new Image($this->portrait(), 8), ["green", "white", "red", "blue"]],
+        ];
     }
 
-    public function testPortrait()
+    /** @dataProvider portraitThumbnailData */
+    public function testPortraitThumbnail(Image $image, array $expected): void
     {
-        $actual = $this->subject->makeThumbnail($this->portrait, 128);
-        $info = getimagesizefromstring($actual);
-        $this->assertSame(96, $info[0]);
-        $this->assertSame(128, $info[1]);
-        $this->assertSame(IMAGETYPE_JPEG, $info[2]);
+        $data = $this->subject->makeThumbnail($image, 64);
+        $im = imagecreatefromstring($data);
+        $this->assertEquals(32, imagesx($im));
+        $this->assertEquals(64, imagesy($im));
+        imagetruecolortopalette($im, false, 4);
+        $colors = $this->colors($im);
+        $this->assertEquals($colors[$expected[0]], imagecolorat($im, 7, 15));
+        $this->assertEquals($colors[$expected[1]], imagecolorat($im, 23, 15));
+        $this->assertEquals($colors[$expected[2]], imagecolorat($im, 7, 47));
+        $this->assertEquals($colors[$expected[3]], imagecolorat($im, 23, 47));
+    }
+
+    public function portraitThumbnailData(): array
+    {
+        return [
+            "orient 1" => [new Image($this->portrait(), 1), ["red", "green", "blue", "white"]],
+            "orient 2" => [new Image($this->portrait(), 2), ["green", "red", "white", "blue"]],
+            "orient 3" => [new Image($this->portrait(), 3), ["white", "blue", "green", "red"]],
+            "orient 4" => [new Image($this->portrait(), 4), ["blue", "white", "red", "green"]],
+            "orient 5" => [new Image($this->landscape(), 5), ["red", "blue", "green", "white"]],
+            "orient 6" => [new Image($this->landscape(), 6), ["blue", "red", "white", "green"]],
+            "orient 7" => [new Image($this->landscape(), 7), ["white", "green", "blue", "red"]],
+            "orient 8" => [new Image($this->landscape(), 8), ["green", "white", "red", "blue"]],
+        ];
     }
 
     public function testFolderThumbnail(): void
     {
-        $actual = $this->subject->makeFolderThumbnail([$this->landscape, $this->portrait], 128);
+        $actual = $this->subject->makeFolderThumbnail([new Image($this->landscape(), 0), new Image($this->portrait(), 0)], 64);
         $info = getimagesizefromstring($actual);
-        $this->assertEquals([128, 128, IMAGETYPE_JPEG], array_slice($info, 0, 3));
+        $this->assertEquals([64, 64, IMAGETYPE_JPEG], array_slice($info, 0, 3));
+    }
+
+    private function landscape(): string
+    {
+        $im = imagecreatetruecolor(200, 100);
+        imagefilledrectangle($im, 0, 0, 99, 99, 0xff0000);
+        imagefilledrectangle($im, 100, 0, 199, 99, 0x00ff00);
+        imagefilledrectangle($im, 0, 50, 99, 199, 0x0000ff);
+        imagefilledrectangle($im, 100, 50, 199, 199, 0xfffffff);
+        ob_start();
+        imagejpeg($im);
+        return ob_get_clean();
+    }
+
+    private function portrait(): string
+    {
+        $im = imagecreatetruecolor(100, 200);
+        imagefilledrectangle($im, 0, 0, 49, 99, 0xff0000);
+        imagefilledrectangle($im, 50, 0, 99, 99, 0x00ff00);
+        imagefilledrectangle($im, 0, 100, 49, 199, 0x0000ff);
+        imagefilledrectangle($im, 50, 100, 99, 199, 0xfffffff);
+        ob_start();
+        imagejpeg($im);
+        return ob_get_clean();
+    }
+
+    private function colors($im): array
+    {
+        return [
+            "red" => imagecolorclosest($im, 0xff, 0x00, 0x00),
+            "green" => imagecolorclosest($im, 0x00, 0xff, 0x00),
+            "blue" => imagecolorclosest($im, 0x00, 0x00, 0xff),
+            "white" => imagecolorclosest($im, 0xff, 0xff, 0xff),
+        ];
     }
 }
