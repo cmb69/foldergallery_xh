@@ -22,14 +22,15 @@
 namespace Foldergallery\Infra;
 
 use Foldergallery\Value\Image;
+use Foldergallery\Value\Item;
 
 class ImageService
 {
     /** @var array<string,string>|null */
     private $data = null;
 
-    /** @return array<array{caption:string,basename:?string,filename:string,isDir:bool,size:?string}> */
-    public function findEntries(string $folder): array
+    /** @return list<Item> */
+    public function findItems(string $folder): array
     {
         $this->readImageData($folder);
         $items = [];
@@ -40,7 +41,7 @@ class ImageService
                 }
                 $filename = $folder . $entry;
                 if (is_dir($filename)) {
-                    $items[] = $this->createDir($folder, $entry);
+                    $items[] = new Item($this->getCaption($entry), $folder . $entry);
                 } elseif ($this->isImageFile($filename)) {
                     $items[] = $this->createImage($folder, $entry);
                 }
@@ -48,7 +49,7 @@ class ImageService
             closedir($dir);
         }
         usort($items, function ($a, $b) {
-            return 2 * ($b["isDir"] - $a["isDir"]) + strnatcasecmp($a["filename"], $b["filename"]);
+            return 2 * ($b->isFolder() - $a->isFolder()) + strnatcasecmp($a->filename(), $b->filename());
         });
         return $items;
     }
@@ -64,18 +65,6 @@ class ImageService
                 $this->data = $data[$sl];
             }
         }
-    }
-
-    /** @return array{caption:string,basename:string,filename:string,isDir:bool,size:null} */
-    private function createDir(string $folder, string $entry): array
-    {
-        return [
-            'caption' => $this->getCaption($entry),
-            'basename' => $entry,
-            'filename' => "{$folder}{$entry}",
-            'isDir' => true,
-            "size" => null,
-        ];
     }
 
     /** @return list<Image> */
@@ -101,12 +90,9 @@ class ImageService
         return $images;
     }
 
-    /** @return array{caption:string,basename:null,filename:string,isDir:bool,size:string} */
-    private function createImage(string $folder, string $entry): array
+    private function createImage(string $folder, string $entry): Item
     {
-        $caption = $this->getCaption($entry);
         $filename = "{$folder}{$entry}";
-        $isDir = false;
         $size = getimagesize($filename);
         assert($size !== false); // TODO invalid assertion
         list($width, $height) = $size;
@@ -116,13 +102,7 @@ class ImageService
                 $size = "{$height}x{$width}";
             }
         }
-        return [
-            "caption" => $caption,
-            "basename" => null,
-            "filename" => $filename,
-            "isDir" => $isDir,
-            "size" => $size,
-        ];
+        return new Item($this->getCaption($entry), $filename, $size);
     }
 
     private function getCaption(string $entry): string

@@ -29,6 +29,7 @@ use Foldergallery\Infra\Request;
 use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
 use Foldergallery\Value\Image;
+use Foldergallery\Value\Item;
 use Foldergallery\Value\Url;
 use PHPUnit\Framework\TestCase;
 
@@ -46,7 +47,10 @@ class GalleryControllerTest extends TestCase
         $this->pluginFolder = "./plugins/foldergallery/";
         $this->conf = XH_includeVar("./config/config.php", "plugin_cf")["foldergallery"];
         $this->imageService = $this->createMock(ImageService::class);
-        $this->imageService->method("findEntries")->willReturn([$this->subfolder(), $this->image()]);
+        $this->imageService->method("findItems")->willReturn([
+            new Item("sub", "./userfiles/images/test/sub"),
+            new Item("Foto", "./userfiles/images/test/Foto.jpg", "1520x2688"),
+        ]);
         $this->thumbnailService = $this->createMock(ThumbnailService::class);
         $this->jquery = $this->createMock(Jquery::class);
         $this->view = new View("./views/", XH_includeVar("./languages/en.php", "plugin_tx")["foldergallery"]);
@@ -124,39 +128,5 @@ class GalleryControllerTest extends TestCase
         $response = $this->sut()($request, "./userfiles/images/test/");
         [$data] = $response->image();
         $this->assertEquals("thumb/nail", $data);
-    }
-
-    private function image(): array
-    {
-        return [
-            "caption" => "Foto",
-            "basename" => null,
-            "filename" => "./userfiles/images/test/Foto.jpg",
-            "thumbnails" => [
-                "1x" => "./plugins/foldergallery/cache/987063af227eefe7990217434bf913e66e05194b.jpg",
-                "2x" => "./plugins/foldergallery/cache/cd61be09e4859ba1cb621fa7555c534d01b72562.jpg",
-                "3x" => "./plugins/foldergallery/cache/0f7a1df87f33789abad3b6449d8f8738635aac39.jpg",
-            ],
-            "isDir" => false,
-            "size" => "1520x2688",
-            "images" => null,
-        ];
-    }
-
-    private function subfolder(): array
-    {
-        return [
-            "caption" => "sub",
-            "basename" => "sub",
-            "filename" => "./userfiles/images/test/sub",
-            "thumbnails" => [
-                "1x" => "./plugins/foldergallery/cache/798d64164c925053c757bce207f14a5beeea2527.jpg",
-                "2x" => "./plugins/foldergallery/cache/90f9ff2fdd5b5eeadbebc6389834f03271d8abbc.jpg",
-                "3x" => "./plugins/foldergallery/cache/7c2941af8c00e286f85a0b5fd63cdc5b268c7275.jpg",
-            ],
-            "isDir" => true,
-            "size" => null,
-            "images" => [],
-        ];
     }
 }

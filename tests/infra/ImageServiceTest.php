@@ -21,6 +21,7 @@
 
 namespace Foldergallery\Infra;
 
+use Foldergallery\Value\Item;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
 
@@ -45,21 +46,12 @@ class ImageServiceTest extends TestCase
         $this->subject = new ImageService("vfs://root/", 128, $thumbnailServiceStub);
     }
 
-    public function testFindEntries()
+    public function testFindsItems()
     {
-        $expected = array([
-            'caption' => 'foo',
-            'basename' => 'foo',
-            'filename' => vfsStream::url('root/foo'),
-            'isDir' => true,
-            "size" => null,
-        ], [
-            'caption' => 'image',
-            "basename" => null,
-            'filename' => vfsStream::url('root/image.jpg'),
-            'isDir' => false,
-            'size' => "10x10",
-        ]);
-        $this->assertEquals($expected, $this->subject->findEntries(vfsStream::url('root/')));
+        $expected = [
+            new Item("foo", "vfs://root/foo"),
+            new Item("image", "vfs://root/image.jpg", "10x10"),
+        ];
+        $this->assertEquals($expected, $this->subject->findItems(vfsStream::url('root/')));
     }
 }
