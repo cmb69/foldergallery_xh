@@ -81,7 +81,7 @@ class GalleryController
         [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
         return Response::create($output . $this->view->render("gallery", [
             "breadcrumbs" => $this->getBreadcrumbs($request),
-            "children" => $this->itemRecords($items, $request->folder(), $request->url(), 1.0/* $mean */),
+            "children" => $this->itemRecords($items, $request->folder(), $request->url(), $mean),
         ]))->withHjs($hjs);
     }
 
