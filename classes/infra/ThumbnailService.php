@@ -80,23 +80,20 @@ class ThumbnailService
 
     public function makeThumbnail(Image $image, int $dstHeight): string
     {
-        $size = getimagesizefromstring($image->data());
-        assert($size !== false); // TODO invalid assertion
-        list($srcWidth, $srcHeight, $type) = $size;
+        if (!($srcImage = imagecreatefromstring($image->data()))) {
+            return $image->data();
+        }
+        $srcWidth = imagesx($srcImage);
+        assert($srcWidth !== false);
+        $srcHeight = imagesy($srcImage);
+        assert($srcHeight !== false);
         if ($image->orientation() >= 5) {
             $temp = $srcWidth;
             $srcWidth = $srcHeight;
             $srcHeight = $temp;
         }
         $dstWidth = (int) round($srcWidth / $srcHeight * $dstHeight);
-        if (
-            $dstWidth > $srcWidth || $dstHeight > $srcHeight
-            || $dstWidth == $srcWidth && $dstHeight == $srcHeight
-            || $type != IMAGETYPE_JPEG
-        ) {
-            return $image->data();
-        }
-        if (!($srcImage = imagecreatefromstring($image->data()))) {
+        if ($dstWidth > $srcWidth || $dstHeight > $srcHeight || $dstWidth === $srcWidth && $dstHeight === $srcHeight) {
             return $image->data();
         }
         if (!($srcImage = $this->normalize($srcImage, $image->orientation()))) {
