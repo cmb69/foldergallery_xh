@@ -49,7 +49,7 @@ class GalleryControllerTest extends TestCase
         $this->imageService = $this->createMock(ImageService::class);
         $this->imageService->method("findItems")->willReturn([
             new Item("sub", "./userfiles/images/test/sub"),
-            new Item("Foto", "./userfiles/images/test/Foto.jpg", "1520x2688"),
+            new Item("Foto", "./userfiles/images/test/Foto.jpg", [1520, 2688]),
         ]);
         $this->thumbnailService = $this->createMock(ThumbnailService::class);
         $this->jquery = $this->createMock(Jquery::class);

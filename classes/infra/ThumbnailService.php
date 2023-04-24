@@ -78,7 +78,7 @@ class ThumbnailService
         imagecopyresampled($im, $src, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
     }
 
-    public function makeThumbnail(Image $image, int $dstHeight): string
+    public function makeThumbnail(Image $image, int $dstHeight, float $ratio): string
     {
         if (!($srcImage = imagecreatefromstring($image->data()))) {
             return $image->data();
@@ -99,7 +99,7 @@ class ThumbnailService
         if (!($srcImage = $this->normalize($srcImage, $image->orientation()))) {
             return $image->data();
         }
-        if (!($dstImage = $this->resize($srcImage, $srcWidth, $srcHeight, $dstWidth, $dstHeight))) {
+        if (!($dstImage = $this->resize($srcImage, $srcWidth, $srcHeight, $dstWidth, $dstHeight, $ratio))) {
             return $image->data();
         }
         return $this->embedIcc($this->jpegData($dstImage), $image->icc());
@@ -147,22 +147,36 @@ class ThumbnailService
      * @param GdImage $srcImage
      * @return GdImage|null
      */
-    private function resize($srcImage, int $w1, int $h1, int $w2, int $h2)
+    private function resize($srcImage, int $w1, int $h1, int $w2, int $h2, float $ratio)
     {
+        $w2 = (int) round($h2 * $ratio);
         if (!($dstImage = imagecreatetruecolor($w2, $h2))) {
             return null;
+        }
+        if ($ratio < ($w1 / $h1)) {
+            $w = (int) round($h1 * $ratio);
+            $sx = (int) round(($w1 - $w) / 2);
+            $sy = 0;
+            $sw = $w1 - (int) round(($w1 - $w));
+            $sh = $h1;
+        } else {
+            $h = (int) round($w1 / $ratio);
+            $sx = 0;
+            $sy = (int) round(($h1 - $h) / 2);
+            $sw = $w1;
+            $sh = $h1 - (int) round(($h1 - $h));
         }
         $success = imagecopyresampled(
             $dstImage,
             $srcImage,
             0,
             0,
-            0,
-            0,
+            $sx,
+            $sy,
             $w2,
             $h2,
-            $w1,
-            $h1
+            $sw,
+            $sh
         );
         return $success ? $dstImage : null;
     }

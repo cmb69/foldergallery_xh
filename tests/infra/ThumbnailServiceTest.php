@@ -39,7 +39,7 @@ class ThumbnailServiceTest extends TestCase
     /** @dataProvider landscapeThumbnailData */
     public function testLandscapeThumbnail(Image $image, array $expected): void
     {
-        $data = $this->subject->makeThumbnail($image, 64);
+        $data = $this->subject->makeThumbnail($image, 64, 2.0);
         $im = imagecreatefromstring($data);
         $this->assertEquals(128, imagesx($im));
         $this->assertEquals(64, imagesy($im));
@@ -68,7 +68,7 @@ class ThumbnailServiceTest extends TestCase
     /** @dataProvider portraitThumbnailData */
     public function testPortraitThumbnail(Image $image, array $expected): void
     {
-        $data = $this->subject->makeThumbnail($image, 64);
+        $data = $this->subject->makeThumbnail($image, 64, 0.5);
         $im = imagecreatefromstring($data);
         $this->assertEquals(32, imagesx($im));
         $this->assertEquals(64, imagesy($im));
@@ -98,7 +98,7 @@ class ThumbnailServiceTest extends TestCase
     {
         $icc = "SUNDX1BST0ZJTEUAAQEAAAIwQURCRQIQAABtbnRyUkdCIFhZWiAH0AAIAAsAEwA3ACdhY3NwQVBQTAAAAABub25lAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLUFEQkUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApjcHJ0AAAA/AAAADJkZXNjAAABMAAAAGl3dHB0AAABnAAAABRia3B0AAABsAAAABRyVFJDAAABxAAAAA5nVFJDAAAB1AAAAA5iVFJDAAAB5AAAAA5yWFlaAAAB9AAAABRnWFlaAAACCAAAABRiWFlaAAACHAAAABR0ZXh0AAAAAENvcHlyaWdodCAyMDAwIEFkb2JlIFN5c3RlbXMgSW5jb3Jwb3JhdGVkAAAAZGVzYwAAAAAAAAAPV2lkZSBHYW11dCBSR0IAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWFlaIAAAAAAAAPbcAAEAAAAA0zpYWVogAAAAAAAAAAAAAAAAAAAAAGN1cnYAAAAAAAAAAQIzAABjdXJ2AAAAAAAAAAECMwAAY3VydgAAAAAAAAABAjMAAFhZWiAAAAAAAAC3agAAQjsAAAAAWFlaIAAAAAAAABnbAAC5hwAADRxYWVogAAAAAAAAJZEAAAQ+AADGEQ==";
         $image = new Image($this->portrait(), 0, $icc);
-        $data = $this->subject->makeThumbnail($image, 64);
+        $data = $this->subject->makeThumbnail($image, 64, 0.5);
         getimagesizefromstring($data, $info);
         $this->assertEquals($icc, $info["APP2"]);
     }

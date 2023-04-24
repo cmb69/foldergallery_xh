@@ -50,7 +50,7 @@ class ImageServiceTest extends TestCase
     {
         $expected = [
             new Item("foo", "vfs://root/foo"),
-            new Item("image", "vfs://root/image.jpg", "10x10"),
+            new Item("image", "vfs://root/image.jpg", [10, 10]),
         ];
         $this->assertEquals($expected, $this->subject->findItems(vfsStream::url('root/')));
     }

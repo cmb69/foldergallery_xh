@@ -74,10 +74,14 @@ class GalleryController
             return $this->thumbnail($request, $basefolder);
         }
         $items = $this->imageService->findItems($basefolder . $request->folder());
+        $ratios = array_filter(array_map(function (Item $item) {
+            return $item->ratio();
+        }, $items));
+        $mean = array_product($ratios) ** (1 / count($ratios));
         [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
         return Response::create($output . $this->view->render("gallery", [
             "breadcrumbs" => $this->getBreadcrumbs($request),
-            "children" => $this->itemRecords($items, $request->folder(), $request->url()),
+            "children" => $this->itemRecords($items, $request->folder(), $request->url(), 1.0/* $mean */),
         ]))->withHjs($hjs);
     }
 
@@ -91,7 +95,7 @@ class GalleryController
         } else {
             $image = $this->imageService->readImage($basefolder . $folder);
             assert($image !== null); // TODO invalid assertion
-            $data = $this->thumbnailService->makeThumbnail($image, $dstHeight);
+            $data = $this->thumbnailService->makeThumbnail($image, $dstHeight, $request->ratio());
         }
         return Response::createImage($data, 3 * 60 * 60, $request->time());
     }
@@ -177,27 +181,33 @@ class GalleryController
      * @param list<Item> $items
      * @return list<array{caption:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string|null,url:string|null}>
      */
-    private function itemRecords(array $items, string $folder, Url $url): array
+    private function itemRecords(array $items, string $folder, Url $url, float $meanRatio): array
     {
-        return array_map(function (Item $item) use ($folder, $url) {
+        return array_map(function (Item $item) use ($folder, $url, $meanRatio) {
             $folderUrl = $url->with("foldergallery_folder", $folder . basename($item->filename()));
             $thumbUrl = $url->with("foldergallery_thumb", basename($item->filename()));
+            $ratio = $item->ratio();
+            if ($this->conf["thumb_crop"]) {
+                $ratio = sqrt($ratio * $meanRatio);
+            }
             return [
                 "caption" => $item->caption(),
                 "filename" => $item->filename(),
-                "thumbnail" => $thumbUrl->with("foldergallery_size", "1x")->relative(),
-                "srcset" => $this->srcset($thumbUrl),
+                "thumbnail" => $thumbUrl->with("foldergallery_size", "1x")
+                    ->with("foldergallery_ratio", (string) $ratio)->relative(),
+                "srcset" => $this->srcset($thumbUrl, $ratio),
                 "isDir" => $item->isFolder(),
-                "size" => $item->size(),
+                "size" => $item->size() ? implode("x", $item->size()) : null,
                 "url" => $item->isFolder() ? $folderUrl->relative() : null,
             ];
         }, $items);
     }
 
-    private function srcset(Url $url): string
+    private function srcset(Url $url, float $ratio): string
     {
-        return implode(", ", array_map(function (string $size) use ($url) {
-            return $url->with("foldergallery_size", $size)->relative() . " " . $size;
+        return implode(", ", array_map(function (string $size) use ($url, $ratio) {
+            $url = $url->with("foldergallery_size", $size)->with("foldergallery_ratio", (string) $ratio);
+            return $url->relative() . " " . $size;
         }, ["1x", "2x", "3x"]));
     }
 }

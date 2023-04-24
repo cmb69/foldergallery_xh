@@ -71,6 +71,15 @@ class Request
         return $size;
     }
 
+    public function ratio(): float
+    {
+        $ratio = $this->url()->param("foldergallery_ratio");
+        if (!is_string($ratio)) {
+            return 1.0; // ?
+        }
+        return (float) $ratio;
+    }
+
     /** @codeCoverageIgnore */
     protected function query(): string
     {

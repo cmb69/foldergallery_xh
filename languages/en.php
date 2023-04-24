@@ -21,5 +21,6 @@ $plugin_tx['foldergallery']['syscheck_writable']="'%s' is writable: ";
 $plugin_tx['foldergallery']['syscheck_xhversion']="CMSimple_XH version is at least %s: ";
 
 $plugin_tx['foldergallery']['cf_thumb_size']="The height of the thumbnails in pixels.";
+$plugin_tx['foldergallery']['cf_thumb_crop']="Whether to crop the thumbnails, so that their aspect ratio approaches the mean aspect ratio of the gallery.";
 $plugin_tx['foldergallery']['cf_folder_background']="A hexadecimal RGB color value with the format RRGGBB.";
 $plugin_tx['foldergallery']['cf_frontend']="The front-end for viewing the galleries.";

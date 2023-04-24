@@ -29,10 +29,11 @@ class Item
     /** @var string */
     private $filename;
 
-    /** @var string|null */
+    /** @var array{int,int}|null */
     private $size;
 
-    public function __construct(string $caption, string $filename, ?string $size = null)
+    /** @param array{int,int} $size */
+    public function __construct(string $caption, string $filename, ?array $size = null)
     {
         $this->caption = $caption;
         $this->filename = $filename;
@@ -54,8 +55,18 @@ class Item
         return $this->filename;
     }
 
-    public function size(): ?string
+    /** @return array{int,int} */
+    public function size(): ?array
     {
         return $this->size;
+    }
+
+    public function ratio(): float
+    {
+        if (!$this->size) {
+            return 0.0;
+        }
+        [$width, $height] = $this->size;
+        return $width / $height;
     }
 }

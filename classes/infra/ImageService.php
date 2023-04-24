@@ -96,10 +96,10 @@ class ImageService
         $size = getimagesize($filename);
         assert($size !== false); // TODO invalid assertion
         list($width, $height) = $size;
-        $size = "{$width}x{$height}";
+        $size = [$width, $height];
         if (extension_loaded("exif") && ($exif = exif_read_data($filename))) {
             if (isset($exif["Orientation"]) && $exif["Orientation"] >= 5) {
-                $size = "{$height}x{$width}";
+                $size = [$height, $width];
             }
         }
         return new Item($this->getCaption($entry), $filename, $size);

@@ -21,5 +21,6 @@ $plugin_tx['foldergallery']['syscheck_writable']="'%s' ist schreibbar: ";
 $plugin_tx['foldergallery']['syscheck_xhversion']="CMSimple_XH-Version ist mindestens %s: ";
 
 $plugin_tx['foldergallery']['cf_thumb_size']="Die Höhe der Vorschaubilder in Pixeln.";
+$plugin_tx['foldergallery']['cf_thumb_crop']="Ob die Vorschaubilder beschnitten werden sollen, damit sich das Seitenverhältnis dem durchschnittlichen Seitenverhältnis der Galerie annähert.";
 $plugin_tx['foldergallery']['cf_folder_background']="Ein hexadezimaler RGB Farbwert im Format RRGGBB.";
 $plugin_tx['foldergallery']['cf_frontend']="Das Frontend zum Betrachten der Galerien.";
