@@ -32,24 +32,25 @@ class ImageService
     public function findEntries(string $folder): array
     {
         $this->readImageData($folder);
-        $result = [];
-        $entries = scandir($folder);
-        assert($entries !== false); // TODO invalid assertion
-        foreach ($entries as $entry) {
-            if (strpos($entry, '.') === 0) {
-                continue;
+        $items = [];
+        if (($dir = opendir($folder))) {
+            while (($entry = readdir($dir)) !== false) {
+                if ($entry[0] === ".") {
+                    continue;
+                }
+                $filename = $folder . $entry;
+                if (is_dir($filename)) {
+                    $items[] = $this->createDir($folder, $entry);
+                } elseif ($this->isImageFile($filename)) {
+                    $items[] = $this->createImage($folder, $entry);
+                }
             }
-            $filename = "{$folder}{$entry}";
-            if (is_dir($filename)) {
-                $result[] = $this->createDir($folder, $entry);
-            } elseif ($this->isImageFile($filename)) {
-                $result[] = $this->createImage($folder, $entry);
-            }
+            closedir($dir);
         }
-        usort($result, function ($a, $b) {
+        usort($items, function ($a, $b) {
             return 2 * ($b["isDir"] - $a["isDir"]) + strnatcasecmp($a["filename"], $b["filename"]);
         });
-        return $result;
+        return $items;
     }
 
     /** @return void */
@@ -80,23 +81,24 @@ class ImageService
     /** @return list<Image> */
     public function readFirstImagesIn(string $baseFolder, string $folder): array
     {
-        $folder = "{$baseFolder}$folder/";
-        $result = [];
-        $entries = scandir($folder);
-        assert($entries !== false); // TODO invalid assertion
-        foreach ($entries as $basename) {
-            $filename = "{$folder}$basename";
-            if ($basename[0] !== '.' && $this->isImageFile($filename)) {
-                if (!($image = $this->readImage($filename))) {
-                    continue;
+        $folder = $baseFolder . $folder . "/";
+        $images = [];
+        if (($dir = opendir($folder))) {
+            while (($entry = readdir($dir)) !== false) {
+                $filename = $folder  . $entry;
+                if ($entry[0] !== "." && $this->isImageFile($filename)) {
+                    if (!($image = $this->readImage($filename))) {
+                        continue;
+                    }
+                    $images[] = $image;
                 }
-                $result[] = $image;
+                if (count($images) === 2) {
+                    break;
+                }
             }
-            if (count($result) === 2) {
-                break;
-            }
+            closedir($dir);
         }
-        return $result;
+        return $images;
     }
 
     /** @return array{caption:string,basename:null,filename:string,isDir:bool,size:string} */
