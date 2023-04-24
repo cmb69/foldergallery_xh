@@ -29,10 +29,14 @@ class Image
     /** @var int */
     private $orientation;
 
-    public function __construct(string $data, int $orientation)
+    /** @var string */
+    private $icc;
+
+    public function __construct(string $data, int $orientation, string $icc = "")
     {
         $this->data = $data;
         $this->orientation = $orientation;
+        $this->icc = $icc;
     }
 
     public function data(): string
@@ -43,5 +47,10 @@ class Image
     public function orientation(): int
     {
         return $this->orientation;
+    }
+
+    public function icc(): string
+    {
+        return $this->icc;
     }
 }

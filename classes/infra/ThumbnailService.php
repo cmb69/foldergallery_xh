@@ -105,7 +105,7 @@ class ThumbnailService
         if (!($dstImage = $this->resize($srcImage, $srcWidth, $srcHeight, $dstWidth, $dstHeight))) {
             return $image->data();
         }
-        return $this->jpegData($dstImage);
+        return $this->embedIcc($this->jpegData($dstImage), $image->icc());
     }
 
     /**
@@ -176,5 +176,25 @@ class ThumbnailService
         ob_start();
         imagejpeg($image);
         return (string) ob_get_clean();
+    }
+
+    private function embedIcc(string $data, string $icc): string
+    {
+        if (!$icc) {
+            return $data;
+        }
+        $pos = 0;
+        do {
+            $un = unpack("a2marker/nlength", $data, $pos);
+            if (!$un) {
+                return $data;
+            }
+            if ($un["marker"] === "\xff\xd8") {
+                $pos += 2;
+            } elseif ($un["marker"] === "\xff\xe0") {
+                $pos += $un["length"] + 2;
+            }
+        } while (in_array($un["marker"], ["\xff\xd8", "\xff\xe0"], true));
+        return substr($data, 0, $pos) . "\xff\xe2" . pack("n", strlen($icc) + 2) . $icc . substr($data, $pos);
     }
 }

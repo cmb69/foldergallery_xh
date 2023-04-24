@@ -142,6 +142,11 @@ class ImageService
         if (extension_loaded("exif") && ($exif = exif_read_data($filename))) {
             $orientation = $exif["Orientation"] ?? 0;
         }
-        return new Image($data, $orientation);
+        $icc = "";
+        getimagesizefromstring($data, $info);
+        if (isset($info["APP2"]) && !strncmp($info["APP2"], "ICC_PROFILE", strlen("ICC_PROFILE"))) {
+            $icc = $info["APP2"];
+        }
+        return new Image($data, $orientation, $icc);
     }
 }
