@@ -74,13 +74,16 @@ class GalleryController
             return $this->thumbnail($request, $basefolder);
         }
         $items = $this->imageService->findItems($basefolder . $request->folder());
+        $hasSubFolders = array_reduce($items, function (bool $carry, Item $item) {
+            return $carry || $item->isFolder();
+        }, false);
         $ratios = array_filter(array_map(function (Item $item) {
             return $item->ratio();
         }, $items));
         $mean = array_product($ratios) ** (1 / count($ratios));
         [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
         return Response::create($output . $this->view->render("gallery", [
-            "breadcrumbs" => $this->getBreadcrumbs($request),
+            "breadcrumbs" => $this->getBreadcrumbs($request, $hasSubFolders),
             "children" => $this->itemRecords($items, $request->folder(), $request->url(), $mean),
         ]))->withHjs($hjs);
     }
@@ -154,10 +157,13 @@ class GalleryController
     }
 
     /** @return list<array{name:string,url:string|null,isLink:bool}> */
-    private function getBreadcrumbs(Request $request)
+    private function getBreadcrumbs(Request $request, bool $hasSubFolders)
     {
         $records = [];
         $breadcrumbs = Util::breadcrumbs($request->folder(), $this->view->plain("locator_start"));
+        if (count($breadcrumbs) < 2 && !$hasSubFolders) {
+            return $records;
+        }
         foreach ($breadcrumbs as $i => $breadcrumb) {
             $record = [];
             $record["name"] = $breadcrumb["name"];
