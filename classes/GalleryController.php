@@ -80,7 +80,7 @@ class GalleryController
         $ratios = array_filter(array_map(function (Item $item) {
             return $item->ratio();
         }, $items));
-        $mean = array_product($ratios) ** (1 / count($ratios));
+        $mean = $ratios ? array_product($ratios) ** (1 / count($ratios)) : 1.0;
         [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
         return Response::create($output . $this->view->render("gallery", [
             "breadcrumbs" => $this->getBreadcrumbs($request, $hasSubFolders),
