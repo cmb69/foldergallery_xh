@@ -21,6 +21,7 @@
 
 namespace Foldergallery\Infra;
 
+use Foldergallery\Value\Image;
 use GdImage;
 
 class ThumbnailService
@@ -33,16 +34,18 @@ class ThumbnailService
         $this->folderBackground = $folderBackground;
     }
 
-    /** @param list<string> $images */
+    /** @param list<Image> $images */
     public function makeFolderThumbnail(array $images, int $dstHeight): string
     {
         $dst = imagecreatetruecolor($dstHeight, $dstHeight);
         assert($dst !== false); // TODO invalid assertion?
         imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, $this->folderBackground);
-        foreach ($images as $i => $data) {
-            $src = imagecreatefromstring($data);
+        foreach ($images as $i => $image) {
+            $src = imagecreatefromstring($image->data());
             assert($src !== false);  // TODO invalid assertion
-            $this->copyResizedAndCropped($dst, $src, $i);
+            if (($src = $this->normalize($src, $image->orientation()))) {
+                $this->copyResizedAndCropped($dst, $src, $i);
+            }
         }
         return $this->jpegData($dst);
     }
@@ -75,26 +78,72 @@ class ThumbnailService
         imagecopyresampled($im, $src, $dx, $dy, $sx, $sy, $dw, $dh, $sw, $sh);
     }
 
-    public function makeThumbnail(string $data, int $dstHeight): string
+    public function makeThumbnail(Image $image, int $dstHeight): string
     {
-        $size = getimagesizefromstring($data);
+        $size = getimagesizefromstring($image->data());
         assert($size !== false); // TODO invalid assertion
         list($srcWidth, $srcHeight, $type) = $size;
+        if ($image->orientation() >= 5) {
+            $temp = $srcWidth;
+            $srcWidth = $srcHeight;
+            $srcHeight = $temp;
+        }
         $dstWidth = (int) round($srcWidth / $srcHeight * $dstHeight);
         if (
             $dstWidth > $srcWidth || $dstHeight > $srcHeight
             || $dstWidth == $srcWidth && $dstHeight == $srcHeight
             || $type != IMAGETYPE_JPEG
         ) {
-            return $data;
+            return $image->data();
         }
-        if (!($srcImage = imagecreatefromstring($data))) {
-            return $data;
+        if (!($srcImage = imagecreatefromstring($image->data()))) {
+            return $image->data();
+        }
+        if (!($srcImage = $this->normalize($srcImage, $image->orientation()))) {
+            return $image->data();
         }
         if (!($dstImage = $this->resize($srcImage, $srcWidth, $srcHeight, $dstWidth, $dstHeight))) {
-            return $data;
+            return $image->data();
         }
         return $this->jpegData($dstImage);
+    }
+
+    /**
+     * @param GdImage $image
+     * @return GdImage|null
+     */
+    private function normalize($image, int $orientation)
+    {
+        switch ($orientation) {
+            default:
+                return $image;
+            case 2:
+                if (!imageflip($image, IMG_FLIP_HORIZONTAL)) {
+                    return null;
+                }
+                return $image;
+            case 3:
+                return imagerotate($image, 180, 0) ?: null;
+            case 4:
+                if (!imageflip($image, IMG_FLIP_VERTICAL)) {
+                    return null;
+                }
+                return $image;
+            case 5:
+                if (!imageflip($image, IMG_FLIP_VERTICAL)) {
+                    return null;
+                }
+                return imagerotate($image, 270, 0) ?: null;
+            case 6:
+                return imagerotate($image, 270, 0) ?: null;
+            case 7:
+                if (!imageflip($image, IMG_FLIP_VERTICAL)) {
+                    return null;
+                }
+                return imagerotate($image, 90, 0) ?: null;
+            case 8:
+                return imagerotate($image, 90, 0) ?: null;
+        }
     }
 
     /**

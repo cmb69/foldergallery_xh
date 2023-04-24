@@ -20,7 +20,8 @@ a pre použitie s [Extedit_XH](https://github.com/cmb69/extedit_xh).
 ## Požiadavky
 
 Foldergallery_XH is a plugin for [CMSimple_XH](https://www.cmsimple-xh.org/).
-It requires CMSimple_XH ≥ 1.7.0, and PHP ≥ 7.1.0 with the GD and JSON extensions.
+It requires CMSimple_XH ≥ 1.7.0, and PHP ≥ 7.1.0 with the `gd` and `json` extensions.
+The PHP `exif` extension is recommended.
 
 ## Download
 
@@ -75,6 +76,9 @@ použite:
 Zatiaľ sa dá na jednej stránke použiť iba jedna galéria.
 
 Only JPEG images are supported; other image formats are ignored.
+
+If the PHP exif extension is not enabled, thumbnails of images with Exif
+`Orientation` tags will not be displayed properly (they are rotated and or flipped).
 
 ## Troubleshooting
 

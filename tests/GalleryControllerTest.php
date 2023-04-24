@@ -28,6 +28,7 @@ use Foldergallery\Infra\Jquery;
 use Foldergallery\Infra\Request;
 use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
+use Foldergallery\Value\Image;
 use Foldergallery\Value\Url;
 use PHPUnit\Framework\TestCase;
 
@@ -102,10 +103,11 @@ class GalleryControllerTest extends TestCase
 
     public function testDeliversFolderThumbnail(): void
     {
+        $images = [new Image("some image data", 0), new Image("other image data", 0)];
         $this->imageService->expects($this->once())->method("readFirstImagesIn")->with("test", "sub")
-            ->willReturn(["some image data", "other image data"]);
+            ->willReturn($images);
         $this->thumbnailService->expects($this->once())->method("makeFolderThumbnail")
-            ->with(["some image data", "other image data"], 128)->willReturn("thumb/nail");
+            ->with($images, 128)->willReturn("thumb/nail");
         $request = new FakeRequest(["query" => "Gallery&foldergallery_thumb=sub&foldergallery_size=1x"]);
         $response = $this->sut()($request, "test");
         [$data] = $response->image();
@@ -115,9 +117,9 @@ class GalleryControllerTest extends TestCase
     public function testDeliversImageThumbnail(): void
     {
         $this->imageService->expects($this->once())->method("readImage")->with("./userfiles/images/test/image.jpg")
-            ->willReturn("some image data");
+            ->willReturn(new Image("some image data", 0));
         $this->thumbnailService->expects($this->once())->method("makeThumbnail")
-            ->with("some image data", 128)->willReturn("thumb/nail");
+            ->with(new Image("some image data", 0), 128)->willReturn("thumb/nail");
         $request = new FakeRequest(["query" => "Gallery&foldergallery_thumb=image.jpg&foldergallery_size=1x"]);
         $response = $this->sut()($request, "./userfiles/images/test/");
         [$data] = $response->image();

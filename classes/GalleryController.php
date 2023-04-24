@@ -88,9 +88,9 @@ class GalleryController
             $images = $this->imageService->readFirstImagesIn($basefolder, $folder);
             $data = $this->thumbnailService->makeFolderThumbnail($images, $dstHeight);
         } else {
-            $data = $this->imageService->readImage($basefolder . $folder);
-            assert($data !== null); // TODO invalid assertion
-            $data = $this->thumbnailService->makeThumbnail($data, $dstHeight);
+            $image = $this->imageService->readImage($basefolder . $folder);
+            assert($image !== null); // TODO invalid assertion
+            $data = $this->thumbnailService->makeThumbnail($image, $dstHeight);
         }
         return Response::createImage($data, 3 * 60 * 60, $request->time());
     }
