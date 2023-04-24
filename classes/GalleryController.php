@@ -139,7 +139,7 @@ class GalleryController
         $this->jquery->includePlugin("colorbox", $this->pluginFolder . "lib/colorbox/jquery.colorbox-min.js");
         return [
             $this->view->render("colorbox_head", [
-                "stylesheet" => $this->pluginFolder . "lib/colorbox/colorbox.css",
+                "stylesheet" => $this->pluginFolder . "lib/colorbox/" . $this->conf["colorbox_theme"] . "/colorbox.css",
             ]),
             $this->view->render("colorbox", [
                 "config" => [

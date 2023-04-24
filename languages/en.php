@@ -26,6 +26,7 @@ $plugin_tx['foldergallery']['cf_thumb_size']="The height of the thumbnails in pi
 $plugin_tx['foldergallery']['cf_thumb_crop']="Whether to crop the thumbnails, so that their aspect ratio approaches the mean aspect ratio of the gallery.";
 $plugin_tx['foldergallery']['cf_folder_background']="A hexadecimal RGB color value with the format RRGGBB.";
 $plugin_tx['foldergallery']['cf_frontend']="The front-end for viewing the galleries.";
+$plugin_tx['foldergallery']['cf_colorbox_theme']="The theme. Only supported if “Colorbox” is chosen as front-end.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow']="Whether a slideshow is available. Only supported if “Colorbox” is chosen as front-end.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_auto']="Whether the slideshow will automatically start to play. Only supported if “Colorbox” is chosen as front-end.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_speed']="The speed of the slideshow, in milliseconds. Only supported if “Colorbox” is chosen as front-end.";

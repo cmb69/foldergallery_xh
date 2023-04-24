@@ -27,6 +27,7 @@ $plugin_tx['foldergallery']['cf_thumb_size']="Die Höhe der Vorschaubilder in Pi
 $plugin_tx['foldergallery']['cf_thumb_crop']="Ob die Vorschaubilder beschnitten werden sollen, damit sich das Seitenverhältnis dem durchschnittlichen Seitenverhältnis der Galerie annähert.";
 $plugin_tx['foldergallery']['cf_folder_background']="Ein hexadezimaler RGB Farbwert im Format RRGGBB.";
 $plugin_tx['foldergallery']['cf_frontend']="Das Frontend zum Betrachten der Galerien.";
+$plugin_tx['foldergallery']['cf_colorbox_theme']="Das theme. Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow']="Ob eine Diashow angeboten wird. Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_auto']="Ob die Diashow automatisch startet. Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_speed']="Die Geschwindigkeit der Diashow (in Millisekunden). Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
