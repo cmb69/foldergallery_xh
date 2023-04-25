@@ -6,7 +6,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 
 /**
  * @var View $this
- * @var list<array{name:string,url:string,isLink:bool}> $breadcrumbs
+ * @var list<array{name:string,url:string|null,isLink:bool}> $breadcrumbs
  * @var list<array{caption:string,filename:string,thumbnail:string,srcset:string,isDir:bool,width:int|null,height:int|null,url:string|null}> $children
  */
 ?>
@@ -14,7 +14,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 <div class="foldergallery">
   <div class="foldergallery_locator">
 <?foreach ($breadcrumbs as $breadcrumb):?>
-<?  if ($breadcrumb['isLink']):?>
+<?  if ($breadcrumb['url']):?>
     <a href="<?=$breadcrumb['url']?>"><?=$breadcrumb['name']?></a>
     <?=$this->text('locator_separator')?>
 <?  else:?>

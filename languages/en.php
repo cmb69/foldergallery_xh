@@ -11,6 +11,7 @@ $plugin_tx['foldergallery']['colorbox_close']="close";
 $plugin_tx['foldergallery']['colorbox_imgError']="This image failed to load.";
 
 $plugin_tx['foldergallery']['error_frontend']="The front-end '%s' is not supported!";
+$plugin_tx['foldergallery']['error_gallery_notfound']="Gallery %s not found!";
 
 $plugin_tx['foldergallery']['syscheck_extension']="PHP extension '%s' is loaded: ";
 $plugin_tx['foldergallery']['syscheck_fail']="failure";

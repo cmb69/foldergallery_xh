@@ -27,6 +27,7 @@ use Foldergallery\Infra\Request;
 use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
 use Foldergallery\Logic\Util;
+use Foldergallery\Value\Breadcrumb;
 use Foldergallery\Value\Item;
 use Foldergallery\Value\Response;
 use Foldergallery\Value\Url;
@@ -73,18 +74,13 @@ class GalleryController
         if ($request->thumb()) {
             return $this->thumbnail($request, $basefolder);
         }
-        $items = $this->imageService->findItems($basefolder . $request->folder());
-        $hasSubFolders = array_reduce($items, function (bool $carry, Item $item) {
-            return $carry || $item->isFolder();
-        }, false);
-        $ratios = array_filter(array_map(function (Item $item) {
-            return $item->ratio();
-        }, $items));
-        $mean = $ratios ? array_product($ratios) ** (1 / count($ratios)) : 1.0;
+        if (($items = $this->imageService->findItems($basefolder . $request->folder())) === null) {
+            return Response::create($this->view->error("error_gallery_notfound", $request->folder()));
+        }
         [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
         return Response::create($output . $this->view->render("gallery", [
-            "breadcrumbs" => $this->getBreadcrumbs($request, $hasSubFolders),
-            "children" => $this->itemRecords($items, $request->folder(), $request->url(), $mean),
+            "breadcrumbs" => $this->breadcrumbRecords($request, $items),
+            "children" => $this->itemRecords($items, $request->folder(), $request->url()),
         ]))->withHjs($hjs);
     }
 
@@ -159,39 +155,27 @@ class GalleryController
         ];
     }
 
-    /** @return list<array{name:string,url:string|null,isLink:bool}> */
-    private function getBreadcrumbs(Request $request, bool $hasSubFolders)
+    /**
+     * @param list<Item> $items
+     * @return list<array{name:string,url:string|null}>
+     */
+    private function breadcrumbRecords(Request $request, array $items)
     {
-        $records = [];
-        $breadcrumbs = Util::breadcrumbs($request->folder(), $this->view->plain("locator_start"));
-        if (count($breadcrumbs) < 2 && !$hasSubFolders) {
-            return $records;
-        }
-        foreach ($breadcrumbs as $i => $breadcrumb) {
-            $record = [];
-            $record["name"] = $breadcrumb["name"];
-            if ($i < count($breadcrumbs) - 1) {
-                if (isset($breadcrumb["url"])) {
-                    $record["url"] = $request->url()->with("foldergallery_folder", $breadcrumb["url"])->relative();
-                } else {
-                    $record["url"] = $request->url()->without("foldergallery_folder")->relative();
-                }
-                $record["isLink"] = true;
-            } else {
-                $record["url"] = null;
-                $record["isLink"] = false;
-            }
-            $records[] = $record;
-        }
-        return $records;
+        return array_map(function (Breadcrumb $breadcrumb) {
+            return [
+                "name" => $breadcrumb->name(),
+                "url" => $breadcrumb->url(),
+            ];
+        }, Util::breadcrumbs($request->folder(), $this->view->plain("locator_start"), $request->url(), $items));
     }
 
     /**
      * @param list<Item> $items
      * @return list<array{caption:string,filename:string,thumbnail:string,srcset:string,isDir:bool,width:int|null,height:int|null,url:string|null}>
      */
-    private function itemRecords(array $items, string $folder, Url $url, float $meanRatio): array
+    private function itemRecords(array $items, string $folder, Url $url): array
     {
+        $meanRatio = Util::meanRatio($items);
         return array_map(function (Item $item) use ($folder, $url, $meanRatio) {
             $folderUrl = $url->with("foldergallery_folder", $folder . basename($item->filename()));
             $thumbUrl = $url->with("foldergallery_thumb", basename($item->filename()));

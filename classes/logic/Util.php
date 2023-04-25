@@ -21,19 +21,48 @@
 
 namespace Foldergallery\Logic;
 
+use Foldergallery\Value\Breadcrumb;
+use Foldergallery\Value\Item;
+use Foldergallery\Value\Url;
+
 class Util
 {
-    /** @return list<array{name:string,url:?string}> */
-    public static function breadcrumbs(string $path, string $firstName): array
+    /**
+     * @param list<Item> $items
+     * @return list<Breadcrumb>
+     */
+    public static function breadcrumbs(string $path, string $firstName, Url $url, array $items): array
     {
         $result = explode('/', rtrim($path, "/"));
         $result = array_filter($result);
-        $url = '';
-        $result = array_map(function ($part) use (&$url) {
-            $url .= "$part/";
-            return ['name' => $part, 'url' => rtrim($url, '/')];
+        $path = '';
+        $result = array_map(function ($part) use (&$path, $url) {
+            $path .= "$part/";
+            return new Breadcrumb($part, $url->with("foldergallery_folder", rtrim($path, '/'))->relative());
         }, $result);
-        array_unshift($result, ['name' => $firstName, "url" => null]);
+        array_unshift($result, new Breadcrumb($firstName, $url->without("foldergallery_folder")->relative()));
+        $result[count($result) - 1] = new Breadcrumb($result[count($result) - 1]->name(), null);
+        if (count($result) < 2 && !self::hasFolders($items)) {
+            return [];
+        }
+
         return $result;
+    }
+
+    /** @param list<Item> $items */
+    private static function hasFolders(array $items): bool
+    {
+        return array_reduce($items, function (bool $carry, Item $item) {
+            return $carry || $item->isFolder();
+        }, false);
+    }
+
+    /** @param list<Item> $items */
+    public static function meanRatio(array $items): float
+    {
+        $ratios = array_filter(array_map(function (Item $item) {
+            return $item->ratio();
+        }, $items));
+        return $ratios ? array_product($ratios) ** (1 / count($ratios)) : 1.0;
     }
 }

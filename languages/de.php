@@ -12,6 +12,7 @@ $plugin_tx['foldergallery']['colorbox_close']="Schließen";
 $plugin_tx['foldergallery']['colorbox_imgError']="Dieses Bild konnte nicht geladen werden.";
 
 $plugin_tx['foldergallery']['error_frontend']="Das Frontend '%s' wird nicht unterstützt!";
+$plugin_tx['foldergallery']['error_gallery_notfound']="Galerie %s wurde nicht gefunden!";
 
 $plugin_tx['foldergallery']['syscheck_extension']="PHP-Extension '%s' wurde geladen: ";
 $plugin_tx['foldergallery']['syscheck_fail']="Fehlschlag";

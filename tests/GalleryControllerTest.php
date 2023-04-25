@@ -25,12 +25,10 @@ use ApprovalTests\Approvals;
 use Foldergallery\Infra\FakeRequest;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\Jquery;
-use Foldergallery\Infra\Request;
 use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
 use Foldergallery\Value\Image;
 use Foldergallery\Value\Item;
-use Foldergallery\Value\Url;
 use PHPUnit\Framework\TestCase;
 
 class GalleryControllerTest extends TestCase
@@ -66,6 +64,13 @@ class GalleryControllerTest extends TestCase
             $this->jquery,
             $this->view
         );
+    }
+
+    public function testReportsNonExistentGallery(): void
+    {
+        $this->imageService = $this->createMock(ImageService::class);
+        $response = $this->sut()(new FakeRequest(["query" => "Gallery"]), "test");
+        $this->assertStringContainsString("Gallery  not found!", $response->output());
     }
 
     public function testRendersGallery(): void

@@ -30,9 +30,12 @@ class ImageService
     private $data = null;
 
     /** @return list<Item> */
-    public function findItems(string $folder): array
+    public function findItems(string $folder): ?array
     {
         $this->readImageData($folder);
+        if (!is_dir($folder)) {
+            return null;
+        }
         $items = [];
         if (($dir = opendir($folder))) {
             while (($entry = readdir($dir)) !== false) {
