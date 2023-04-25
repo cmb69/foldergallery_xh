@@ -61,13 +61,6 @@
     </exec>
     <unzip file="export.zip" todir="export"/>
     <delete file="export.zip"/>
-    <exec executable="uglifyjs" checkreturn="true">
-      <arg file="export/foldergallery.min.js"/>
-      <arg value="--compress"/>
-      <arg value="--mangle"/>
-      <arg value="--output"/>
-      <arg file="export/foldergallery.min.js"/>
-    </exec>
     <move todir="dist">
       <fileset dir="export">
         <include name="views/*.php"/>

@@ -30,3 +30,4 @@ $plugin_tx['foldergallery']['cf_colorbox_theme']="The theme. Only supported if �
 $plugin_tx['foldergallery']['cf_colorbox_slideshow']="Whether a slideshow is available. Only supported if “Colorbox” is chosen as front-end.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_auto']="Whether the slideshow will automatically start to play. Only supported if “Colorbox” is chosen as front-end.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_speed']="The speed of the slideshow, in milliseconds. Only supported if “Colorbox” is chosen as front-end.";
+$plugin_tx['foldergallery']['cf_photoswipe_opacity']="The backdrop opacity. Only supported if “Photoswipe” is chosen as front-end.";

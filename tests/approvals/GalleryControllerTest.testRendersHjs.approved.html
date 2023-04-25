@@ -1,5 +1,12 @@
 <!-- foldergallery photoswipe -->
 <link rel="stylesheet" href="./plugins/foldergallery/lib/photoswipe/photoswipe.css">
-<link rel="stylesheet" href="./plugins/foldergallery/lib/photoswipe/default-skin/default-skin.css">
-<script src="./plugins/foldergallery/lib/photoswipe/photoswipe.min.js"></script>
-<script src="./plugins/foldergallery/lib/photoswipe/photoswipe-ui-default.min.js"></script>
+<script type="module">
+import PhotoSwipeLightbox from "./plugins/foldergallery/lib/photoswipe/photoswipe-lightbox.esm.min.js";
+const lightbox = new PhotoSwipeLightbox({
+    gallery: ".foldergallery",
+    children: ".foldergallery_image a",
+    bgOpacity: 0.8,
+    pswpModule: () => import("./plugins/foldergallery/lib/photoswipe/photoswipe.esm.min.js"),
+});
+lightbox.init();
+</script>

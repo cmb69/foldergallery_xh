@@ -122,13 +122,11 @@ class GalleryController
         return [
             $this->view->render("photoswipe_head", [
                 "stylesheet" => $this->pluginFolder . "lib/photoswipe/photoswipe.css",
-                "skin_stylesheet" => $this->pluginFolder . "lib/photoswipe/default-skin/default-skin.css",
-                "script" => $this->pluginFolder . "lib/photoswipe/photoswipe.min.js",
-                "skin_script" => $this->pluginFolder . "lib/photoswipe/photoswipe-ui-default.min.js",
+                "core" => $this->pluginFolder . "lib/photoswipe/photoswipe.esm.min.js",
+                "lightbox" => $this->pluginFolder . "lib/photoswipe/photoswipe-lightbox.esm.min.js",
+                "opacity" => $this->conf["photoswipe_opacity"],
             ]),
-            $this->view->render("photoswipe", [
-                "script" => $this->pluginFolder . "foldergallery.min.js",
-            ]),
+            "",
         ];
     }
 
@@ -190,7 +188,7 @@ class GalleryController
 
     /**
      * @param list<Item> $items
-     * @return list<array{caption:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string|null,url:string|null}>
+     * @return list<array{caption:string,filename:string,thumbnail:string,srcset:string,isDir:bool,width:int|null,height:int|null,url:string|null}>
      */
     private function itemRecords(array $items, string $folder, Url $url, float $meanRatio): array
     {
@@ -208,7 +206,8 @@ class GalleryController
                     ->with("foldergallery_ratio", (string) $ratio)->relative(),
                 "srcset" => $this->srcset($thumbUrl, $ratio),
                 "isDir" => $item->isFolder(),
-                "size" => $item->size() ? implode("x", $item->size()) : null,
+                "width" => $item->size() ? $item->size()[0] : null,
+                "height" => $item->size() ? $item->size()[1] : null,
                 "url" => $item->isFolder() ? $folderUrl->relative() : null,
             ];
         }, $items);

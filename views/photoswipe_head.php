@@ -7,13 +7,20 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 /**
  * @var View $this
  * @var string $stylesheet
- * @var string $skin_stylesheet
- * @var string $script
- * @var string $skin_script
+ * @var string $core
+ * @var string $lightbox
+ * @var string $opacity
  */
 ?>
 <!-- foldergallery photoswipe -->
 <link rel="stylesheet" href="<?=$stylesheet?>">
-<link rel="stylesheet" href="<?=$skin_stylesheet?>">
-<script src="<?=$script?>"></script>
-<script src="<?=$skin_script?>"></script>
+<script type="module">
+import PhotoSwipeLightbox from "<?=$lightbox?>";
+const lightbox = new PhotoSwipeLightbox({
+    gallery: ".foldergallery",
+    children: ".foldergallery_image a",
+    bgOpacity: <?=$opacity?>,
+    pswpModule: () => import("<?=$core?>"),
+});
+lightbox.init();
+</script>

@@ -8,3 +8,4 @@ $plugin_cf['foldergallery']['colorbox_theme']="theme1";
 $plugin_cf['foldergallery']['colorbox_slideshow']="true";
 $plugin_cf['foldergallery']['colorbox_slideshow_auto']="";
 $plugin_cf['foldergallery']['colorbox_slideshow_speed']="2500";
+$plugin_cf['foldergallery']['photoswipe_opacity']="0.8";

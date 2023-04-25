@@ -7,7 +7,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 /**
  * @var View $this
  * @var list<array{name:string,url:string,isLink:bool}> $breadcrumbs
- * @var list<array{caption:string,filename:string,thumbnail:string,srcset:string,isDir:bool,size:string|null,url:string|null}> $children
+ * @var list<array{caption:string,filename:string,thumbnail:string,srcset:string,isDir:bool,width:int|null,height:int|null,url:string|null}> $children
  */
 ?>
 <!-- foldergallery gallery -->
@@ -33,7 +33,7 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
     </figure>
 <?  else:?>
     <figure class="foldergallery_image">
-      <a class="foldergallery_group" href="<?=$child['filename']?>" data-size="<?=$child['size']?>">
+      <a class="foldergallery_group" href="<?=$child['filename']?>" data-pswp-width="<?=$child['width']?>" data-pswp-height="<?=$child['height']?>">
         <img src="<?=$child['thumbnail']?>" srcset="<?=$child['srcset']?>" alt="<?=$child['caption']?>">
       </a>
       <figcaption><?=$child['caption']?></figcaption>

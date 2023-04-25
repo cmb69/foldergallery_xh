@@ -31,3 +31,4 @@ $plugin_tx['foldergallery']['cf_colorbox_theme']="Das theme. Nur unterstützt, w
 $plugin_tx['foldergallery']['cf_colorbox_slideshow']="Ob eine Diashow angeboten wird. Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_auto']="Ob die Diashow automatisch startet. Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
 $plugin_tx['foldergallery']['cf_colorbox_slideshow_speed']="Die Geschwindigkeit der Diashow (in Millisekunden). Nur unterstützt, wenn „Colorbox“ als Frontend gewählt ist.";
+$plugin_tx['foldergallery']['cf_photoswipe_opacity']="Die Deckkraft des Hintergrunds. Nur unterstützt, wenn „Photoswipe“ als Frontend gewählt ist.";
