@@ -41,11 +41,13 @@ class ThumbnailService
         assert($dst !== false);
         imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, $this->folderBackground);
         foreach ($images as $i => $image) {
-            $src = imagecreatefromstring($image->data());
-            assert($src !== false);  // TODO invalid assertion
-            if (($src = $this->normalize($src, $image->orientation()))) {
-                $this->copyResizedAndCropped($dst, $src, $i);
+            if (!($src = imagecreatefromstring($image->data()))) {
+                continue;
             }
+            if (!($src = $this->normalize($src, $image->orientation()))) {
+                continue;
+            }
+            $this->copyResizedAndCropped($dst, $src, $i);
         }
         return $this->jpegData($dst);
     }
