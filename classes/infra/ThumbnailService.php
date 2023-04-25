@@ -38,7 +38,7 @@ class ThumbnailService
     public function makeFolderThumbnail(array $images, int $dstHeight): string
     {
         $dst = imagecreatetruecolor($dstHeight, $dstHeight);
-        assert($dst !== false); // TODO invalid assertion?
+        assert($dst !== false);
         imagefilledrectangle($dst, 0, 0, $dstHeight - 1, $dstHeight - 1, $this->folderBackground);
         foreach ($images as $i => $image) {
             $src = imagecreatefromstring($image->data());
@@ -142,9 +142,8 @@ class ThumbnailService
     private function resize($srcImage, int $w1, int $h1, int $w2, int $h2, float $ratio)
     {
         $w2 = (int) round($h2 * $ratio);
-        if (!($dstImage = imagecreatetruecolor($w2, $h2))) {
-            return null;
-        }
+        $dstImage = imagecreatetruecolor($w2, $h2);
+        assert($dstImage !== false);
         if ($ratio < ($w1 / $h1)) {
             $w = (int) round($h1 * $ratio);
             $sx = (int) round(($w1 - $w) / 2);
