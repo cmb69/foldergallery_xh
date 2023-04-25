@@ -82,12 +82,6 @@ class GalleryControllerTest extends TestCase
         Approvals::verifyHtml($response->output());
     }
 
-    public function testRendersHjs(): void
-    {
-        $response = $this->sut()(new FakeRequest(["query" => "Gallery"]), "test");
-        Approvals::verifyHtml($response->hjs());
-    }
-
     public function testRendersColorboxHjs(): void
     {
         $this->conf["frontend"] = "Colorbox";

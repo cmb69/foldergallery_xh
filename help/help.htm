@@ -66,6 +66,9 @@
 <pre><code>{{{foldergallery()}}}</code></pre>
 <p>To present only the images of a subfolder (and all subfolders of that folder), use something like the following (replace <code>%SUBFOLDERNAME%</code> with the actual name of the subfolder):</p>
 <pre><code>{{{foldergallery(%)&#39;SUBFOLDERNAME%)&#39;}}}</code></pre>
+<p>It is also possible to put the plugin call in the template:</p>
+<pre><code>&lt;?=foldergallery()?&gt;</code></pre>
+<p>However, the lightbox is only supported for the <code>Photoswipe</code> front-end, but not the <code>Colorbox</code> front-end in this case.</p>
 <h2 id="limitations">Limitations</h2>
 <p>Only a single gallery can be shown on each page.</p>
 <p>Only JPEG images are supported; other image formats are ignored.</p>

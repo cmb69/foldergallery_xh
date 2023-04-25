@@ -66,6 +66,9 @@
 <pre><code>{{{foldergallery()}}}</code></pre>
 <p>Um nur die Bilder eines Unterordners (und allen Unterordnern dieses Ordners) anzuzeigen, verwenden Sie in etwa folgendes (ersetzen Sie <code>%UNTERORDNERNAME%</code> durch den tatsächlichen Namen des Unterordners):</p>
 <pre><code>{{{foldergallery(&#39;%UNTERORDNERNAME%&#39;)}}}</code></pre>
+<p>Es ist ebenfalls möglich den Pluginaufruf ins Template zu schreiben:</p>
+<pre><code>&lt;?=foldergallery()?&gt;</code></pre>
+<p>Allerdings wird in diesem Fall die Lightbox nur für das <code>Photoswipe</code> Frontend, nicht aber für das <code>Colorbox</code> Frontend unterstützt.</p>
 <h2 id="einschränkungen">Einschränkungen</h2>
 <p>Es kann nur eine einzige Galerie auf jeder Seite angezeigt werden.</p>
 <p>Es werden nur JPEG-Bilder unterstützt; andere Bildformate werden ignoriert.</p>

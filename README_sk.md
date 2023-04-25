@@ -71,6 +71,13 @@ použite:
 
     {{{foldergallery('%NAZOV PODADRESAR%'}}}
 
+It is also possible to put the plugin call in the template:
+
+    <?=foldergallery()?>
+
+However, the lightbox is only supported for the `Photoswipe` front-end,
+but not the `Colorbox` front-end in this case.
+
 ## Obmedzenia
 
 Zatiaľ sa dá na jednej stránke použiť iba jedna galéria.

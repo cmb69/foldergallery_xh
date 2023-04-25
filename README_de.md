@@ -81,6 +81,13 @@ durch den tatsächlichen Namen des Unterordners):
 
     {{{foldergallery('%UNTERORDNERNAME%')}}}
 
+Es ist ebenfalls möglich den Pluginaufruf ins Template zu schreiben:
+
+    <?=foldergallery()?>
+
+Allerdings wird in diesem Fall die Lightbox nur für das `Photoswipe`
+Frontend, nicht aber für das `Colorbox` Frontend unterstützt.
+
 ## Einschränkungen
 
 Es kann nur eine einzige Galerie auf jeder Seite angezeigt werden.

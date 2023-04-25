@@ -120,13 +120,13 @@ class GalleryController
     private function includePhotoswipe(): array
     {
         return [
-            $this->view->render("photoswipe_head", [
+            "",
+            $this->view->render("photoswipe", [
                 "stylesheet" => $this->pluginFolder . "lib/photoswipe/photoswipe.css",
                 "core" => $this->pluginFolder . "lib/photoswipe/photoswipe.esm.min.js",
                 "lightbox" => $this->pluginFolder . "lib/photoswipe/photoswipe-lightbox.esm.min.js",
                 "opacity" => $this->conf["photoswipe_opacity"],
             ]),
-            "",
         ];
     }
 
