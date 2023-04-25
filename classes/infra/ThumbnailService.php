@@ -115,28 +115,20 @@ class ThumbnailService
             default:
                 return $image;
             case 2:
-                if (!imageflip($image, IMG_FLIP_HORIZONTAL)) {
-                    return null;
-                }
+                imageflip($image, IMG_FLIP_HORIZONTAL);
                 return $image;
             case 3:
                 return imagerotate($image, 180, 0) ?: null;
             case 4:
-                if (!imageflip($image, IMG_FLIP_VERTICAL)) {
-                    return null;
-                }
+                imageflip($image, IMG_FLIP_VERTICAL);
                 return $image;
             case 5:
-                if (!imageflip($image, IMG_FLIP_VERTICAL)) {
-                    return null;
-                }
+                imageflip($image, IMG_FLIP_VERTICAL);
                 return imagerotate($image, 270, 0) ?: null;
             case 6:
                 return imagerotate($image, 270, 0) ?: null;
             case 7:
-                if (!imageflip($image, IMG_FLIP_VERTICAL)) {
-                    return null;
-                }
+                imageflip($image, IMG_FLIP_VERTICAL);
                 return imagerotate($image, 90, 0) ?: null;
             case 8:
                 return imagerotate($image, 90, 0) ?: null;
