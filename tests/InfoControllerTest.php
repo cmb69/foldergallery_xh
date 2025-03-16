@@ -3,9 +3,9 @@
 namespace Foldergallery;
 
 use ApprovalTests\Approvals;
-use Foldergallery\Infra\View;
 use PHPUnit\Framework\TestCase;
 use Plib\FakeSystemChecker;
+use Plib\View;
 
 class InfoControllerTest extends TestCase
 {

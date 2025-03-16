@@ -1,6 +1,6 @@
 <?php
 
-use Foldergallery\Infra\View;
+use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 
@@ -10,4 +10,4 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
  */
 ?>
 <!-- foldergallery colorbox -->
-<link rel="stylesheet" href="<?=$stylesheet?>" type="text/css">
+<link rel="stylesheet" href="<?=$this->esc($stylesheet)?>" type="text/css">

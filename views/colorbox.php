@@ -1,6 +1,6 @@
 <?php
 
-use Foldergallery\Infra\View;
+use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 

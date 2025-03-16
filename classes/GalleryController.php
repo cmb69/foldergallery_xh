@@ -24,13 +24,13 @@ namespace Foldergallery;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\Request;
 use Foldergallery\Infra\ThumbnailService;
-use Foldergallery\Infra\View;
 use Foldergallery\Logic\Util;
 use Foldergallery\Value\Breadcrumb;
 use Foldergallery\Value\Item;
 use Foldergallery\Value\Response;
 use Foldergallery\Value\Url;
 use Plib\Jquery;
+use Plib\View;
 
 class GalleryController
 {
@@ -75,7 +75,7 @@ class GalleryController
             return $this->thumbnail($request, $basefolder);
         }
         if (($items = $this->imageService->findItems($basefolder . $request->folder())) === null) {
-            return Response::create($this->view->error("error_gallery_notfound", $request->folder()));
+            return Response::create($this->view->message("fail", "error_gallery_notfound", $request->folder()));
         }
         [$hjs, $output] = $this->initializeFrontEnd($this->conf["frontend"]);
         return Response::create($output . $this->view->render("gallery", [
@@ -108,7 +108,7 @@ class GalleryController
             case "Colorbox":
                 return $this->includeColorbox();
             default:
-                return ["", $this->view->error("error_frontend", $frontEnd)];
+                return ["", $this->view->message("fail", "error_frontend", $frontEnd)];
         }
     }
 

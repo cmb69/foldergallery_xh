@@ -1,6 +1,6 @@
 <?php
 
-use Foldergallery\Infra\View;
+use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 
@@ -11,10 +11,10 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
  */
 ?>
 <!-- foldergallery plugin info -->
-<h1>Foldergallery <?=$version?></h1>
+<h1>Foldergallery <?=$this->esc($version)?></h1>
 <h2><?=$this->text('syscheck_title')?></h2>
 <div class="foldergallery_syscheck">
 <?foreach ($checks as $check):?>
-  <p class="<?=$check['class']?>"><?=$this->text($check['key'], $check['arg'])?><?=$this->text($check['statekey'])?></p>
+  <p class="<?=$this->esc($check['class'])?>"><?=$this->text($check['key'], $check['arg'])?><?=$this->text($check['statekey'])?></p>
 <?endforeach?>
 </div>

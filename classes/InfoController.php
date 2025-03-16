@@ -21,9 +21,9 @@
 
 namespace Foldergallery;
 
-use Foldergallery\Infra\View;
 use Foldergallery\Value\Response;
 use Plib\SystemChecker;
+use Plib\View;
 
 class InfoController
 {

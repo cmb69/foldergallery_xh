@@ -1,6 +1,6 @@
 <?php
 
-use Foldergallery\Infra\View;
+use Plib\View;
 
 if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
 
@@ -13,14 +13,14 @@ if (!defined("CMSIMPLE_XH_VERSION")) {header("403 Forbidden"); exit;}
  */
 ?>
 <!-- foldergallery photoswipe -->
-<link rel="stylesheet" href="<?=$stylesheet?>">
+<link rel="stylesheet" href="<?=$this->esc($stylesheet)?>">
 <script type="module">
-import PhotoSwipeLightbox from "<?=$lightbox?>";
+import PhotoSwipeLightbox from "<?=$this->esc($lightbox)?>";
 const lightbox = new PhotoSwipeLightbox({
     gallery: ".foldergallery",
     children: ".foldergallery_image a",
-    bgOpacity: <?=$opacity?>,
-    pswpModule: () => import("<?=$core?>"),
+    bgOpacity: <?=$this->esc($opacity)?>,
+    pswpModule: () => import("<?=$this->esc($core)?>"),
 });
 lightbox.init();
 </script>

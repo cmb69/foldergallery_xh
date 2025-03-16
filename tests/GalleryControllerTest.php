@@ -6,11 +6,11 @@ use ApprovalTests\Approvals;
 use Foldergallery\Infra\FakeRequest;
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\ThumbnailService;
-use Foldergallery\Infra\View;
 use Foldergallery\Value\Image;
 use Foldergallery\Value\Item;
 use PHPUnit\Framework\TestCase;
 use Plib\Jquery;
+use Plib\View;
 
 class GalleryControllerTest extends TestCase
 {
