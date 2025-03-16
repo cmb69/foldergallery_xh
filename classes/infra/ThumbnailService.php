@@ -116,7 +116,7 @@ class ThumbnailService
             (int) (0.1953125 * $size), (int) (0.8046875 * $size),
         ];
         if (PHP_MAJOR_VERSION >= 8) {
-            imagefilledpolygon($im1, $points, $folder); // @phpstan-ignore-line
+            imagefilledpolygon($im1, $points, $folder);
         } else {
             imagefilledpolygon($im1, $points, 4, $folder);
         }
