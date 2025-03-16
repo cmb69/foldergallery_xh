@@ -107,7 +107,7 @@ class ThumbnailServiceTest extends TestCase
     {
         $actual = $this->subject->makeFolderThumbnail([new Image($this->landscape(), 0), new Image($this->portrait(), 0)], 64);
         $info = getimagesizefromstring($actual);
-        $this->assertEquals([64, 64, IMAGETYPE_JPEG], array_slice($info, 0, 3));
+        $this->assertEquals([64, 64, IMAGETYPE_PNG], array_slice($info, 0, 3));
     }
 
     private function landscape(): string

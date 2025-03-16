@@ -35,7 +35,7 @@ class ThumbnailService
     }
 
     /** @param list<Image> $images */
-    public function makeFolderThumbnail(array $images, int $dstHeight): string
+    public function makeFolderThumbnail1(array $images, int $dstHeight): string
     {
         $dst = imagecreatetruecolor($dstHeight, $dstHeight);
         assert($dst !== false);
@@ -50,6 +50,78 @@ class ThumbnailService
             $this->copyResizedAndCropped($dst, $src, $i);
         }
         return $this->jpegData($dst);
+    }
+
+    /** @param list<Image> $images */
+    public function makeFolderThumbnail(array $images, int $dstHeight): string
+    {
+        $folder = $this->folderBackground;
+        $red = $folder >> 16 & 0xff;
+        $green = $folder >> 8 & 0xff;
+        $blue = $folder & 0xff;
+        $folderDark = (int) (0.9 * $red) << 16 | (int) (0.9 * $green) << 8 | (int) (0.9 * $blue);
+
+        $size = $dstHeight;
+
+        $matrixes = [
+            [0.7, 0.15, 0, 1, 0, 0],
+            [0.55, 0.30, 0, 0.9, 0, 0],
+        ];
+        $offsets = [(int) (0.3125 * $size), (int) (0.234375 * $size)];
+
+        $im1 = imagecreatetruecolor($size, $size);
+        assert($im1 !== false);
+        imagealphablending($im1, false);
+        imagefilledrectangle($im1, 0, 0, $size - 1, $size - 1, 0x7f000000);
+        imagealphablending($im1, true);
+        imagefilledrectangle(
+            $im1,
+            (int) (0.1953125 * $size),
+            (int) (0.0234375 * $size),
+            (int) (0.703125 * $size),
+            (int) (0.8046875 * $size),
+            $folderDark
+        );
+
+        foreach ($images as $i => $image) {
+            if (!($im2 = imagecreatefromstring($image->data()))) {
+                continue;
+            }
+            if (!($im2 = $this->normalize($im2, $image->orientation()))) {
+                continue;
+            }
+            $w = imagesx($im2);
+            $h = imagesy($im2);
+            if ($w > $h) {
+                $im2 = imagecrop($im2, ["x" => intdiv($w - $h, 2), "y" => 0, "width" => $h, "height" => $h]);
+            } else {
+                $im2 = imagecrop($im2, ["x" => 0, "y" => intdiv($h - $w, 2), "width" => $w, "height" => $w]);
+            }
+            assert($im2 !== false); // TODO invalid assertion?
+            $im2 = imagescale($im2, (int) (0.78125 * $size));
+            assert($im2 !== false); // TODO invalid assertion?
+            $im2 = imageaffine($im2, $matrixes[$i]);
+            assert($im2 !== false); // TODO invalid assertion?
+            $w = imagesx($im2);
+            assert($w !== false);
+            $h = imagesy($im2);
+            assert($h !== false);
+            imagecopy($im1, $im2, $offsets[$i], (int) (0.0546875 * $size), 0, 0, $w, $h);
+        }
+
+        $points = [
+            (int) (0.1953125 * $size), (int) (0.0234375 * $size),
+            (int) (0.390625 * $size), (int) (0.1796875 * $size),
+            (int) (0.390625 * $size), (int) (0.9609375 * $size),
+            (int) (0.1953125 * $size), (int) (0.8046875 * $size),
+        ];
+        if (PHP_MAJOR_VERSION >= 8) {
+            imagefilledpolygon($im1, $points, $folder); // @phpstan-ignore-line
+        } else {
+            imagefilledpolygon($im1, $points, 4, $folder);
+        }
+        imagesavealpha($im1, true);
+        return $this->pngData($im1);
     }
 
     /**
@@ -179,6 +251,14 @@ class ThumbnailService
     {
         ob_start();
         imagejpeg($image);
+        return (string) ob_get_clean();
+    }
+
+    /** @param GdImage $image */
+    private function pngData($image): string
+    {
+        ob_start();
+        imagepng($image);
         return (string) ob_get_clean();
     }
 

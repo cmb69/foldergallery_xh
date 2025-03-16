@@ -15,3 +15,6 @@
     caption-side: bottom;
     text-align: center;
 }
+.foldergallery .foldergallery_folder a {
+    border: none;
+}

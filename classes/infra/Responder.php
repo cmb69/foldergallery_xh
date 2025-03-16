@@ -33,7 +33,9 @@ class Responder
                 ob_end_clean();
             }
             [$data, $maxAge, $now] = $response->image();
-            header("Content-Type: image/jpeg");
+            $size = getimagesizefromstring($data);
+            assert($size !== false);
+            header("Content-Type: " . $size["mime"]);
             header("Cache-Control: private, max-age=" . $maxAge);
             header("Pragma: ", true);
             header("Expires: " . date("r", $now + $maxAge));
