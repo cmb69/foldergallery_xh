@@ -20,13 +20,13 @@ jobs:
       - name: Checkout Foldergallery_XH
         uses: actions/checkout@v4
         with:
-          path: 'cmsimplexh/plugins/foldergallery'
+          path: cmsimplexh/plugins/foldergallery
       - name: Cache tools
         id: cache-tools
         uses: actions/cache@v4
         with:
           path: cmsimplexh/plugins/foldergallery/tools
-          key: tools-${{matrix.version}}-${{hashFiles('cmsimplexh/plugins/foldergallery/.phive')}}
+          key: tools-${{hashFiles('cmsimplexh/plugins/foldergallery/.phive')}}
       - if: ${{steps.cache-tools.outputs.cache-hit != 'true'}}
         name: phive install
         run: cd cmsimplexh/plugins/foldergallery && phive --no-progress install --copy --force-accept-unsigned --trust-gpg-keys 31C7E470E2138192,4AA394086372C20A,51C67305FFC2E5C0,A4E55EA12C7C085C,A978220305CD5C32,CF1A108D0E7AE720,D5F0CB76E2DD74F8
