@@ -17,6 +17,7 @@ $plugin_tx['foldergallery']['error_gallery_notfound']="Galerie %s wurde nicht ge
 $plugin_tx['foldergallery']['syscheck_extension']="PHP-Extension '%s' wurde geladen: ";
 $plugin_tx['foldergallery']['syscheck_fail']="Fehlschlag";
 $plugin_tx['foldergallery']['syscheck_phpversion']="PHP-Version ist mindestens %s: ";
+$plugin_tx['foldergallery']['syscheck_plibversion']="Plib_XH-Version ist mindestens %s: ";
 $plugin_tx['foldergallery']['syscheck_plugin']="CMSimple_XH-Plugin '%s' ist installiert: ";
 $plugin_tx['foldergallery']['syscheck_success']="Okay";
 $plugin_tx['foldergallery']['syscheck_title']="System-Prüfung";

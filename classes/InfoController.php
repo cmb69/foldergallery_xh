@@ -21,9 +21,9 @@
 
 namespace Foldergallery;
 
-use Foldergallery\Infra\SystemChecker;
 use Foldergallery\Infra\View;
 use Foldergallery\Value\Response;
+use Plib\SystemChecker;
 
 class InfoController
 {
@@ -60,6 +60,7 @@ class InfoController
             $this->checkExtension("json"),
             $this->checkExtension("exif", false),
             $this->checkXhVersion("1.7.0"),
+            $this->checkPlibVersion("1.3"),
             $this->checkPlugin("jquery"),
             $this->checkWritability($this->pluginFolder . "cache/"),
             $this->checkWritability($this->pluginFolder . "config/"),
@@ -99,6 +100,18 @@ class InfoController
         return [
             "class" => "xh_$state",
             "key" => "syscheck_xhversion",
+            "arg" => $version,
+            "statekey" => "syscheck_$state",
+        ];
+    }
+
+    /** @return array{class:string,key:string,arg:string,statekey:string} */
+    private function checkPlibVersion(string $version): array
+    {
+        $state = $this->systemChecker->checkPlugin("plib", $version) ? "success" : "fail";
+        return [
+            "class" => "xh_$state",
+            "key" => "syscheck_plibversion",
             "arg" => $version,
             "statekey" => "syscheck_$state",
         ];

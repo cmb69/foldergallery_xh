@@ -23,9 +23,9 @@ namespace Foldergallery;
 
 use Foldergallery\Infra\ImageService;
 use Foldergallery\Infra\Jquery;
-use Foldergallery\Infra\SystemChecker;
 use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
+use Plib\SystemChecker;
 
 class Dic
 {

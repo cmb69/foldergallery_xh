@@ -15,7 +15,8 @@ $plugin_tx['foldergallery']['error_gallery_notfound']="Gallery %s not found!";
 
 $plugin_tx['foldergallery']['syscheck_extension']="PHP extension '%s' is loaded: ";
 $plugin_tx['foldergallery']['syscheck_fail']="failure";
-$plugin_tx['foldergallery']['syscheck_phpversion']="the PHP version is at least %s: ";
+$plugin_tx['foldergallery']['syscheck_phpversion']="PHP version is at least %s: ";
+$plugin_tx['foldergallery']['syscheck_plibversion']="Plib_XH version is at least %s: ";
 $plugin_tx['foldergallery']['syscheck_plugin']="CMSimple_XH plugin '%s' is installed: ";
 $plugin_tx['foldergallery']['syscheck_success']="okay";
 $plugin_tx['foldergallery']['syscheck_title']="System check";
