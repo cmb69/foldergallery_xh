@@ -22,7 +22,6 @@
 namespace Foldergallery;
 
 use Foldergallery\Infra\ImageService;
-use Foldergallery\Infra\Jquery;
 use Foldergallery\Infra\Request;
 use Foldergallery\Infra\ThumbnailService;
 use Foldergallery\Infra\View;
@@ -31,6 +30,7 @@ use Foldergallery\Value\Breadcrumb;
 use Foldergallery\Value\Item;
 use Foldergallery\Value\Response;
 use Foldergallery\Value\Url;
+use Plib\Jquery;
 
 class GalleryController
 {
