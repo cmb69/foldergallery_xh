@@ -3,3 +3,5 @@ includes:
 parameters:
   typeAliases:
     GdImage: resource
+  ignoreErrors:
+    - '/Function imagefilledpolygon invoked with 3 parameters, 4 required/'
