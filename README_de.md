@@ -119,9 +119,9 @@ bestimmten Zweck*. Details finden Sie in der GNU General Public License.
 Sie sollten ein Exemplar der GNU General Public License zusammen mit
 Foldergallery_XH erhalten haben. Falls nicht, siehe <https://www.gnu.org/licenses/>.
 
-Copyright © 2017 Christoph M. Becker
+Copyright © Christoph M. Becker
 
-Slovakische Übersetzung © 2017 Dr. Martin Sereday
+Slovakische Übersetzung © Dr. Martin Sereday
 
 ## Danksagung
 

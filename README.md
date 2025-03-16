@@ -113,9 +113,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Foldergallery_XH.  If not, see <https://www.gnu.org/licenses/>.
 
-Copyright © 2017 Christoph M. Becker
+Copyright © Christoph M. Becker
 
-Slovak translation © 2017 Dr. Martin Sereday
+Slovak translation © Dr. Martin Sereday
 
 ## Credits
 
